@@ -1,8 +1,12 @@
 import type { Key } from "../lib";
 import type { LimiterState } from "../types";
 
-export interface ILimiterStorage {
-    get: (key: Key) => LimiterState | null | Promise<LimiterState | null>;
+export type StorageTypes = "in-memory";
 
-    set: (key: Key, state: LimiterState) => void | Promise<void>;
+export interface ILimiterStorage {
+    type: StorageTypes;
+
+    get: <State extends LimiterState>(key: Key) => State | null | Promise<State | null>;
+
+    set: <State extends LimiterState>(key: Key, state: State) => void | Promise<void>;
 }

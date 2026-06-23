@@ -1,34 +1,25 @@
 import { Injectable } from "@nestjs/common";
 import type { Key } from "../lib";
-import type { LimiterStrategy } from "../strategy";
-import type { LimiterOptions, LimiterState } from "../types";
+import type { LimiterState } from "../types";
 import type { ILimiterStorage } from "./storage.interface";
 
 @Injectable()
 export class InMemoryStorage implements ILimiterStorage {
-    private readonly storage = new Map<Key, LimiterState>();
+    public readonly type = "in-memory";
 
-    public constructor(private readonly strategy: LimiterStrategy) {}
+    private readonly map = new Map<Key, LimiterState>();
 
-    public isAllowed(key: Key, options: LimiterOptions) {
-        const state = this.get(key);
+    public get<State extends LimiterState>(key: Key) {
+        const state = this.map.get(key);
 
-        if (state) {
-            return this.strategy.check(state, options);
+        if (!state) {
+            return null;
         }
 
-        const defaultState = this.strategy.getDefaultState(options);
-
-        this.set(key, defaultState);
-
-        return this.strategy.check(defaultState, options);
+        return state as State;
     }
 
-    public get(key: Key) {
-        return this.storage.get(key) ?? null;
-    }
-
-    public set(key: Key, state: LimiterState) {
-        this.storage.set(key, state);
+    public set<State extends LimiterState>(key: Key, state: State) {
+        this.map.set(key, state);
     }
 }
