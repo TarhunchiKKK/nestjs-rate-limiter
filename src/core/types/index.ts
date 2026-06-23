@@ -1,6 +1,4 @@
-import type { FixedWindowStrategyName, FixedWindowStrategyOptions, FixedWindowStrategyState } from "./fixed-window.types";
-
-export type StrategyNames = FixedWindowStrategyName;
+import type { FixedWindowStrategyOptions, FixedWindowStrategyState } from "./fixed-window.types";
 
 export type LimiterOptions = FixedWindowStrategyOptions;
 

@@ -28,6 +28,7 @@
         "@biomejs/biome": "^2.5.1",
         "@nestjs/common": "^11.1.27",
         "@nestjs/core": "^11.1.27",
+        "@nestjs/testing": "^11.1.27",
         "@types/bun": "latest",
         "bun-plugin-swc": "^0.0.1",
         "ioredis": "^5.11.1",

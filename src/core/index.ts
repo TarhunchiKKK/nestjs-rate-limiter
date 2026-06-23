@@ -1,2 +1,2 @@
-export * from "./algorithms";
 export * from "./storage";
+export * from "./strategies";

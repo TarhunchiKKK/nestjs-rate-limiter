@@ -1,13 +1,12 @@
 export type FixedWindowStrategyName = "fixed-window";
 
 export type FixedWindowStrategyOptions = {
-    strategy: FixedWindowStrategyName;
+    strategy: "fixed-window";
     limit: number;
     ttl: number;
 };
 
 export type FixedWindowStrategyState = {
-    strategy: FixedWindowStrategyName;
     count: number;
     resetTime: number;
 };

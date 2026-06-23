@@ -1,4 +1,4 @@
-import type { Key } from "../../shared";
+import type { Key } from "../../shared/keys";
 import type { LimiterOptions } from "../types";
 
 export interface ILimiterStrategy {
