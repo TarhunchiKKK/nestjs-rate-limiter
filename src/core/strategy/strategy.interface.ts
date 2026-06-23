@@ -1,5 +1,6 @@
-import type { StrategyOptions, StrategyState } from "./types";
+import type { LimiterOptions, LimiterState } from "../types";
 
 export interface ILimiterStrategy {
-    isAllowed: (state: StrategyState, options: StrategyOptions) => boolean;
+    check: (state: LimiterState, options: LimiterOptions) => false | LimiterState;
+    getDefaultState: (options: LimiterOptions) => LimiterState;
 }
