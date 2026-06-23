@@ -1,14 +1,12 @@
-import type { Key } from "../lib";
-import type { IRateLimitingStrategy } from "./strategy.interface";
+import type { ILimiterStrategy } from "./strategy.interface";
+import type { StrategyOptions, StrategyState } from "./types";
 
-type Options = {
-    limit: number;
+export class FixedWindowStrategy implements ILimiterStrategy {
+    public isAllowed(state: StrategyState, options: StrategyOptions) {
+        if (state.strategy !== "fixed-window" || options.strategy !== "fixed-window") {
+            throw new Error(`Incorrect strategy`);
+        }
 
-    ttl: number;
-};
-
-export class FixedWindowStrategy implements IRateLimitingStrategy<Options> {
-    public isAllowed(key: Key, options: Options) {
         return true;
     }
 }

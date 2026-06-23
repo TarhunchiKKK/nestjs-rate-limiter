@@ -1,5 +1,5 @@
-import type { Key } from "../lib";
+import type { StrategyOptions, StrategyState } from "./types";
 
-export interface IRateLimitingStrategy<Arg> {
-    isAllowed: (key: Key, arg: Arg) => boolean | Promise<boolean>;
+export interface ILimiterStrategy {
+    isAllowed: (state: StrategyState, options: StrategyOptions) => boolean;
 }

@@ -1,1 +1,1 @@
-export { Key } from "./types";
+export type { Key } from "./types";
