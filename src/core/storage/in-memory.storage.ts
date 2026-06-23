@@ -9,7 +9,7 @@ export class InMemoryStorage implements ILimiterStorage {
 
     private readonly map = new Map<Key, LimiterState>();
 
-    public get<State extends LimiterState>(key: Key) {
+    public get<State extends LimiterState = LimiterState>(key: Key) {
         const state = this.map.get(key);
 
         if (!state) {

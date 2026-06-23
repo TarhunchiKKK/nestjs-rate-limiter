@@ -2,7 +2,7 @@
     "Add `private readonly` modifiers": {
         "scope": "typescript",
         "prefix": "p-r",
-        "body": "private readonly",
+        "body": "private readonly"
     },
 
     // * Tests
@@ -34,12 +34,12 @@
             "    it(\"\", async () => {",
             "        $0",
             "    });",
-            "});",
-        ],
+            "});"
+        ]
     },
     "NestJS Bun Unit Test Mock": {
         "prefix": "t-mock",
         "scope": "typescript",
-        "body": ["mock<${1:Type}>((() => {}) as any)"],
-    },
+        "body": ["mock<${1:Type}>((() => {}) as any)"]
+    }
 }

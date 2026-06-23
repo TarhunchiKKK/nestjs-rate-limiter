@@ -14,21 +14,18 @@ describe("InMemoryStorage", () => {
         storage = module.get(InMemoryStorage);
     });
 
-
     describe(".get", () => {
         it("should return existing state", () => {
             const key = crypto.randomUUID();
             const state: LimiterState = {
                 count: Math.random() * 100,
                 resetTime: Date.now()
-            }
-
+            };
 
             storage.set(key, state);
-            const result = storage.get(key)
+            const result = storage.get(key);
 
-            expect(result).toEqual(state)
-
+            expect(result).toEqual(state);
         });
 
         it("should not found state", () => {
@@ -36,10 +33,9 @@ describe("InMemoryStorage", () => {
 
             const result = storage.get(key);
 
-            expect(result).toBeNull()
-
-        })
-    })
+            expect(result).toBeNull();
+        });
+    });
 
     describe(".set", () => {
         it("should save state", () => {
@@ -48,12 +44,12 @@ describe("InMemoryStorage", () => {
             const state: LimiterState = {
                 count: Math.random() * 100,
                 resetTime: Date.now()
-            }
+            };
 
             storage.set(key, state);
-            const result = storage.get(key)
+            const result = storage.get(key);
 
-            expect(result).toEqual(state)
-        })
-    })
+            expect(result).toEqual(state);
+        });
+    });
 });

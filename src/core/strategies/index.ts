@@ -1,1 +1,1 @@
-export { FixedWindowStrategy } from "./fixed-window.strategy"
+export { FixedWindowStrategy } from "./fixed-window.strategy";
