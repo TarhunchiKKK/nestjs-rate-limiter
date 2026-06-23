@@ -1,5 +1,13 @@
 {
     "name": "nestjs-rate-limiter",
+    "description": "Rate Limiter pattern implementation for NestJS framework.",
+    "version": "0.0.0",
+    "author": {
+        "name": "Konstantin Barilo",
+        "email": "kostabarilo12@gmail.com",
+        "url": "https://github.com/TarhunchiKKK"
+    },
+    "license": "MIT",
     "module": "./src/index.ts",
     "type": "module",
     "private": true,
