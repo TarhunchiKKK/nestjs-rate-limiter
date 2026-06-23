@@ -15,7 +15,7 @@
             "import { Test } from \"@nestjs/testing\";",
             "",
             "describe(\"${1:ClassName}\", () => {",
-            "    let handler: ${1:ClassName};",
+            "    let provider: ${1:ClassName};",
             "",
             "    beforeEach(async () => {",
             "        const module = await Test.createTestingModule({",
@@ -24,7 +24,7 @@
             "            ]",
             "        }).compile();",
             "",
-            "        handler = module.get(${1:ClassName});",
+            "        provider = module.get(${1:ClassName});",
             "    });",
             "",
             "    afterEach(() => {",
@@ -40,6 +40,6 @@
     "NestJS Bun Unit Test Mock": {
         "prefix": "t-mock",
         "scope": "typescript",
-        "body": ["mock(() => Promise.resolve({}))"],
+        "body": ["mock<${1:Type}>((() => {}) as any)"],
     },
 }

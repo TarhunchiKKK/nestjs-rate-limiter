@@ -1,10 +1,12 @@
+import { Inject, Injectable } from "@nestjs/common";
 import type { Key } from "../../shared/keys";
-import type { ILimiterStorage } from "../storage";
+import { type ILimiterStorage, InMemoryStorage } from "../storage";
 import type { FixedWindowStrategyOptions, FixedWindowStrategyState, LimiterOptions } from "../types";
 import type { ILimiterStrategy } from "./strategy.interface";
 
+@Injectable()
 export class FixedWindowStrategy implements ILimiterStrategy {
-    public constructor(private readonly storage: ILimiterStorage) {}
+    public constructor(@Inject(InMemoryStorage) private readonly storage: ILimiterStorage) { }
 
     public async check(key: Key, options: LimiterOptions) {
         if (options.strategy !== "fixed-window") {
@@ -42,8 +44,7 @@ export class FixedWindowStrategy implements ILimiterStrategy {
     private getDefaultState(options: FixedWindowStrategyOptions): FixedWindowStrategyState {
         return {
             count: options.limit,
-            resetTime: Date.now() + options.ttl,
-            strategy: "fixed-window"
+            resetTime: Date.now() + options.ttl
         };
     }
 }
