@@ -1,4 +1,4 @@
-import type { Key } from "../lib";
+import type { Key } from "../../shared";
 import type { ILimiterStorage } from "../storage";
 import type { FixedWindowStrategyOptions, FixedWindowStrategyState, LimiterOptions } from "../types";
 import type { ILimiterStrategy } from "./strategy.interface";
@@ -39,7 +39,7 @@ export class FixedWindowStrategy implements ILimiterStrategy {
         return state;
     }
 
-    public getDefaultState(options: FixedWindowStrategyOptions): FixedWindowStrategyState {
+    private getDefaultState(options: FixedWindowStrategyOptions): FixedWindowStrategyState {
         return {
             count: options.limit,
             resetTime: Date.now() + options.ttl,

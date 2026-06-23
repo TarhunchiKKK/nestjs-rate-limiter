@@ -1,4 +1,4 @@
-import type { Key } from "../lib";
+import type { Key } from "../../shared";
 import type { LimiterState } from "../types";
 
 export type StorageTypes = "in-memory";
