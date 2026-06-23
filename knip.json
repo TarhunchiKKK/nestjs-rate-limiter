@@ -1,0 +1,13 @@
+{
+    "$schema": "https://unpkg.com/knip@5/schema.json",
+    "ignore": [],
+    "ignoreBinaries": [],
+    "ignoreDependencies": [],
+    "rules": {
+        "files": "error",
+        "types": "error",
+        "dependencies": "error",
+        "devDependencies": "error",
+        "unlisted": "off"
+    }
+}
