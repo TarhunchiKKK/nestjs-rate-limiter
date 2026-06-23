@@ -12,6 +12,10 @@
     "type": "module",
     "private": true,
     "scripts": {
+        "test": "bun test tests --preload ./tests/preload.ts",
+        "test:unit": "bun test tests/unit --preload ./tests/preload.ts",
+        "test:integration": "bun test tests/integration --preload ./tests/preload.ts",
+        "test:e2e": "bun test tests/e2e --preload ./tests/preload.ts",
         "format:check": "bunx biome format",
         "format:fix": "bunx biome format --write",
         "lint:check": "bunx --bun biome lint",
@@ -21,6 +25,7 @@
     "devDependencies": {
         "@biomejs/biome": "^2.5.1",
         "@types/bun": "latest",
+        "bun-plugin-swc": "^0.0.1",
         "knip": "^6.18.0"
     },
     "peerDependencies": {
