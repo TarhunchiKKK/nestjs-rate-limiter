@@ -18,7 +18,7 @@ describe("InMemoryStorage", () => {
         it("should return existing state", () => {
             const key = crypto.randomUUID();
             const state: LimiterState = {
-                count: Math.random() * 100,
+                count: 100,
                 resetTime: Date.now()
             };
 
@@ -42,7 +42,7 @@ describe("InMemoryStorage", () => {
             const key = crypto.randomUUID();
 
             const state: LimiterState = {
-                count: Math.random() * 100,
+                count: 100,
                 resetTime: Date.now()
             };
 
