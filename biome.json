@@ -6,7 +6,7 @@
         "useIgnoreFile": true
     },
     "files": {
-        "includes": ["**", "!packages/contracts/src/generated"],
+        "includes": ["**"],
         "ignoreUnknown": false
     },
     "linter": {
