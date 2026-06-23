@@ -1,12 +1,19 @@
 {
-  "name": "nestjs-rate-limiter",
-  "module": "./src/index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+    "name": "nestjs-rate-limiter",
+    "module": "./src/index.ts",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "format:check": "bunx biome format",
+        "format:fix": "bunx biome format --write",
+        "lint:check": "bunx --bun biome lint",
+        "lint:fix": "bunx --bun biome lint --write"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.5.1",
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    }
 }
