@@ -1,0 +1,45 @@
+{
+    "Add `private readonly` modifiers": {
+        "scope": "typescript",
+        "prefix": "p-r",
+        "body": "private readonly",
+    },
+
+    // * Tests
+
+    "NestJS Bun Unit Test Handler": {
+        "prefix": "t-unit",
+        "scope": "typescript",
+        "body": [
+            "import { afterEach, beforeEach, describe, it, expect } from \"bun:test\";",
+            "import { Test } from \"@nestjs/testing\";",
+            "",
+            "describe(\"${1:ClassName}\", () => {",
+            "    let handler: ${1:ClassName};",
+            "",
+            "    beforeEach(async () => {",
+            "        const module = await Test.createTestingModule({",
+            "            providers: [",
+            "                ${1:ClassName}",
+            "            ]",
+            "        }).compile();",
+            "",
+            "        handler = module.get(${1:ClassName});",
+            "    });",
+            "",
+            "    afterEach(() => {",
+            "        // clearMock();",
+            "    });",
+            "",
+            "    it(\"\", async () => {",
+            "        $0",
+            "    });",
+            "});",
+        ],
+    },
+    "NestJS Bun Unit Test Mock": {
+        "prefix": "t-mock",
+        "scope": "typescript",
+        "body": ["mock(() => Promise.resolve({}))"],
+    },
+}

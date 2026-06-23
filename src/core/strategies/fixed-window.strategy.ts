@@ -1,4 +1,4 @@
-import type { Key } from "../../shared";
+import type { Key } from "../../shared/keys";
 import type { ILimiterStorage } from "../storage";
 import type { FixedWindowStrategyOptions, FixedWindowStrategyState, LimiterOptions } from "../types";
 import type { ILimiterStrategy } from "./strategy.interface";

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import type { Key } from "../../shared";
+import type { Key } from "../../shared/keys";
 import type { LimiterState } from "../types";
 import type { ILimiterStorage } from "./storage.interface";
 
