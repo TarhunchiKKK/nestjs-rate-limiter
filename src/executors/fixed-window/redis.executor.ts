@@ -1,6 +1,6 @@
+import * as fs from "node:fs";
 import * as path from "node:path";
 import { Inject, Injectable } from "@nestjs/common";
-import * as fs from "fs";
 import type Redis from "ioredis";
 import { REDIS_STORAGE_TOKEN } from "../../di/di.constants";
 import type { Key } from "../../shared/keys";

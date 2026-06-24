@@ -19,12 +19,13 @@ local elapsed = now - lastRefilled
 local refilledTokens = elapsed * refillRate
 local currentTokens = math.min(capacity, tokens + refilledTokens)
 
--- Check ability to decrement token
 if currentTokens >= 1 then
+    -- Decrement token
     redis.call('hmset', KEYS[1], 'tokens', currentTokens - 1, 'lastRefilled', now)
     redis.call('pexpire', KEYS[1], ttl)
     return 1
 else
+    -- Set remaining tokens count (<= 1)
     redis.call('hmset', KEYS[1], 'tokens', currentTokens, 'lastRefilled', now)
     redis.call('pexpire', KEYS[1], ttl)
     return 0

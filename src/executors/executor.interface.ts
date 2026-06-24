@@ -9,7 +9,7 @@ export type BaseOptions = {
     storageType: StorageTypes;
 };
 
-export interface IExecutor<Options = any> {
+export interface IExecutor<Options> {
     readonly strategy: Strategies;
     readonly storageType: StorageTypes;
 
