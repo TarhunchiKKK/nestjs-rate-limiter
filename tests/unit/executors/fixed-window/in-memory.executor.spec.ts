@@ -3,11 +3,11 @@ import { Test } from "@nestjs/testing";
 import { IN_MEMORY_STORAGE_TOKEN } from "../../../../src/di/di.constants";
 import { FixedWindowInMemoryExecutor } from "../../../../src/executors";
 import type { FixedWindowOptions, FixedWindowState } from "../../../../src/executors/fixed-window/types";
-import { clearMock, createInMemoryStorage, MS_IN_DAY, TOMORROW, YESTERDAY } from "../../../mocks";
+import { clearMock, createInMemoryStorageMock, MS_IN_DAY, TOMORROW, YESTERDAY } from "../../../mocks";
 
 describe("FixedWindowInMemoryExecutor", () => {
     let executor: FixedWindowInMemoryExecutor;
-    const storageMock = createInMemoryStorage<FixedWindowState>();
+    const storageMock = createInMemoryStorageMock<FixedWindowState>();
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
