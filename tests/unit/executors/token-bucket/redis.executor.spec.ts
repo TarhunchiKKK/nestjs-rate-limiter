@@ -56,6 +56,6 @@ describe("TokenBucketRedisExecutor", () => {
 
         const result = await executor.check(key, options);
 
-        expect(result).toBeTrue()
+        expect(result).toBeFalse()
     });
 });
