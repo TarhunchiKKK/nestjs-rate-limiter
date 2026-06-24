@@ -1,0 +1,30 @@
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { Inject, Injectable } from "@nestjs/common";
+import type Redis from "ioredis";
+import { REDIS_STORAGE_TOKEN } from "../../di/di.constants";
+import type { Key } from "../../shared/keys";
+import { getRedisKey } from "../../shared/redis";
+import type { IExecutor, StorageTypes, Strategies } from "../executor.interface";
+import type { FixedWindowOptions } from "./types";
+
+@Injectable()
+export class FixedWindowRedisExecutor implements IExecutor<FixedWindowOptions> {
+    public readonly strategy: Strategies = "fixed-window";
+    public readonly storageType: StorageTypes = "redis";
+    private readonly luaScript: string;
+
+    public constructor(@Inject(REDIS_STORAGE_TOKEN) private readonly redis: Redis) {
+        const luaScriptPath = path.join(__dirname, "../../../lua/fixed-window.lua");
+        this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
+    }
+
+    public async check(key: Key, options: FixedWindowOptions) {
+        const redisKey = getRedisKey(key);
+        const keysCount = 1;
+
+        const currentCount = (await this.redis.eval(this.luaScript, keysCount, redisKey, options.ttl)) as number;
+
+        return currentCount < options.limit;
+    }
+}

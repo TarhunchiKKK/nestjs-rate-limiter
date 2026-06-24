@@ -1,11 +1,11 @@
-export type TokenBucketStrategyOptions = {
-    // DELETE: this field is unused
+export type TokenBucketOptions = {
     strategy: "token-bucket";
     capacity: number;
     refillRate: number;
+    ttl: number;
 };
 
-export type TokenBucketStrategyState = {
+export type TokenBucketState = {
     tokens: number;
     lastRefilled: number;
 };
