@@ -1,6 +1,5 @@
 import type { Key } from "../../shared/keys";
-import type { LimiterOptions } from "../types";
 
-export interface ILimiterStrategy {
-    check: (key: Key, options: LimiterOptions) => boolean | Promise<boolean>;
+export interface ILimiterStrategy<Options> {
+    check: (key: Key, options: Options) => boolean | Promise<boolean>;
 }

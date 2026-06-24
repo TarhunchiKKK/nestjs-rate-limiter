@@ -1,12 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { STORAGE_INJECTION_TOKEN } from "../../di/di.constants";
-import type { Key } from "../../shared/keys";
-import type { ILimiterStorage } from "../storage";
-import type { FixedWindowStrategyOptions, FixedWindowStrategyState, LimiterOptions } from "../types";
-import type { ILimiterStrategy } from "./strategy.interface";
+import { STORAGE_INJECTION_TOKEN } from "../../../di/di.constants";
+import type { Key } from "../../../shared/keys";
+import type { ILimiterStorage } from "../../storage";
+import type { LimiterOptions } from "..";
+import type { ILimiterStrategy } from "../strategy.interface";
+import type { FixedWindowStrategyOptions, FixedWindowStrategyState } from "./types";
 
 @Injectable()
-export class FixedWindowStrategy implements ILimiterStrategy {
+export class FixedWindowStrategy implements ILimiterStrategy<FixedWindowStrategyOptions> {
     public constructor(@Inject(STORAGE_INJECTION_TOKEN) private readonly storage: ILimiterStorage<FixedWindowStrategyState>) {}
 
     public async check(key: Key, options: LimiterOptions) {
