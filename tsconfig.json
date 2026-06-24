@@ -27,6 +27,7 @@
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false,
 
+        // For NestJS
         "allowSyntheticDefaultImports": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
