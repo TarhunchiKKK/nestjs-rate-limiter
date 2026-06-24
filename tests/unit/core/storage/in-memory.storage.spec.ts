@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { InMemoryStorage } from "../../../../src/core";
-import type { LimiterState } from "../../../../src/core/types";
+import { InMemoryStorage } from "../../../../src/core/storage";
+import type { LimiterState } from "../../../../src/core/strategies";
 
 describe("InMemoryStorage", () => {
-    let storage: InMemoryStorage;
+    let storage: InMemoryStorage<LimiterState>;
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({

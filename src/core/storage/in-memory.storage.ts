@@ -1,15 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import type { Key } from "../../shared/keys";
-import type { LimiterState } from "../types";
 import type { ILimiterStorage } from "./storage.interface";
 
 @Injectable()
-export class InMemoryStorage implements ILimiterStorage {
+export class InMemoryStorage<State> implements ILimiterStorage<State> {
     public readonly type = "in-memory";
 
-    private readonly map = new Map<Key, LimiterState>();
+    private readonly map = new Map<Key, State>();
 
-    public get<State extends LimiterState = LimiterState>(key: Key) {
+    public get(key: Key) {
         const state = this.map.get(key);
 
         if (!state) {
@@ -19,7 +18,7 @@ export class InMemoryStorage implements ILimiterStorage {
         return state as State;
     }
 
-    public set<State extends LimiterState>(key: Key, state: State) {
+    public set(key: Key, state: State) {
         this.map.set(key, state);
     }
 }

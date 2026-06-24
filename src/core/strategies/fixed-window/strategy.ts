@@ -1,13 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { STORAGE_INJECTION_TOKEN } from "../../nestjs/di/di.constants";
-import type { Key } from "../../shared/keys";
-import type { ILimiterStorage } from "../storage";
-import type { FixedWindowStrategyOptions, FixedWindowStrategyState, LimiterOptions } from "../types";
-import type { ILimiterStrategy } from "./strategy.interface";
+import { STORAGE_INJECTION_TOKEN } from "../../../di/di.constants";
+import type { Key } from "../../../shared/keys";
+import type { ILimiterStorage } from "../../storage";
+import type { LimiterOptions } from "..";
+import type { ILimiterStrategy } from "../strategy.interface";
+import type { FixedWindowStrategyOptions, FixedWindowStrategyState } from "./types";
 
 @Injectable()
-export class FixedWindowStrategy implements ILimiterStrategy {
-    public constructor(@Inject(STORAGE_INJECTION_TOKEN) private readonly storage: ILimiterStorage) { }
+export class FixedWindowStrategy implements ILimiterStrategy<FixedWindowStrategyOptions> {
+    public constructor(@Inject(STORAGE_INJECTION_TOKEN) private readonly storage: ILimiterStorage<FixedWindowStrategyState>) {}
 
     public async check(key: Key, options: LimiterOptions) {
         if (options.strategy !== "fixed-window") {
@@ -17,7 +18,7 @@ export class FixedWindowStrategy implements ILimiterStrategy {
         const state = await this.getState(key, options);
 
         if (state.count < options.limit) {
-            await this.storage.set<FixedWindowStrategyState>(key, {
+            await this.storage.set(key, {
                 ...state,
                 count: state.count + 1
             });
@@ -29,7 +30,7 @@ export class FixedWindowStrategy implements ILimiterStrategy {
     }
 
     private async getState(key: Key, options: FixedWindowStrategyOptions) {
-        const state = await this.storage.get<FixedWindowStrategyState>(key);
+        const state = await this.storage.get(key);
 
         if (!state || state.resetTime < Date.now()) {
             const defaultState = this.getDefaultState(options);

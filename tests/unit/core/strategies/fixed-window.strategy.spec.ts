@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { FixedWindowStrategy } from "../../../../src/core";
-import type { FixedWindowStrategyState, LimiterOptions } from "../../../../src/core/types";
-import { STORAGE_INJECTION_TOKEN } from "../../../../src/nestjs/di/di.constants";
+import { FixedWindowStrategy, type LimiterOptions, type LimiterState } from "../../../../src/core/strategies";
+import type { FixedWindowStrategyState } from "../../../../src/core/strategies/fixed-window/types";
+import { STORAGE_INJECTION_TOKEN } from "../../../../src/di/di.constants";
 import { clearMock, createStorageMock, MS_IN_DAY, TOMORROW, YESTERDAY } from "../../../mocks";
 
 describe("FixedWindowStrategy", () => {
     let strategy: FixedWindowStrategy;
-    const storageMock = createStorageMock();
+    const storageMock = createStorageMock<LimiterState>();
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -40,7 +40,7 @@ describe("FixedWindowStrategy", () => {
                 resetTime: TOMORROW
             };
 
-            storageMock.get.mockResolvedValue(state as never);
+            storageMock.get.mockReturnValue(state);
 
             const result = await strategy.check(key, options);
 
@@ -59,7 +59,7 @@ describe("FixedWindowStrategy", () => {
                 resetTime: YESTERDAY
             };
 
-            storageMock.get.mockResolvedValue(state as never);
+            storageMock.get.mockReturnValue(state);
 
             const result = await strategy.check(key, options);
 
@@ -74,7 +74,7 @@ describe("FixedWindowStrategy", () => {
                 ttl: MS_IN_DAY
             };
 
-            storageMock.get.mockResolvedValue(null as never);
+            storageMock.get.mockReturnValue(null);
 
             const result = await strategy.check(key, options);
 
@@ -95,8 +95,7 @@ describe("FixedWindowStrategy", () => {
                 resetTime: TOMORROW
             };
 
-            // FIX: typing for storageMock.get
-            storageMock.get.mockResolvedValue(state as never);
+            storageMock.get.mockReturnValue(state);
 
             const result = await strategy.check(key, options);
 
@@ -115,7 +114,7 @@ describe("FixedWindowStrategy", () => {
                 resetTime: TOMORROW
             };
 
-            storageMock.get.mockResolvedValue(state as never);
+            storageMock.get.mockReturnValue(state);
 
             const result = await strategy.check(key, options);
 
