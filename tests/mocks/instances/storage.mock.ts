@@ -3,8 +3,8 @@ import type { ILimiterStorage } from "../../../src/core/storage";
 
 export function createStorageMock<State>() {
     return {
-        type: mock((() => {}) as any),
-        get: mock<ILimiterStorage<State>["get"]>((() => {}) as any),
-        set: mock<ILimiterStorage<State>["set"]>((() => {}) as any)
+        type: "mock",
+        get: mock<ILimiterStorage<State>["get"]>(() => null),
+        set: mock<ILimiterStorage<State>["set"]>(() => {})
     } satisfies Record<keyof ILimiterStorage<State>, unknown>;
 }

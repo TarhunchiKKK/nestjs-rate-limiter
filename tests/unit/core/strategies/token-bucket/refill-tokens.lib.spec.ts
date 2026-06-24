@@ -1,6 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import { refillTokens } from "../../../../../src/core/strategies/token-bucket/lib";
 import type { TokenBucketStrategyOptions, TokenBucketStrategyState } from "../../../../../src/core/strategies/token-bucket/types";
+import { MS_IN_MINUTE } from "../../../../mocks";
 
 describe("refillTokens", () => {
     it("basic case", () => {
@@ -8,13 +9,13 @@ describe("refillTokens", () => {
 
         const state: TokenBucketStrategyState = {
             tokens: 10,
-            lastRefilled: Date.now() - 1 * 1000 // one minute ago
+            lastRefilled: Date.now() - MS_IN_MINUTE // one minute ago
         };
 
         const options: TokenBucketStrategyOptions = {
             strategy: "token-bucket",
             capacity: 100,
-            refillRate: refillTokensPerMinute / 1000 // 3 tokens per minute
+            refillRate: refillTokensPerMinute / MS_IN_MINUTE // 3 tokens per minute
         };
 
         const result = refillTokens(state, options);
@@ -26,13 +27,13 @@ describe("refillTokens", () => {
     it("tokens count is more than capacity", () => {
         const state: TokenBucketStrategyState = {
             tokens: 9,
-            lastRefilled: Date.now() - 1 * 1000 // one minute ago
+            lastRefilled: Date.now() - MS_IN_MINUTE // one minute ago
         };
 
         const options: TokenBucketStrategyOptions = {
             strategy: "token-bucket",
             capacity: 10,
-            refillRate: 3 / 1000 // 3 tokens per minute
+            refillRate: 3 / MS_IN_MINUTE // 3 tokens per minute
         };
 
         const result = refillTokens(state, options);
@@ -43,17 +44,33 @@ describe("refillTokens", () => {
     it("negative/zero elapsed time", () => {
         const state: TokenBucketStrategyState = {
             tokens: 9,
-            lastRefilled: Date.now() + 1 * 1000 // one minute after
+            lastRefilled: Date.now() + MS_IN_MINUTE // one minute after
         };
 
         const options: TokenBucketStrategyOptions = {
             strategy: "token-bucket",
             capacity: 10,
-            refillRate: 3 / 1000 // 3 tokens per minute
+            refillRate: 3 / MS_IN_MINUTE // 3 tokens per minute
         };
 
         const result = refillTokens(state, options);
 
         expect(result.currentTokens).toBe(state.tokens);
+    });
+
+    it("zero tokens state", () => {
+        const state: TokenBucketStrategyState = {
+            tokens: 0,
+            lastRefilled: Date.now() - MS_IN_MINUTE
+        };
+        const options: TokenBucketStrategyOptions = {
+            strategy: "token-bucket",
+            capacity: 10,
+            refillRate: 1 / (2 * MS_IN_MINUTE) // one per 2 minutes
+        };
+
+        const result = refillTokens(state, options);
+
+        expect(result.currentTokens).toBeLessThan(1);
     });
 });

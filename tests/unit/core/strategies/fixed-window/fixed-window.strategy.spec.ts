@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { FixedWindowStrategy, type LimiterOptions, type LimiterState } from "../../../../../src/core/strategies";
+import { FixedWindowStrategy, type LimiterOptions } from "../../../../../src/core/strategies";
 import type { FixedWindowStrategyState } from "../../../../../src/core/strategies/fixed-window/types";
 import { STORAGE_INJECTION_TOKEN } from "../../../../../src/di/di.constants";
 import { clearMock, createStorageMock, MS_IN_DAY, TOMORROW, YESTERDAY } from "../../../../mocks";
 
 describe("FixedWindowStrategy", () => {
     let strategy: FixedWindowStrategy;
-    const storageMock = createStorageMock<LimiterState>();
+    const storageMock = createStorageMock<FixedWindowStrategyState>();
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -120,9 +120,5 @@ describe("FixedWindowStrategy", () => {
 
             expect(result).toBeFalse();
         });
-    });
-
-    describe("receive incorrect options", () => {
-        // TODO: implement after another state creation
     });
 });
