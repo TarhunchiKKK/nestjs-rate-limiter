@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { InMemoryStorage } from "../../../../src/core";
+import { InMemoryStorage } from "../../../../src/core/storage";
 import type { LimiterState } from "../../../../src/core/types";
 
 describe("InMemoryStorage", () => {

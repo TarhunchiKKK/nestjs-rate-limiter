@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { FixedWindowStrategy } from "../../../../src/core";
+import { FixedWindowStrategy } from "../../../../src/core/strategies";
 import type { FixedWindowStrategyState, LimiterOptions } from "../../../../src/core/types";
-import { STORAGE_INJECTION_TOKEN } from "../../../../src/nestjs/di/di.constants";
+import { STORAGE_INJECTION_TOKEN } from "../../../../src/di/di.constants";
 import { clearMock, createStorageMock, MS_IN_DAY, TOMORROW, YESTERDAY } from "../../../mocks";
 
 describe("FixedWindowStrategy", () => {

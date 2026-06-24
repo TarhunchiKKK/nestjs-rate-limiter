@@ -1,2 +1,1 @@
-export * from "./core";
-export * from "./nestjs";
+export { RateLimiterModule } from "./rate-limiter.module";
