@@ -1,5 +1,5 @@
 export type FixedWindowOptions = {
-    strategy: "fixed-window"
+    strategy: "fixed-window";
     limit: number;
     ttl: number;
 };

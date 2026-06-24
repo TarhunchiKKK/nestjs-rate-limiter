@@ -9,7 +9,7 @@ export class FixedWindowInMemoryExecutor implements IExecutor<FixedWindowOptions
     public readonly strategy: Strategies = "fixed-window";
     public readonly storageType: StorageTypes = "in-memory";
 
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, FixedWindowState>) {}
+    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, FixedWindowState>) { }
 
     public async check(key: Key, options: FixedWindowOptions) {
         const now = Date.now();
