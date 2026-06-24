@@ -7,7 +7,7 @@ import type { ILimiterStrategy } from "./strategy.interface";
 
 @Injectable()
 export class FixedWindowStrategy implements ILimiterStrategy {
-    public constructor(@Inject(STORAGE_INJECTION_TOKEN) private readonly storage: ILimiterStorage) {}
+    public constructor(@Inject(STORAGE_INJECTION_TOKEN) private readonly storage: ILimiterStorage<FixedWindowStrategyState>) {}
 
     public async check(key: Key, options: LimiterOptions) {
         if (options.strategy !== "fixed-window") {
@@ -17,7 +17,7 @@ export class FixedWindowStrategy implements ILimiterStrategy {
         const state = await this.getState(key, options);
 
         if (state.count < options.limit) {
-            await this.storage.set<FixedWindowStrategyState>(key, {
+            await this.storage.set(key, {
                 ...state,
                 count: state.count + 1
             });
@@ -29,7 +29,7 @@ export class FixedWindowStrategy implements ILimiterStrategy {
     }
 
     private async getState(key: Key, options: FixedWindowStrategyOptions) {
-        const state = await this.storage.get<FixedWindowStrategyState>(key);
+        const state = await this.storage.get(key);
 
         if (!state || state.resetTime < Date.now()) {
             const defaultState = this.getDefaultState(options);

@@ -4,7 +4,7 @@ import { InMemoryStorage } from "../../../../src/core/storage";
 import type { LimiterState } from "../../../../src/core/types";
 
 describe("InMemoryStorage", () => {
-    let storage: InMemoryStorage;
+    let storage: InMemoryStorage<LimiterState>;
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({

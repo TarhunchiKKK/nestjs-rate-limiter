@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
-import { FixedWindowStrategy, InMemoryStorage } from "./core";
+import { InMemoryStorage } from "./core/storage";
+import { FixedWindowStrategy } from "./core/strategies";
 import { STORAGE_INJECTION_TOKEN } from "./di/di.constants";
 
 @Module({
