@@ -1,5 +1,6 @@
 import { Inject } from "@nestjs/common";
-import { STORAGE_TOKEN } from "../di";
+
+export const STORAGE_TOKEN = Symbol();
 
 export function InjectStorage() {
     return Inject(STORAGE_TOKEN);

@@ -1,1 +1,1 @@
-export * from "./tokens";
+export { InjectStorage, STORAGE_TOKEN } from "./storage.di";
