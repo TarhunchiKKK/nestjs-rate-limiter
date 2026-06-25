@@ -1,14 +1,15 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject } from "@nestjs/common";
 import type Redis from "ioredis";
+import { Executor } from "../../decorators";
 import { REDIS_STORAGE_TOKEN } from "../../di/di.constants";
 import type { Key } from "../../shared/keys";
 import { getRedisKey } from "../../shared/redis";
 import type { IExecutor } from "../executor.interface";
 import type { LeakyBucketOptions } from "./types";
 
-@Injectable()
+@Executor({ strategy: "leaky-bucket", storage: "redis" })
 export class LeakyBucketRedisExecutor implements IExecutor<LeakyBucketOptions> {
     private readonly luaScript: string;
 
