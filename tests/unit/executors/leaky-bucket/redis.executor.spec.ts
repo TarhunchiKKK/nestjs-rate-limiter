@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { REDIS_STORAGE_TOKEN } from "../../../../src/di/di.constants";
+import { STORAGE_TOKEN } from "../../../../src/di";
 import { LeakyBucketRedisExecutor } from "../../../../src/executors";
 import type { LeakyBucketOptions } from "../../../../src/executors/leaky-bucket/types";
 import { clearMock, createRedisMock, MS_IN_MINUTE } from "../../../mocks";
@@ -14,7 +14,7 @@ describe("LeakyBucketRedisExecutor", () => {
             providers: [
                 LeakyBucketRedisExecutor,
                 {
-                    provide: REDIS_STORAGE_TOKEN,
+                    provide: STORAGE_TOKEN,
                     useValue: redisMock
                 }
             ]
@@ -29,8 +29,7 @@ describe("LeakyBucketRedisExecutor", () => {
 
     it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: LeakyBucketOptions = {
-            strategy: "leaky-bucket",
+        const options: LeakyBucketOptions["redis"] = {
             capacity: 10,
             leakRate: 1 / MS_IN_MINUTE,
             ttl: 5 * MS_IN_MINUTE
@@ -45,8 +44,7 @@ describe("LeakyBucketRedisExecutor", () => {
 
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: LeakyBucketOptions = {
-            strategy: "leaky-bucket",
+        const options: LeakyBucketOptions["redis"] = {
             capacity: 10,
             leakRate: 1 / MS_IN_MINUTE,
             ttl: 5 * MS_IN_MINUTE

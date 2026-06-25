@@ -1,14 +1,15 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { IN_MEMORY_STORAGE_TOKEN } from "../../di/di.constants";
+import { Executor, InjectStorage } from "../../decorators";
 import type { Key } from "../../shared/keys";
 import type { IExecutor } from "../executor.interface";
 import type { FixedWindowOptions, FixedWindowState } from "./types";
 
-@Injectable()
-export class FixedWindowInMemoryExecutor implements IExecutor<FixedWindowOptions> {
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, FixedWindowState>) {}
+type Options = FixedWindowOptions["in-memory"];
 
-    public check(key: Key, options: FixedWindowOptions) {
+@Executor({ strategy: "fixed-window", storage: "in-memory" })
+export class FixedWindowInMemoryExecutor implements IExecutor<Options> {
+    public constructor(@InjectStorage() private readonly storage: Map<Key, FixedWindowState>) {}
+
+    public check(key: Key, options: Options) {
         const now = Date.now();
 
         let state = this.storage.get(key);

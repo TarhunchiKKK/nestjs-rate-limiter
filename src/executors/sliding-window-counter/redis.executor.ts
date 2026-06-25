@@ -1,23 +1,24 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { Inject, Injectable } from "@nestjs/common";
 import type Redis from "ioredis";
-import { REDIS_STORAGE_TOKEN } from "../../di/di.constants";
+import { Executor, InjectStorage } from "../../decorators";
 import type { Key } from "../../shared/keys";
 import { getRedisKey } from "../../shared/redis";
 import type { IExecutor } from "../executor.interface";
 import type { SlidingWindowCounterOptions } from "./types";
 
-@Injectable()
-export class SlidingWindowCounterRedisExecutor implements IExecutor<SlidingWindowCounterOptions> {
+type Options = SlidingWindowCounterOptions["redis"];
+
+@Executor({ strategy: "sliding-window-counter", storage: "redis" })
+export class SlidingWindowCounterRedisExecutor implements IExecutor<Options> {
     private readonly luaScript: string;
 
-    public constructor(@Inject(REDIS_STORAGE_TOKEN) private readonly redis: Redis) {
+    public constructor(@InjectStorage() private readonly redis: Redis) {
         const luaScriptPath = path.join(__dirname, "../../../lua/sliding-window-counter.lua");
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
-    public async check(key: Key, options: SlidingWindowCounterOptions) {
+    public async check(key: Key, options: Options) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
         const startTime = Date.now();
