@@ -1,18 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
+import { SlidingWindowCounterRedisExecutor } from "../../../../src/executors";
+import { clearMock, createRedisMock, MS_IN_MINUTE } from "../../../mocks";
 import { REDIS_STORAGE_TOKEN } from "../../../../src/di/di.constants";
-import { TokenBucketRedisExecutor } from "../../../../src/executors";
-import type { TokenBucketOptions } from "../../../../src/executors/token-bucket/types";
-import { clearMock, createRedisMock, MS_IN_DAY, MS_IN_MINUTE } from "../../../mocks";
+import type { SlidingWindowCounterOptions } from "../../../../src/executors/sliding-window-counter/types";
 
-describe("TokenBucketRedisExecutor", () => {
-    let executor: TokenBucketRedisExecutor;
+describe("SlidingWindowCounterRedisExecutor", () => {
+    let executor: SlidingWindowCounterRedisExecutor;
     const redisMock = createRedisMock();
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
             providers: [
-                TokenBucketRedisExecutor,
+                SlidingWindowCounterRedisExecutor,
                 {
                     provide: REDIS_STORAGE_TOKEN,
                     useValue: redisMock
@@ -20,7 +20,7 @@ describe("TokenBucketRedisExecutor", () => {
             ]
         }).compile();
 
-        executor = module.get(TokenBucketRedisExecutor);
+        executor = module.get(SlidingWindowCounterRedisExecutor);
     });
 
     afterEach(() => {
@@ -29,11 +29,10 @@ describe("TokenBucketRedisExecutor", () => {
 
     it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: TokenBucketOptions = {
-            strategy: "token-bucket",
-            capacity: 10,
-            refillRate: 1 / MS_IN_MINUTE,
-            ttl: MS_IN_DAY
+        const options: SlidingWindowCounterOptions = {
+            strategy: "sliding-window-counter",
+            limit: 10,
+            windowMs: MS_IN_MINUTE
         };
 
         redisMock.eval.mockResolvedValue(1);
@@ -45,11 +44,10 @@ describe("TokenBucketRedisExecutor", () => {
 
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: TokenBucketOptions = {
-            strategy: "token-bucket",
-            capacity: 10,
-            refillRate: 1 / MS_IN_MINUTE,
-            ttl: MS_IN_DAY
+        const options: SlidingWindowCounterOptions = {
+            strategy: "sliding-window-counter",
+            limit: 10,
+            windowMs: MS_IN_MINUTE
         };
 
         redisMock.eval.mockResolvedValue(0);
