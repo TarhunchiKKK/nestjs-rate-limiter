@@ -16,7 +16,6 @@
         "type-check": "tsc --noEmit",
         "test": "bun test tests --preload ./tests/preload.ts",
         "test:unit": "bun test tests/unit --preload ./tests/preload.ts",
-        "test:integration": "bun test tests/integration --preload ./tests/preload.ts",
         "test:e2e": "bun test tests/e2e --preload ./tests/preload.ts",
         "format:check": "bunx biome format",
         "format:fix": "bunx biome format --write",

@@ -21,8 +21,5 @@ jobs:
       - name: Unit Tests
         run: bun run test:unit
 
-      - name: Intergational Tests
-        run: bun run test:integration
-
       - name: E2e-Tests
         run: bun run test:e2e

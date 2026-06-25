@@ -10,8 +10,5 @@ export type BaseOptions = {
 };
 
 export interface IExecutor<Options> {
-    readonly strategy: Strategies;
-    readonly storageType: StorageTypes;
-
     check(key: Key, options: Options): Promise<boolean>;
 }
