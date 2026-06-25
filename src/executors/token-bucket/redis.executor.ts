@@ -13,19 +13,20 @@ export class TokenBucketRedisExecutor implements IExecutor<TokenBucketOptions> {
     private readonly luaScript: string;
 
     public constructor(@Inject(REDIS_STORAGE_TOKEN) private readonly redis: Redis) {
-        const luaScriptPath = path.join(__dirname, "../../../lua/fixed-window.lua");
+        const luaScriptPath = path.join(__dirname, "../../../lua/token-bucket.lua");
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
     public async check(key: Key, options: TokenBucketOptions) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
+        const startTime = Date.now()
 
         const result = await this.redis.eval(
             this.luaScript,
             keysCount,
             redisKey,
-            Date.now().toString(),
+            startTime.toString(),
             options.capacity.toString(),
             options.refillRate.toString(),
             options.ttl.toString()

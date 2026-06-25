@@ -13,15 +13,16 @@ export class SlidingWindowCounterRedisExecutor implements IExecutor<SlidingWindo
     private readonly luaScript: string;
 
     public constructor(@Inject(REDIS_STORAGE_TOKEN) private readonly redis: Redis) {
-        const luaScriptPath = path.join(__dirname, "../../../lua/fixed-window.lua");
+        const luaScriptPath = path.join(__dirname, "../../../lua/sliding-window-counter.lua");
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
     public async check(key: Key, options: SlidingWindowCounterOptions) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
+        const startTime = Date.now()
 
-        const result = await this.redis.eval(this.luaScript, redisKey, keysCount, Date.now().toString(), options.windowMs.toString(), options.limit.toString());
+        const result = await this.redis.eval(this.luaScript, redisKey, keysCount, startTime.toString(), options.windowMs.toString(), options.limit.toString());
 
         return result === 1;
     }

@@ -21,7 +21,7 @@ export class FixedWindowRedisExecutor implements IExecutor<FixedWindowOptions> {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
 
-        const currentCount = (await this.redis.eval(this.luaScript, keysCount, redisKey, options.ttl)) as number;
+        const currentCount = (await this.redis.eval(this.luaScript, keysCount, redisKey, options.ttl.toString())) as number;
 
         return currentCount < options.limit;
     }
