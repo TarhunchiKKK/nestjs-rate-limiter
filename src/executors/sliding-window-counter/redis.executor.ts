@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { Inject, Injectable } from "@nestjs/common";
-import type { IExecutor, StorageTypes, Strategies } from "../executor.interface";
+import type { IExecutor } from "../executor.interface";
 import type { SlidingWindowCounterOptions } from "./types";
 import type { Key } from "../../shared/keys";
 import { REDIS_STORAGE_TOKEN } from "../../di/di.constants";
@@ -10,8 +10,6 @@ import { getRedisKey } from "../../shared/redis";
 
 @Injectable()
 export class SlidingWindowCounterRedisExecutor implements IExecutor<SlidingWindowCounterOptions> {
-    public readonly strategy: Strategies = "sliding-window-counter";
-    public readonly storageType: StorageTypes = "redis";
     private readonly luaScript: string;
 
     public constructor(@Inject(REDIS_STORAGE_TOKEN) private readonly redis: Redis) {

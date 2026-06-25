@@ -5,13 +5,11 @@ import type Redis from "ioredis";
 import { REDIS_STORAGE_TOKEN } from "../../di/di.constants";
 import type { Key } from "../../shared/keys";
 import { getRedisKey } from "../../shared/redis";
-import type { IExecutor, StorageTypes, Strategies } from "../executor.interface";
+import type { IExecutor } from "../executor.interface";
 import type { TokenBucketOptions } from "./types";
 
 @Injectable()
 export class TokenBucketRedisExecutor implements IExecutor<TokenBucketOptions> {
-    public readonly strategy: Strategies = "token-bucket";
-    public readonly storageType: StorageTypes = "redis";
     private readonly luaScript: string;
 
     public constructor(@Inject(REDIS_STORAGE_TOKEN) private readonly redis: Redis) {
