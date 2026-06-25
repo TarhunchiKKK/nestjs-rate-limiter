@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { REDIS_STORAGE_TOKEN } from "../../../../src/di/di.constants";
+import { REDIS_STORAGE_TOKEN } from "../../../../src/di/tokens";
 import { SlidingWindowCounterRedisExecutor } from "../../../../src/executors";
 import type { SlidingWindowCounterOptions } from "../../../../src/executors/sliding-window-counter/types";
 import { clearMock, createRedisMock, MS_IN_MINUTE } from "../../../mocks";

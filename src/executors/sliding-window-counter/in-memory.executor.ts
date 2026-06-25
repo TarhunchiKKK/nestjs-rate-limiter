@@ -1,13 +1,11 @@
-import { Inject } from "@nestjs/common";
-import { Executor } from "../../decorators";
-import { IN_MEMORY_STORAGE_TOKEN } from "../../di/di.constants";
+import { Executor, InjectStorage } from "../../decorators";
 import type { Key } from "../../shared/keys";
 import type { IExecutor } from "../executor.interface";
 import type { SlidingWindowCounterOptions, SlidingWindowCounterState } from "./types";
 
 @Executor({ strategy: "sliding-window-counter", storage: "in-memory" })
 export class SlidingWindowCounterInMemoryExecutor implements IExecutor<SlidingWindowCounterOptions> {
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, SlidingWindowCounterState>) {}
+    public constructor(@InjectStorage() private readonly storage: Map<Key, SlidingWindowCounterState>) {}
 
     public check(key: Key, options: SlidingWindowCounterOptions) {
         const startTime = Date.now();

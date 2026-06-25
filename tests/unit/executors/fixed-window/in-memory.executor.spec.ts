@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { IN_MEMORY_STORAGE_TOKEN } from "../../../../src/di/di.constants";
+import { IN_MEMORY_STORAGE_TOKEN } from "../../../../src/di/tokens";
 import { FixedWindowInMemoryExecutor } from "../../../../src/executors";
 import type { FixedWindowOptions, FixedWindowState } from "../../../../src/executors/fixed-window/types";
 import { clearMock, createInMemoryStorageMock, MS_IN_DAY, TOMORROW, YESTERDAY } from "../../../mocks";

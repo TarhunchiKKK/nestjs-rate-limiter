@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { IN_MEMORY_STORAGE_TOKEN } from "../../../../src/di/di.constants";
+import { IN_MEMORY_STORAGE_TOKEN } from "../../../../src/di/tokens";
 import { TokenBucketInMemoryExecutor } from "../../../../src/executors";
 import type { TokenBucketOptions, TokenBucketState } from "../../../../src/executors/token-bucket/types";
 import { clearMock, createInMemoryStorageMock, MS_IN_DAY, MS_IN_MINUTE } from "../../../mocks";

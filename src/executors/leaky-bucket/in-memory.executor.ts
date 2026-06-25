@@ -1,13 +1,11 @@
-import { Inject } from "@nestjs/common";
-import { Executor } from "../../decorators";
-import { IN_MEMORY_STORAGE_TOKEN } from "../../di/di.constants";
+import { Executor, InjectStorage } from "../../decorators";
 import type { Key } from "../../shared/keys";
 import type { IExecutor } from "../executor.interface";
 import type { LeakyBucketOptions, LeakyBucketState } from "./types";
 
 @Executor({ strategy: "leaky-bucket", storage: "in-memory" })
 export class LeakyBucketInMemoryExecutor implements IExecutor<LeakyBucketOptions> {
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, LeakyBucketState>) {}
+    public constructor(@InjectStorage() private readonly storage: Map<Key, LeakyBucketState>) {}
 
     public check(key: Key, options: LeakyBucketOptions) {
         const startTime = Date.now();

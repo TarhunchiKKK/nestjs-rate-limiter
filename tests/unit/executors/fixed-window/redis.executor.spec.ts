@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { REDIS_STORAGE_TOKEN } from "../../../../src/di/di.constants";
+import { REDIS_STORAGE_TOKEN } from "../../../../src/di/tokens";
 import { FixedWindowRedisExecutor } from "../../../../src/executors";
 import type { FixedWindowOptions } from "../../../../src/executors/fixed-window/types";
 import { clearMock, createRedisMock, MS_IN_DAY } from "../../../mocks";

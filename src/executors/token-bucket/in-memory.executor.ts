@@ -1,13 +1,11 @@
-import { Inject } from "@nestjs/common";
-import { Executor } from "../../decorators";
-import { IN_MEMORY_STORAGE_TOKEN } from "../../di/di.constants";
+import { Executor, InjectStorage } from "../../decorators";
 import type { Key } from "../../shared/keys";
 import type { IExecutor } from "../executor.interface";
 import type { TokenBucketOptions, TokenBucketState } from "./types";
 
 @Executor({ strategy: "token-bucket", storage: "in-memory" })
 export class TokenBucketInMemoryExecutor implements IExecutor<TokenBucketOptions> {
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, TokenBucketState>) {}
+    public constructor(@InjectStorage() private readonly storage: Map<Key, TokenBucketState>) {}
 
     public check(key: Key, options: TokenBucketOptions) {
         const state = this.storage.get(key);
