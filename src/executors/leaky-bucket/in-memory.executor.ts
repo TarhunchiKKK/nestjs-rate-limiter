@@ -3,11 +3,13 @@ import type { Key } from "../../shared/keys";
 import type { IExecutor } from "../executor.interface";
 import type { LeakyBucketOptions, LeakyBucketState } from "./types";
 
+type Options = LeakyBucketOptions["in-memory"];
+
 @Executor({ strategy: "leaky-bucket", storage: "in-memory" })
-export class LeakyBucketInMemoryExecutor implements IExecutor<LeakyBucketOptions> {
+export class LeakyBucketInMemoryExecutor implements IExecutor<Options> {
     public constructor(@InjectStorage() private readonly storage: Map<Key, LeakyBucketState>) {}
 
-    public check(key: Key, options: LeakyBucketOptions) {
+    public check(key: Key, options: Options) {
         const startTime = Date.now();
 
         const state = this.storage.get(key);
@@ -34,7 +36,7 @@ export class LeakyBucketInMemoryExecutor implements IExecutor<LeakyBucketOptions
         return true;
     }
 
-    private getCurrentWater(state: LeakyBucketState, options: LeakyBucketOptions, startTime: number) {
+    private getCurrentWater(state: LeakyBucketState, options: Options, startTime: number) {
         const elapsed = startTime - state.lastLeaked;
 
         const leakedWater = elapsed * options.leakRate;

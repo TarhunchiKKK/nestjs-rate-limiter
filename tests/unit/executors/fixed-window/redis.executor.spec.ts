@@ -28,42 +28,28 @@ describe("FixedWindowRedisExecutor", () => {
         clearMock(redisMock);
     });
 
-    it("should receive count < limit", async () => {
+    it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: FixedWindowOptions = {
+        const options: FixedWindowOptions["redis"] = {
             limit: 100,
             ttl: MS_IN_DAY
         };
 
-        redisMock.eval.mockResolvedValue(options.limit - 1);
+        redisMock.eval.mockResolvedValue(1);
 
         const result = await executor.check(key, options);
 
         expect(result).toBeTrue();
     });
 
-    it("should receive count === limit", async () => {
+    it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: FixedWindowOptions = {
+        const options: FixedWindowOptions["redis"] = {
             limit: 100,
             ttl: MS_IN_DAY
         };
 
-        redisMock.eval.mockResolvedValue(options.limit);
-
-        const result = await executor.check(key, options);
-
-        expect(result).toBeFalse();
-    });
-
-    it("should receive count > limit", async () => {
-        const key = crypto.randomUUID();
-        const options: FixedWindowOptions = {
-            limit: 100,
-            ttl: MS_IN_DAY
-        };
-
-        redisMock.eval.mockResolvedValue(options.limit + 1);
+        redisMock.eval.mockResolvedValue(0);
 
         const result = await executor.check(key, options);
 

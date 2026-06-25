@@ -29,7 +29,7 @@ describe("LeakyBucketRedisExecutor", () => {
 
     it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: LeakyBucketOptions = {
+        const options: LeakyBucketOptions["redis"] = {
             capacity: 10,
             leakRate: 1 / MS_IN_MINUTE,
             ttl: 5 * MS_IN_MINUTE
@@ -44,7 +44,7 @@ describe("LeakyBucketRedisExecutor", () => {
 
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: LeakyBucketOptions = {
+        const options: LeakyBucketOptions["redis"] = {
             capacity: 10,
             leakRate: 1 / MS_IN_MINUTE,
             ttl: 5 * MS_IN_MINUTE

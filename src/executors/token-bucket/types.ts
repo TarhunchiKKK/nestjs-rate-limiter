@@ -1,7 +1,13 @@
 export type TokenBucketOptions = {
-    capacity: number;
-    refillRate: number;
-    ttl: number;
+    "in-memory": {
+        capacity: number;
+        refillRate: number;
+    };
+    redis: {
+        capacity: number;
+        refillRate: number;
+        ttl: number;
+    };
 };
 
 export type TokenBucketState = {

@@ -29,7 +29,7 @@ describe("TokenBucketRedisExecutor", () => {
 
     it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: TokenBucketOptions = {
+        const options: TokenBucketOptions["redis"] = {
             capacity: 10,
             refillRate: 1 / MS_IN_MINUTE,
             ttl: MS_IN_DAY
@@ -44,7 +44,7 @@ describe("TokenBucketRedisExecutor", () => {
 
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: TokenBucketOptions = {
+        const options: TokenBucketOptions["redis"] = {
             capacity: 10,
             refillRate: 1 / MS_IN_MINUTE,
             ttl: MS_IN_DAY

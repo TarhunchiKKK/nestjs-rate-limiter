@@ -8,8 +8,10 @@ import { generateSalt } from "../../shared/salt";
 import type { IExecutor } from "../executor.interface";
 import type { SlidingWindowLogOptions } from "./types";
 
+type Options = SlidingWindowLogOptions["redis"];
+
 @Executor({ strategy: "sliding-window-log", storage: "redis" })
-export class SlidingWindowLogRedisExecutor implements IExecutor<SlidingWindowLogOptions> {
+export class SlidingWindowLogRedisExecutor implements IExecutor<Options> {
     private readonly luaScript: string;
 
     public constructor(@InjectStorage() private readonly redis: Redis) {
@@ -17,7 +19,7 @@ export class SlidingWindowLogRedisExecutor implements IExecutor<SlidingWindowLog
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
-    public async check(key: Key, options: SlidingWindowLogOptions) {
+    public async check(key: Key, options: Options) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
 

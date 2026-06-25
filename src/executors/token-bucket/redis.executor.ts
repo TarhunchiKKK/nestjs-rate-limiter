@@ -7,8 +7,10 @@ import { getRedisKey } from "../../shared/redis";
 import type { IExecutor } from "../executor.interface";
 import type { TokenBucketOptions } from "./types";
 
+type Options = TokenBucketOptions["redis"];
+
 @Executor({ strategy: "token-bucket", storage: "redis" })
-export class TokenBucketRedisExecutor implements IExecutor<TokenBucketOptions> {
+export class TokenBucketRedisExecutor implements IExecutor<Options> {
     private readonly luaScript: string;
 
     public constructor(@InjectStorage() private readonly redis: Redis) {
@@ -16,7 +18,7 @@ export class TokenBucketRedisExecutor implements IExecutor<TokenBucketOptions> {
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
-    public async check(key: Key, options: TokenBucketOptions) {
+    public async check(key: Key, options: Options) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
         const startTime = Date.now();
