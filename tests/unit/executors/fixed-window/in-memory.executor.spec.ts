@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { IN_MEMORY_STORAGE_TOKEN } from "../../../../src/di/tokens";
+import { STORAGE_TOKEN } from "../../../../src/di";
 import { FixedWindowInMemoryExecutor } from "../../../../src/executors";
 import type { FixedWindowOptions, FixedWindowState } from "../../../../src/executors/fixed-window/types";
 import { clearMock, createInMemoryStorageMock, MS_IN_DAY, TOMORROW, YESTERDAY } from "../../../mocks";
@@ -14,7 +14,7 @@ describe("FixedWindowInMemoryExecutor", () => {
             providers: [
                 FixedWindowInMemoryExecutor,
                 {
-                    provide: IN_MEMORY_STORAGE_TOKEN,
+                    provide: STORAGE_TOKEN,
                     useValue: storageMock
                 }
             ]
@@ -32,7 +32,6 @@ describe("FixedWindowInMemoryExecutor", () => {
         it("should find valid state", async () => {
             const key = crypto.randomUUID();
             const options: FixedWindowOptions = {
-                strategy: "fixed-window",
                 limit: 100,
                 ttl: MS_IN_DAY
             };
@@ -51,7 +50,6 @@ describe("FixedWindowInMemoryExecutor", () => {
         it("should find state with resetTime left", async () => {
             const key = crypto.randomUUID();
             const options: FixedWindowOptions = {
-                strategy: "fixed-window",
                 limit: 100,
                 ttl: MS_IN_DAY
             };
@@ -70,7 +68,6 @@ describe("FixedWindowInMemoryExecutor", () => {
         it("should not found state", async () => {
             const key = crypto.randomUUID();
             const options: FixedWindowOptions = {
-                strategy: "fixed-window",
                 limit: 100,
                 ttl: MS_IN_DAY
             };
@@ -87,7 +84,6 @@ describe("FixedWindowInMemoryExecutor", () => {
         it("should found state with limit === count", async () => {
             const key = crypto.randomUUID();
             const options: FixedWindowOptions = {
-                strategy: "fixed-window",
                 limit: 10,
                 ttl: MS_IN_DAY
             };
@@ -106,7 +102,6 @@ describe("FixedWindowInMemoryExecutor", () => {
         it("should found state with limit <= count", async () => {
             const key = crypto.randomUUID();
             const options: FixedWindowOptions = {
-                strategy: "fixed-window",
                 limit: 10,
                 ttl: MS_IN_DAY
             };

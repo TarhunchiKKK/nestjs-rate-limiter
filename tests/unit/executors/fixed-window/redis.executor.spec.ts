@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { REDIS_STORAGE_TOKEN } from "../../../../src/di/tokens";
+import { STORAGE_TOKEN } from "../../../../src/di/tokens";
 import { FixedWindowRedisExecutor } from "../../../../src/executors";
 import type { FixedWindowOptions } from "../../../../src/executors/fixed-window/types";
 import { clearMock, createRedisMock, MS_IN_DAY } from "../../../mocks";
@@ -14,7 +14,7 @@ describe("FixedWindowRedisExecutor", () => {
             providers: [
                 FixedWindowRedisExecutor,
                 {
-                    provide: REDIS_STORAGE_TOKEN,
+                    provide: STORAGE_TOKEN,
                     useValue: redisMock
                 }
             ]
@@ -31,7 +31,6 @@ describe("FixedWindowRedisExecutor", () => {
     it("should receive count < limit", async () => {
         const key = crypto.randomUUID();
         const options: FixedWindowOptions = {
-            strategy: "fixed-window",
             limit: 100,
             ttl: MS_IN_DAY
         };
@@ -46,7 +45,6 @@ describe("FixedWindowRedisExecutor", () => {
     it("should receive count === limit", async () => {
         const key = crypto.randomUUID();
         const options: FixedWindowOptions = {
-            strategy: "fixed-window",
             limit: 100,
             ttl: MS_IN_DAY
         };
@@ -61,7 +59,6 @@ describe("FixedWindowRedisExecutor", () => {
     it("should receive count > limit", async () => {
         const key = crypto.randomUUID();
         const options: FixedWindowOptions = {
-            strategy: "fixed-window",
             limit: 100,
             ttl: MS_IN_DAY
         };

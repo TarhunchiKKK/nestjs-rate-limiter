@@ -1,5 +1,4 @@
 export type TokenBucketOptions = {
-    strategy: "token-bucket";
     capacity: number;
     refillRate: number;
     ttl: number;

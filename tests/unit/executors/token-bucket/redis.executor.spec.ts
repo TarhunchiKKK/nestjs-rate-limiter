@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { REDIS_STORAGE_TOKEN } from "../../../../src/di/tokens";
+import { STORAGE_TOKEN } from "../../../../src/di/tokens";
 import { TokenBucketRedisExecutor } from "../../../../src/executors";
 import type { TokenBucketOptions } from "../../../../src/executors/token-bucket/types";
 import { clearMock, createRedisMock, MS_IN_DAY, MS_IN_MINUTE } from "../../../mocks";
@@ -14,7 +14,7 @@ describe("TokenBucketRedisExecutor", () => {
             providers: [
                 TokenBucketRedisExecutor,
                 {
-                    provide: REDIS_STORAGE_TOKEN,
+                    provide: STORAGE_TOKEN,
                     useValue: redisMock
                 }
             ]
@@ -30,7 +30,6 @@ describe("TokenBucketRedisExecutor", () => {
     it("should allow request", async () => {
         const key = crypto.randomUUID();
         const options: TokenBucketOptions = {
-            strategy: "token-bucket",
             capacity: 10,
             refillRate: 1 / MS_IN_MINUTE,
             ttl: MS_IN_DAY
@@ -46,7 +45,6 @@ describe("TokenBucketRedisExecutor", () => {
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
         const options: TokenBucketOptions = {
-            strategy: "token-bucket",
             capacity: 10,
             refillRate: 1 / MS_IN_MINUTE,
             ttl: MS_IN_DAY
