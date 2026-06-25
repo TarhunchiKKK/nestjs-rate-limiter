@@ -1,5 +1,6 @@
-import { Executor, InjectStorage } from "../../decorators";
+import { InjectStorage } from "../../di";
 import type { Key } from "../../shared/keys";
+import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { TokenBucketOptions, TokenBucketState } from "./types";
 
