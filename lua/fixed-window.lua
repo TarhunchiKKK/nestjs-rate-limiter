@@ -1,7 +1,9 @@
-local current = redis.call('incr', KEYS[1])
+local key = KEYS[1]
+local ttl = ARGV[1]
+local current = redis.call('incr', key)
 
 if current == 1 then
-    redis.call('pexpire', KEYS[1], ARGV[1])
+    redis.call('pexpire', key, ttl)
 end
 
 return current
