@@ -21,6 +21,7 @@ describe("FixedWindowInMemoryExecutor", () => {
         }).compile();
 
         executor = module.get(FixedWindowInMemoryExecutor);
+        // REFACTOR: add storageMock getting
     });
 
     afterEach(() => {

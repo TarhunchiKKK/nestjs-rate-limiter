@@ -10,5 +10,5 @@ export type BaseOptions = {
 };
 
 export interface IExecutor<Options> {
-    check(key: Key, options: Options): Promise<boolean>;
+    check(key: Key, options: Options): boolean | Promise<boolean>;
 }

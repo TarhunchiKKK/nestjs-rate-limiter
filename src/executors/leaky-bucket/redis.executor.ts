@@ -1,12 +1,12 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { Inject, Injectable } from "@nestjs/common";
+import type Redis from "ioredis";
+import { REDIS_STORAGE_TOKEN } from "../../di/di.constants";
+import type { Key } from "../../shared/keys";
+import { getRedisKey } from "../../shared/redis";
 import type { IExecutor } from "../executor.interface";
 import type { LeakyBucketOptions } from "./types";
-import type { Key } from "../../shared/keys";
-import { REDIS_STORAGE_TOKEN } from "../../di/di.constants";
-import type Redis from "ioredis";
-import { getRedisKey } from "../../shared/redis";
 
 @Injectable()
 export class LeakyBucketRedisExecutor implements IExecutor<LeakyBucketOptions> {
@@ -31,7 +31,7 @@ export class LeakyBucketRedisExecutor implements IExecutor<LeakyBucketOptions> {
             options.capacity.toString(),
             options.leakRate.toString(),
             options.ttl.toString()
-        )
+        );
 
         return result === 1;
     }

@@ -21,6 +21,7 @@ describe("FixedWindowRedisExecutor", () => {
         }).compile();
 
         executor = module.get(FixedWindowRedisExecutor);
+        // REFACTOR: add redisMock getting
     });
 
     afterEach(() => {

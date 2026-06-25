@@ -6,9 +6,9 @@ import type { FixedWindowOptions, FixedWindowState } from "./types";
 
 @Injectable()
 export class FixedWindowInMemoryExecutor implements IExecutor<FixedWindowOptions> {
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, FixedWindowState>) {}
+    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, FixedWindowState>) { }
 
-    public async check(key: Key, options: FixedWindowOptions) {
+    public check(key: Key, options: FixedWindowOptions) {
         const now = Date.now();
 
         let state = this.storage.get(key);
