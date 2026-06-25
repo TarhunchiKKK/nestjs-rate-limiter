@@ -8,7 +8,7 @@ import type { TokenBucketOptions, TokenBucketState } from "./types";
 export class TokenBucketInMemoryExecutor implements IExecutor<TokenBucketOptions> {
     public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, TokenBucketState>) {}
 
-    public async check(key: Key, options: TokenBucketOptions) {
+    public check(key: Key, options: TokenBucketOptions) {
         const state = this.storage.get(key);
 
         if (!state) {

@@ -1,18 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
 import { REDIS_STORAGE_TOKEN } from "../../../../src/di/di.constants";
-import { SlidingWindowCounterRedisExecutor } from "../../../../src/executors";
-import type { SlidingWindowCounterOptions } from "../../../../src/executors/sliding-window-counter/types";
+import { LeakyBucketRedisExecutor } from "../../../../src/executors";
+import type { LeakyBucketOptions } from "../../../../src/executors/leaky-bucket/types";
 import { clearMock, createRedisMock, MS_IN_MINUTE } from "../../../mocks";
 
-describe("SlidingWindowCounterRedisExecutor", () => {
-    let executor: SlidingWindowCounterRedisExecutor;
+describe("LeakyBucketRedisExecutor", () => {
+    let executor: LeakyBucketRedisExecutor;
     const redisMock = createRedisMock();
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
             providers: [
-                SlidingWindowCounterRedisExecutor,
+                LeakyBucketRedisExecutor,
                 {
                     provide: REDIS_STORAGE_TOKEN,
                     useValue: redisMock
@@ -20,7 +20,7 @@ describe("SlidingWindowCounterRedisExecutor", () => {
             ]
         }).compile();
 
-        executor = module.get(SlidingWindowCounterRedisExecutor);
+        executor = module.get(LeakyBucketRedisExecutor);
     });
 
     afterEach(() => {
@@ -29,10 +29,11 @@ describe("SlidingWindowCounterRedisExecutor", () => {
 
     it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: SlidingWindowCounterOptions = {
-            strategy: "sliding-window-counter",
-            limit: 10,
-            windowMs: MS_IN_MINUTE
+        const options: LeakyBucketOptions = {
+            strategy: "leaky-bucket",
+            capacity: 10,
+            leakRate: 1 / MS_IN_MINUTE,
+            ttl: 5 * MS_IN_MINUTE
         };
 
         redisMock.eval.mockResolvedValue(1);
@@ -44,10 +45,11 @@ describe("SlidingWindowCounterRedisExecutor", () => {
 
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: SlidingWindowCounterOptions = {
-            strategy: "sliding-window-counter",
-            limit: 10,
-            windowMs: MS_IN_MINUTE
+        const options: LeakyBucketOptions = {
+            strategy: "leaky-bucket",
+            capacity: 10,
+            leakRate: 1 / MS_IN_MINUTE,
+            ttl: 5 * MS_IN_MINUTE
         };
 
         redisMock.eval.mockResolvedValue(0);

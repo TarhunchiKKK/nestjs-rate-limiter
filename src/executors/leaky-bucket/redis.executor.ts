@@ -5,34 +5,32 @@ import type Redis from "ioredis";
 import { REDIS_STORAGE_TOKEN } from "../../di/di.constants";
 import type { Key } from "../../shared/keys";
 import { getRedisKey } from "../../shared/redis";
-import { generateSalt } from "../../shared/salt";
 import type { IExecutor } from "../executor.interface";
-import type { SlidingWindowLogOptions } from "./types";
+import type { LeakyBucketOptions } from "./types";
 
 @Injectable()
-export class SlidingWindowLogRedisExecutor implements IExecutor<SlidingWindowLogOptions> {
+export class LeakyBucketRedisExecutor implements IExecutor<LeakyBucketOptions> {
     private readonly luaScript: string;
 
     public constructor(@Inject(REDIS_STORAGE_TOKEN) private readonly redis: Redis) {
-        const luaScriptPath = path.join(__dirname, "../../../lua/sliding-window-log.lua");
+        const luaScriptPath = path.join(__dirname, "../../../lua/leaky-bucket.lua");
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
-    public async check(key: Key, options: SlidingWindowLogOptions) {
+    public async check(key: Key, options: LeakyBucketOptions) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
 
         const startTime = Date.now();
-        const salt = generateSalt();
 
         const result = await this.redis.eval(
             this.luaScript,
             keysCount,
             redisKey,
             startTime.toString(),
-            options.windowMs.toString(),
-            options.limit.toString(),
-            salt
+            options.capacity.toString(),
+            options.leakRate.toString(),
+            options.ttl.toString()
         );
 
         return result === 1;

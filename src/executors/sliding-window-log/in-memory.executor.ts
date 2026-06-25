@@ -1,14 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { IN_MEMORY_STORAGE_TOKEN } from "../../di/di.constants";
+import type { Key } from "../../shared/keys";
 import type { IExecutor } from "../executor.interface";
 import type { SlidingWindowLogOptions, SlidingWindowLogState } from "./types";
-import type { Key } from "../../shared/keys";
-import { IN_MEMORY_STORAGE_TOKEN } from "../../di/di.constants";
 
 @Injectable()
 export class SlidingWindowLogInMemoryExecutor implements IExecutor<SlidingWindowLogOptions> {
     public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, SlidingWindowLogState>) {}
 
-    public async check(key: Key, options: SlidingWindowLogOptions) {
+    public check(key: Key, options: SlidingWindowLogOptions) {
         const now = Date.now();
 
         const timestamps = this.getRelevantTimestamps(key, options, now);
