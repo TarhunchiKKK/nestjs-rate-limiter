@@ -40,7 +40,7 @@ describe("TokenBucketRedisExecutor", () => {
 
         const result = await executor.check(key, options);
 
-        expect(result).toBeTrue()
+        expect(result).toBeTrue();
     });
 
     it("should disallow request", async () => {
@@ -56,6 +56,6 @@ describe("TokenBucketRedisExecutor", () => {
 
         const result = await executor.check(key, options);
 
-        expect(result).toBeFalse()
+        expect(result).toBeFalse();
     });
 });

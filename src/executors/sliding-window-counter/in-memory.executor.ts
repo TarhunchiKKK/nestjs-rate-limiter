@@ -5,11 +5,11 @@ import type { IExecutor, StorageTypes, Strategies } from "../executor.interface"
 import type { SlidingWindowCounterOptions, SlidingWindowCounterState } from "./types";
 
 @Injectable()
-export class SlidingWindowInMemoryExecutor implements IExecutor<SlidingWindowCounterOptions> {
+export class SlidingWindowCounterInMemoryExecutor implements IExecutor<SlidingWindowCounterOptions> {
     public readonly strategy: Strategies = "sliding-window-counter";
     public readonly storageType: StorageTypes = "in-memory";
 
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, SlidingWindowCounterState>) { }
+    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, SlidingWindowCounterState>) {}
 
     public async check(key: Key, options: SlidingWindowCounterOptions) {
         const startTime = Date.now();
@@ -20,7 +20,7 @@ export class SlidingWindowInMemoryExecutor implements IExecutor<SlidingWindowCou
 
         this.checkPassedWindows(state, options, currentWindowStart);
 
-        const calculatedWeightCount = this.calculateWeightCount(state, options, currentWindowStart, startTime)
+        const calculatedWeightCount = this.calculateWeightCount(state, options, currentWindowStart, startTime);
 
         if (calculatedWeightCount < options.limit) {
             state.currentCount += 1;
@@ -70,6 +70,6 @@ export class SlidingWindowInMemoryExecutor implements IExecutor<SlidingWindowCou
 
         const calculatedWeightCount = state.currentCount + state.previousCont * previousWindowWeight;
 
-        return calculatedWeightCount
+        return calculatedWeightCount;
     }
 }
