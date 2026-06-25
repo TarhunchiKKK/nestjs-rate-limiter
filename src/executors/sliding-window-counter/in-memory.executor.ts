@@ -6,7 +6,7 @@ import type { SlidingWindowCounterOptions, SlidingWindowCounterState } from "./t
 
 @Injectable()
 export class SlidingWindowCounterInMemoryExecutor implements IExecutor<SlidingWindowCounterOptions> {
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, SlidingWindowCounterState>) { }
+    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, SlidingWindowCounterState>) {}
 
     public check(key: Key, options: SlidingWindowCounterOptions) {
         const startTime = Date.now();

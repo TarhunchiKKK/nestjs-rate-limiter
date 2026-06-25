@@ -6,7 +6,7 @@ import type { LeakyBucketOptions, LeakyBucketState } from "./types";
 
 @Injectable()
 export class LeakyBucketInMemoryExecutor implements IExecutor<LeakyBucketOptions> {
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, LeakyBucketState>) { }
+    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, LeakyBucketState>) {}
 
     public check(key: Key, options: LeakyBucketOptions) {
         const startTime = Date.now();

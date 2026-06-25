@@ -6,7 +6,7 @@ import type { SlidingWindowLogOptions, SlidingWindowLogState } from "./types";
 
 @Injectable()
 export class SlidingWindowLogInMemoryExecutor implements IExecutor<SlidingWindowLogOptions> {
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, SlidingWindowLogState>) { }
+    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, SlidingWindowLogState>) {}
 
     public check(key: Key, options: SlidingWindowLogOptions) {
         const now = Date.now();

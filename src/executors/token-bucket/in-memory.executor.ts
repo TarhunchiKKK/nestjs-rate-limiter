@@ -6,7 +6,7 @@ import type { TokenBucketOptions, TokenBucketState } from "./types";
 
 @Injectable()
 export class TokenBucketInMemoryExecutor implements IExecutor<TokenBucketOptions> {
-    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, TokenBucketState>) { }
+    public constructor(@Inject(IN_MEMORY_STORAGE_TOKEN) private readonly storage: Map<Key, TokenBucketState>) {}
 
     public check(key: Key, options: TokenBucketOptions) {
         const state = this.storage.get(key);
