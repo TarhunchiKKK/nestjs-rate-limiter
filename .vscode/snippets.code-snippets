@@ -2,7 +2,19 @@
     "Add `private readonly` modifiers": {
         "scope": "typescript",
         "prefix": "p-r",
-        "body": "private readonly"
+        "body": "private readonly $1"
+    },
+    "Create constructor": {
+        "scope": "typescript",
+        "prefix": "p-c",
+        "body": "public constructor($1) {}"
+    },
+
+    // * NestJS
+    "Create `Logger` class member": {
+        "scope": "typescript",
+        "prefix": "n-logger",
+        "body": "private readonly logger = new Logger(${1:ClassName}.name);"
     },
 
     // * Tests
