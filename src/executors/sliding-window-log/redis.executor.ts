@@ -19,11 +19,11 @@ export class SlidingWindowLogRedisExecutor implements IExecutor<SlidingWindowLog
     }
 
     public async check(key: Key, options: SlidingWindowLogOptions) {
-        const redisKey = getRedisKey(key)
+        const redisKey = getRedisKey(key);
         const keysCount = 1;
 
         const startTime = Date.now();
-        const salt = generateSalt()
+        const salt = generateSalt();
 
         const result = await this.redis.eval(
             this.luaScript,
@@ -33,9 +33,8 @@ export class SlidingWindowLogRedisExecutor implements IExecutor<SlidingWindowLog
             options.windowMs.toString(),
             options.limit.toString(),
             salt
-        )
+        );
 
         return result === 1;
     }
-
 }

@@ -20,7 +20,7 @@ export class SlidingWindowCounterRedisExecutor implements IExecutor<SlidingWindo
     public async check(key: Key, options: SlidingWindowCounterOptions) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
-        const startTime = Date.now()
+        const startTime = Date.now();
 
         const result = await this.redis.eval(this.luaScript, redisKey, keysCount, startTime.toString(), options.windowMs.toString(), options.limit.toString());
 

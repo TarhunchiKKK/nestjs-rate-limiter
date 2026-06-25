@@ -7,7 +7,7 @@ import type { SlidingWindowLogOptions } from "../../../../src/executors/sliding-
 
 describe("SlidingWindowLogRedisExecutor", () => {
     let executor: SlidingWindowLogRedisExecutor;
-    const redisMock = createRedisMock()
+    const redisMock = createRedisMock();
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -33,13 +33,13 @@ describe("SlidingWindowLogRedisExecutor", () => {
             strategy: "sliding-window-log",
             limit: 100,
             windowMs: MS_IN_DAY
-        }
+        };
 
         redisMock.eval.mockResolvedValue(1);
 
-        const result = await executor.check(key, options)
+        const result = await executor.check(key, options);
 
-        expect(result).toBeTrue()
+        expect(result).toBeTrue();
     });
 
     it("should disallow request", async () => {
@@ -48,12 +48,12 @@ describe("SlidingWindowLogRedisExecutor", () => {
             strategy: "sliding-window-log",
             limit: 100,
             windowMs: MS_IN_DAY
-        }
+        };
 
         redisMock.eval.mockResolvedValue(1);
 
-        const result = await executor.check(key, options)
+        const result = await executor.check(key, options);
 
-        expect(result).toBeFalse()
+        expect(result).toBeFalse();
     });
 });

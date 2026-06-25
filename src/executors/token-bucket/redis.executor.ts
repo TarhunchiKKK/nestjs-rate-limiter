@@ -20,7 +20,7 @@ export class TokenBucketRedisExecutor implements IExecutor<TokenBucketOptions> {
     public async check(key: Key, options: TokenBucketOptions) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
-        const startTime = Date.now()
+        const startTime = Date.now();
 
         const result = await this.redis.eval(
             this.luaScript,
