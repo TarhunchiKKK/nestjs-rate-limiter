@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { STORAGE_TOKEN } from "../../../../src/di/storage.di";
+import { STORAGE_TOKEN } from "../../../../src/di";
 import { TokenBucketInMemoryExecutor } from "../../../../src/executors";
 import type { TokenBucketOptions, TokenBucketState } from "../../../../src/executors/token-bucket/types";
 import { clearMock, createInMemoryStorageMock, MS_IN_MINUTE } from "../../../mocks";
@@ -34,9 +34,10 @@ describe("TokenBucketInMemoryExecutor", () => {
                 tokens: 5,
                 lastRefilled: Date.now() - MS_IN_MINUTE
             };
-            const options: TokenBucketOptions["in-memory"] = {
+            const options: TokenBucketOptions = {
                 capacity: 10,
-                refillRate: 1 / MS_IN_MINUTE // one per minute,
+                refillRate: 1 / MS_IN_MINUTE, // one per minute,
+                ttl: 100
             };
 
             storageMock.get.mockReturnValue(state);
@@ -52,9 +53,10 @@ describe("TokenBucketInMemoryExecutor", () => {
                 tokens: 5,
                 lastRefilled: Date.now() - MS_IN_MINUTE
             };
-            const options: TokenBucketOptions["in-memory"] = {
+            const options: TokenBucketOptions = {
                 capacity: state.tokens + 1,
-                refillRate: 1 / MS_IN_MINUTE // one per minute,
+                refillRate: 1 / MS_IN_MINUTE, // one per minute,
+                ttl: 100
             };
 
             storageMock.get.mockReturnValue(state);
@@ -66,9 +68,10 @@ describe("TokenBucketInMemoryExecutor", () => {
 
         it("should not found state", async () => {
             const key = crypto.randomUUID();
-            const options: TokenBucketOptions["in-memory"] = {
+            const options: TokenBucketOptions = {
                 capacity: 10,
-                refillRate: 1 / MS_IN_MINUTE // one per minute,
+                refillRate: 1 / MS_IN_MINUTE, // one per minute,
+                ttl: 100
             };
 
             storageMock.get.mockReturnValue(undefined);
@@ -86,9 +89,10 @@ describe("TokenBucketInMemoryExecutor", () => {
                 tokens: 0,
                 lastRefilled: Date.now() - MS_IN_MINUTE
             };
-            const options: TokenBucketOptions["in-memory"] = {
+            const options: TokenBucketOptions = {
                 capacity: 10,
-                refillRate: 1 / (2 * MS_IN_MINUTE) // one per 2 minutes,
+                refillRate: 1 / (2 * MS_IN_MINUTE), // one per 2 minutes,
+                ttl: 100
             };
 
             storageMock.get.mockReturnValue(state);

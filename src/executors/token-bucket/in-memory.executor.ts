@@ -4,13 +4,11 @@ import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { TokenBucketOptions, TokenBucketState } from "./types";
 
-type Options = TokenBucketOptions["in-memory"];
-
 @Executor({ strategy: "token-bucket", storage: "in-memory" })
-export class TokenBucketInMemoryExecutor implements IExecutor<Options> {
+export class TokenBucketInMemoryExecutor implements IExecutor<TokenBucketOptions> {
     public constructor(@InjectStorage() private readonly storage: Map<Key, TokenBucketState>) {}
 
-    public check(key: Key, options: Options) {
+    public check(key: Key, options: TokenBucketOptions) {
         const state = this.storage.get(key);
 
         if (!state) {
@@ -36,7 +34,7 @@ export class TokenBucketInMemoryExecutor implements IExecutor<Options> {
         return false;
     }
 
-    private setInitialState(key: Key, options: Options) {
+    private setInitialState(key: Key, options: TokenBucketOptions) {
         const initialState: TokenBucketState = {
             tokens: options.capacity - 1,
             lastRefilled: Date.now()
@@ -45,7 +43,7 @@ export class TokenBucketInMemoryExecutor implements IExecutor<Options> {
         this.storage.set(key, initialState);
     }
 
-    private refillTokens(state: TokenBucketState, options: Options) {
+    private refillTokens(state: TokenBucketState, options: TokenBucketOptions) {
         const now = Date.now();
 
         const elapsed = Math.max(now - state.lastRefilled);

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { STORAGE_TOKEN } from "../../../../src/di/storage.di";
+import { STORAGE_TOKEN } from "../../../../src/di";
 import { SlidingWindowCounterRedisExecutor } from "../../../../src/executors";
 import type { SlidingWindowCounterOptions } from "../../../../src/executors/sliding-window-counter/types";
 import { clearMock, createRedisMock, MS_IN_MINUTE } from "../../../mocks";
@@ -29,7 +29,7 @@ describe("SlidingWindowCounterRedisExecutor", () => {
 
     it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: SlidingWindowCounterOptions["redis"] = {
+        const options: SlidingWindowCounterOptions = {
             limit: 10,
             windowMs: MS_IN_MINUTE
         };
@@ -43,7 +43,7 @@ describe("SlidingWindowCounterRedisExecutor", () => {
 
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: SlidingWindowCounterOptions["redis"] = {
+        const options: SlidingWindowCounterOptions = {
             limit: 10,
             windowMs: MS_IN_MINUTE
         };

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
-import { STORAGE_TOKEN } from "../../../../src/di/storage.di";
+import { STORAGE_TOKEN } from "../../../../src/di";
 import { FixedWindowRedisExecutor } from "../../../../src/executors";
 import type { FixedWindowOptions } from "../../../../src/executors/fixed-window/types";
 import { clearMock, createRedisMock, MS_IN_DAY } from "../../../mocks";
@@ -30,7 +30,7 @@ describe("FixedWindowRedisExecutor", () => {
 
     it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: FixedWindowOptions["redis"] = {
+        const options: FixedWindowOptions = {
             limit: 100,
             ttl: MS_IN_DAY
         };
@@ -44,7 +44,7 @@ describe("FixedWindowRedisExecutor", () => {
 
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: FixedWindowOptions["redis"] = {
+        const options: FixedWindowOptions = {
             limit: 100,
             ttl: MS_IN_DAY
         };
