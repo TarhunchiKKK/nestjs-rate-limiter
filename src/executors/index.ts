@@ -5,3 +5,4 @@ export * from "./leaky-bucket";
 export * from "./sliding-window-counter";
 export * from "./sliding-window-log";
 export * from "./token-bucket";
+export type { AllStrategiesOptions } from "./types";

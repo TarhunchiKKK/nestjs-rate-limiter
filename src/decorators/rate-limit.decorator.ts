@@ -8,9 +8,10 @@ import type { Scope, Strategies } from "../shared/types";
 
 export type RateLimitBaseOptions = {
     scope?: Scope;
-    keyExtractor?: KeyExtractorFn | Type<IKeyExtractor>;
-    error: (context: ExecutionContext, options: RateLimitOptions, key: Key) => Error;
+    error?: (context: ExecutionContext, options: RateLimitOptions, key: Key) => Error;
 };
+
+type KeyExtractorOptions = { keyExtractor: Type<IKeyExtractor> } | { extractKeyFn: KeyExtractorFn };
 
 type StrategySpecificOptions =
     | ({ strategy: ExtractMember<Strategies, "fixed-window"> } & Partial<FixedWindowOptions>)
@@ -19,6 +20,6 @@ type StrategySpecificOptions =
     | ({ strategy: ExtractMember<Strategies, "sliding-window-log"> } & Partial<SlidingWindowLogOptions>)
     | ({ strategy: ExtractMember<Strategies, "leaky-bucket"> } & Partial<LeakyBucketOptions>);
 
-export type RateLimitOptions = RateLimitBaseOptions & StrategySpecificOptions;
+export type RateLimitOptions = RateLimitBaseOptions & KeyExtractorOptions & StrategySpecificOptions;
 
 export const RateLimit = Reflector.createDecorator<RateLimitOptions>();

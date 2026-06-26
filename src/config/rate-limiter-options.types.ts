@@ -1,23 +1,18 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: `any` type is necessary for real type providing */
 import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
 import type { RateLimitBaseOptions } from "../decorators";
-import type { FixedWindowOptions, LeakyBucketOptions, SlidingWindowCounterOptions, SlidingWindowLogOptions, TokenBucketOptions } from "../executors";
+import type { AllStrategiesOptions } from "../executors";
 import type { IKeyExtractor, KeyExtractorFn } from "../key-extractors";
+import type { DeepPartial } from "../shared/ts";
 import type { StorageTypes, Strategies } from "../shared/types";
 
 export type RateLimiterOptions = {
     limiter: {
         storage: StorageTypes;
-        defaults: Pick<RateLimitBaseOptions, "scope" | "error"> & {
+        defaults: RateLimitBaseOptions & {
             strategy: Strategies;
         };
-        options: {
-            fixedWindow?: Partial<FixedWindowOptions>;
-            tokenBucket?: Partial<TokenBucketOptions>;
-            slidingWindowCounter?: Partial<SlidingWindowCounterOptions>;
-            slidingWindowLog?: Partial<SlidingWindowLogOptions>;
-            leakyBucket?: Partial<LeakyBucketOptions>;
-        };
+        options: DeepPartial<AllStrategiesOptions>;
     };
     keyExtractors?: {
         default?: KeyExtractorFn | Type<IKeyExtractor>;
