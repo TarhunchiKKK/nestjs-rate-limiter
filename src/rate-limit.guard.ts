@@ -1,7 +1,7 @@
 import type { InjectionToken } from "@nestjs/common";
-import type { RateLimiterOptions } from "../config";
-import type { IExecutor } from "../executors";
-import type { IKeyExtractor, KeyExtractorFn } from "../key-extractors";
+import type { RateLimiterOptions } from "./config";
+import type { IExecutor } from "./executors";
+import type { IKeyExtractor, KeyExtractorFn } from "./key-extractors";
 
 export type RateLimitGuardOptions = {
     limiter: RateLimiterOptions["limiter"];

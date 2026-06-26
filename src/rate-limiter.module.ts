@@ -4,7 +4,7 @@ import { EXECUTORS_TOKEN, GUARD_OPTIONS_TOKEN, KEY_EXTRACTORS_TOKEN, OPTIONS_TOK
 import { getExecutorMapKey, type IExecutor } from "./executors";
 import { EXECUTOR_METADATA_KEY, type ExecutorMetadata } from "./executors/executor.decorator";
 import { type IKeyExtractor, ipKeyExtractor, type KeyExtractorFn } from "./key-extractors";
-import type { RateLimitGuardOptions } from "./middleware";
+import type { RateLimitGuardOptions } from "./rate-limit.guard";
 import { isClass } from "./shared/js";
 
 @Module({})
@@ -76,12 +76,12 @@ export class RateLimiterModule {
 
                 // get default key extractor
                 let defaultKeyExtractor: KeyExtractorFn | IKeyExtractor;
-                if (!options.keyExtractor?.default) {
+                if (!options.keyExtractors?.default) {
                     defaultKeyExtractor = ipKeyExtractor;
                 } else {
-                    if (typeof options.keyExtractor.default === "function") {
-                        if (isClass(options.keyExtractor.default)) {
-                            const fromMap = keyExtractorsMap.get(options.keyExtractor.default.constructor);
+                    if (typeof options.keyExtractors.default === "function") {
+                        if (isClass(options.keyExtractors.default)) {
+                            const fromMap = keyExtractorsMap.get(options.keyExtractors.default.constructor);
 
                             if (!fromMap) {
                                 throw Error("Default key extractor is not registered in custom key extractors");
@@ -89,11 +89,11 @@ export class RateLimiterModule {
 
                             defaultKeyExtractor = fromMap;
                         } else {
-                            defaultKeyExtractor = options.keyExtractor.default as KeyExtractorFn;
+                            defaultKeyExtractor = options.keyExtractors.default as KeyExtractorFn;
                         }
                     }
 
-                    throw new Error(`Incorrect default key extractor: ${options.keyExtractor.default}`);
+                    throw new Error(`Incorrect default key extractor: ${options.keyExtractors.default}`);
                 }
 
                 return {

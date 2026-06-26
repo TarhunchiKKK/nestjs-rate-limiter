@@ -1,1 +1,0 @@
-export type { RateLimitGuardOptions } from "./rate-limit.guard";

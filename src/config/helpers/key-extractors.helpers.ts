@@ -1,7 +1,7 @@
 import type { Provider } from "@nestjs/common";
+import type { IKeyExtractor } from "../../key-extractors";
 import type { RateLimiterOptions } from "../options";
-import { type IKeyExtractor } from "../../key-extractors";
 
 export function getKeyExtractors(options: RateLimiterOptions): Provider<IKeyExtractor>[] {
-    return options.custom?.keyExtractors ?? [];
+    return options.keyExtractors?.custom ?? [];
 }
