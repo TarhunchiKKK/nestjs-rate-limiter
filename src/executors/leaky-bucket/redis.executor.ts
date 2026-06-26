@@ -3,7 +3,6 @@ import * as path from "node:path";
 import type Redis from "ioredis";
 import { InjectStorage } from "../../di";
 import type { Key } from "../../shared/keys";
-import { getRedisKey } from "../../shared/redis";
 import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { LeakyBucketOptions } from "./types";
@@ -18,7 +17,6 @@ export class LeakyBucketRedisExecutor implements IExecutor<LeakyBucketOptions> {
     }
 
     public async check(key: Key, options: LeakyBucketOptions) {
-        const redisKey = getRedisKey(key);
         const keysCount = 1;
 
         const startTime = Date.now();
@@ -26,7 +24,7 @@ export class LeakyBucketRedisExecutor implements IExecutor<LeakyBucketOptions> {
         const result = await this.redis.eval(
             this.luaScript,
             keysCount,
-            redisKey,
+            key,
             startTime.toString(),
             options.capacity.toString(),
             options.leakRate.toString(),

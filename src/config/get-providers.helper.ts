@@ -13,7 +13,7 @@ import {
     TokenBucketRedisExecutor
 } from "../executors";
 import { EXECUTOR_METADATA_KEY, type ExecutorMetadata } from "../executors/executor.decorator";
-import type { RateLimiterOptions } from "./rate-limiter.options";
+import type { RateLimiterOptions } from "./rate-limiter-options.types";
 
 const builtinExecutors: Provider<IExecutor<unknown>>[] = [
     FixedWindowInMemoryExecutor,

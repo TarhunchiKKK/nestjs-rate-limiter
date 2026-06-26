@@ -3,7 +3,6 @@ import * as path from "node:path";
 import type Redis from "ioredis";
 import { InjectStorage } from "../../di";
 import type { Key } from "../../shared/keys";
-import { getRedisKey } from "../../shared/redis";
 import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { FixedWindowOptions } from "./types";
@@ -18,10 +17,9 @@ export class FixedWindowRedisExecutor implements IExecutor<FixedWindowOptions> {
     }
 
     public async check(key: Key, options: FixedWindowOptions) {
-        const redisKey = getRedisKey(key);
         const keysCount = 1;
 
-        const currentCount = (await this.redis.eval(this.luaScript, keysCount, redisKey, options.ttl.toString())) as number;
+        const currentCount = (await this.redis.eval(this.luaScript, keysCount, key, options.ttl.toString())) as number;
 
         return currentCount < options.limit;
     }
