@@ -8,10 +8,8 @@ import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { FixedWindowOptions } from "./types";
 
-type Options = FixedWindowOptions["redis"];
-
 @Executor({ strategy: "fixed-window", storage: "redis" })
-export class FixedWindowRedisExecutor implements IExecutor<Options> {
+export class FixedWindowRedisExecutor implements IExecutor<FixedWindowOptions> {
     private readonly luaScript: string;
 
     public constructor(@InjectStorage() private readonly redis: Redis) {
@@ -19,7 +17,7 @@ export class FixedWindowRedisExecutor implements IExecutor<Options> {
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
-    public async check(key: Key, options: Options) {
+    public async check(key: Key, options: FixedWindowOptions) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
 

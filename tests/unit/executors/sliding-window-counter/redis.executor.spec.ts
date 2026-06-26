@@ -29,7 +29,7 @@ describe("SlidingWindowCounterRedisExecutor", () => {
 
     it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: SlidingWindowCounterOptions["redis"] = {
+        const options: SlidingWindowCounterOptions = {
             limit: 10,
             windowMs: MS_IN_MINUTE
         };
@@ -43,7 +43,7 @@ describe("SlidingWindowCounterRedisExecutor", () => {
 
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: SlidingWindowCounterOptions["redis"] = {
+        const options: SlidingWindowCounterOptions = {
             limit: 10,
             windowMs: MS_IN_MINUTE
         };

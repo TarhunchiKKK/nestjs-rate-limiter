@@ -4,13 +4,11 @@ import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { SlidingWindowCounterOptions, SlidingWindowCounterState } from "./types";
 
-type Options = SlidingWindowCounterOptions["in-memory"];
-
 @Executor({ strategy: "sliding-window-counter", storage: "in-memory" })
-export class SlidingWindowCounterInMemoryExecutor implements IExecutor<Options> {
+export class SlidingWindowCounterInMemoryExecutor implements IExecutor<SlidingWindowCounterOptions> {
     public constructor(@InjectStorage() private readonly storage: Map<Key, SlidingWindowCounterState>) {}
 
-    public check(key: Key, options: Options) {
+    public check(key: Key, options: SlidingWindowCounterOptions) {
         const startTime = Date.now();
 
         const currentWindowStart = Math.floor(startTime / options.windowMs) * options.windowMs;
@@ -44,7 +42,7 @@ export class SlidingWindowCounterInMemoryExecutor implements IExecutor<Options> 
         return state;
     }
 
-    private checkPassedWindows(state: SlidingWindowCounterState, options: Options, currentWindowStart: number) {
+    private checkPassedWindows(state: SlidingWindowCounterState, options: SlidingWindowCounterOptions, currentWindowStart: number) {
         const timePassedSinceStoredWindow = currentWindowStart - state.currentWindowStart;
 
         if (timePassedSinceStoredWindow === options.windowMs) {
@@ -62,7 +60,7 @@ export class SlidingWindowCounterInMemoryExecutor implements IExecutor<Options> 
         }
     }
 
-    private calculateWeightCount(state: SlidingWindowCounterState, options: Options, currentWindowStart: number, startTime: number) {
+    private calculateWeightCount(state: SlidingWindowCounterState, options: SlidingWindowCounterOptions, currentWindowStart: number, startTime: number) {
         const timeElapsedInCurrentWindow = startTime - currentWindowStart;
 
         const previousWindowWeight = 1 - timeElapsedInCurrentWindow / options.windowMs;

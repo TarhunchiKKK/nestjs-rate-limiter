@@ -8,10 +8,8 @@ import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { LeakyBucketOptions } from "./types";
 
-type Options = LeakyBucketOptions["redis"];
-
 @Executor({ strategy: "leaky-bucket", storage: "redis" })
-export class LeakyBucketRedisExecutor implements IExecutor<Options> {
+export class LeakyBucketRedisExecutor implements IExecutor<LeakyBucketOptions> {
     private readonly luaScript: string;
 
     public constructor(@InjectStorage() private readonly redis: Redis) {
@@ -19,7 +17,7 @@ export class LeakyBucketRedisExecutor implements IExecutor<Options> {
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
-    public async check(key: Key, options: Options) {
+    public async check(key: Key, options: LeakyBucketOptions) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
 

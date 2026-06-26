@@ -4,13 +4,11 @@ import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { SlidingWindowLogOptions, SlidingWindowLogState } from "./types";
 
-type Options = SlidingWindowLogOptions["in-memory"];
-
 @Executor({ strategy: "sliding-window-log", storage: "in-memory" })
-export class SlidingWindowLogInMemoryExecutor implements IExecutor<Options> {
+export class SlidingWindowLogInMemoryExecutor implements IExecutor<SlidingWindowLogOptions> {
     public constructor(@InjectStorage() private readonly storage: Map<Key, SlidingWindowLogState>) {}
 
-    public check(key: Key, options: Options) {
+    public check(key: Key, options: SlidingWindowLogOptions) {
         const now = Date.now();
 
         const timestamps = this.getRelevantTimestamps(key, options, now);
@@ -26,7 +24,7 @@ export class SlidingWindowLogInMemoryExecutor implements IExecutor<Options> {
         return false;
     }
 
-    private getRelevantTimestamps(key: Key, options: Options, startTime: number) {
+    private getRelevantTimestamps(key: Key, options: SlidingWindowLogOptions, startTime: number) {
         const clearBefore = startTime - options.windowMs;
 
         const timestamps = this.storage.get(key) ?? [];

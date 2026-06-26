@@ -8,10 +8,8 @@ import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { SlidingWindowCounterOptions } from "./types";
 
-type Options = SlidingWindowCounterOptions["redis"];
-
 @Executor({ strategy: "sliding-window-counter", storage: "redis" })
-export class SlidingWindowCounterRedisExecutor implements IExecutor<Options> {
+export class SlidingWindowCounterRedisExecutor implements IExecutor<SlidingWindowCounterOptions> {
     private readonly luaScript: string;
 
     public constructor(@InjectStorage() private readonly redis: Redis) {
@@ -19,7 +17,7 @@ export class SlidingWindowCounterRedisExecutor implements IExecutor<Options> {
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
-    public async check(key: Key, options: Options) {
+    public async check(key: Key, options: SlidingWindowCounterOptions) {
         const redisKey = getRedisKey(key);
         const keysCount = 1;
         const startTime = Date.now();

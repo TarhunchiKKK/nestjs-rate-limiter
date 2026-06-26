@@ -30,7 +30,7 @@ describe("FixedWindowRedisExecutor", () => {
 
     it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: FixedWindowOptions["redis"] = {
+        const options: FixedWindowOptions = {
             limit: 100,
             ttl: MS_IN_DAY
         };
@@ -44,7 +44,7 @@ describe("FixedWindowRedisExecutor", () => {
 
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: FixedWindowOptions["redis"] = {
+        const options: FixedWindowOptions = {
             limit: 100,
             ttl: MS_IN_DAY
         };

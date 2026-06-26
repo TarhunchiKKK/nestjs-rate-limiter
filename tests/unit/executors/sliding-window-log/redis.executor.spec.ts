@@ -29,7 +29,7 @@ describe("SlidingWindowLogRedisExecutor", () => {
 
     it("should allow request", async () => {
         const key = crypto.randomUUID();
-        const options: SlidingWindowLogOptions["redis"] = {
+        const options: SlidingWindowLogOptions = {
             limit: 100,
             windowMs: MS_IN_DAY
         };
@@ -43,7 +43,7 @@ describe("SlidingWindowLogRedisExecutor", () => {
 
     it("should disallow request", async () => {
         const key = crypto.randomUUID();
-        const options: SlidingWindowLogOptions["redis"] = {
+        const options: SlidingWindowLogOptions = {
             limit: 100,
             windowMs: MS_IN_DAY
         };

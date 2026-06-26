@@ -31,7 +31,7 @@ describe("FixedWindowInMemoryExecutor", () => {
     describe("allow request", () => {
         it("should find valid state", () => {
             const key = crypto.randomUUID();
-            const options: FixedWindowOptions["in-memory"] = {
+            const options: FixedWindowOptions = {
                 limit: 100,
                 ttl: MS_IN_DAY
             };
@@ -49,7 +49,7 @@ describe("FixedWindowInMemoryExecutor", () => {
 
         it("should find state with resetTime left", () => {
             const key = crypto.randomUUID();
-            const options: FixedWindowOptions["in-memory"] = {
+            const options: FixedWindowOptions = {
                 limit: 100,
                 ttl: MS_IN_DAY
             };
@@ -67,7 +67,7 @@ describe("FixedWindowInMemoryExecutor", () => {
 
         it("should not found state", () => {
             const key = crypto.randomUUID();
-            const options: FixedWindowOptions["in-memory"] = {
+            const options: FixedWindowOptions = {
                 limit: 100,
                 ttl: MS_IN_DAY
             };
@@ -83,7 +83,7 @@ describe("FixedWindowInMemoryExecutor", () => {
     describe("disallow request", () => {
         it("should found state with limit === count", () => {
             const key = crypto.randomUUID();
-            const options: FixedWindowOptions["in-memory"] = {
+            const options: FixedWindowOptions = {
                 limit: 10,
                 ttl: MS_IN_DAY
             };
@@ -101,7 +101,7 @@ describe("FixedWindowInMemoryExecutor", () => {
 
         it("should found state with limit <= count", () => {
             const key = crypto.randomUUID();
-            const options: FixedWindowOptions["in-memory"] = {
+            const options: FixedWindowOptions = {
                 limit: 10,
                 ttl: MS_IN_DAY
             };

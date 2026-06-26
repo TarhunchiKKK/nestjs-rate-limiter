@@ -5,16 +5,12 @@ import type { IKeyExtractor, KeyExtractorFn } from "./key-extractors";
 
 export type RateLimitGuardOptions = {
     limiter: RateLimiterOptions["limiter"];
-
     executors: {
         default: IExecutor<unknown>;
-
-        custom: Map<InjectionToken, IExecutor<unknown>>;
+        all: Map<InjectionToken, IExecutor<unknown>>;
     };
-
     keyExtractors: {
         default: KeyExtractorFn | IKeyExtractor;
-
-        custom: Map<InjectionToken, IKeyExtractor>;
+        all: Map<InjectionToken, IKeyExtractor>;
     };
 };

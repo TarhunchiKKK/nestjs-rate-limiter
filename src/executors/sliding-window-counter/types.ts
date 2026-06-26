@@ -1,12 +1,6 @@
 export type SlidingWindowCounterOptions = {
-    "in-memory": {
-        limit: number;
-        windowMs: number;
-    };
-    redis: {
-        limit: number;
-        windowMs: number;
-    };
+    limit: number;
+    windowMs: number;
 };
 
 export type SlidingWindowCounterState = {

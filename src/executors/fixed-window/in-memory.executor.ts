@@ -4,13 +4,11 @@ import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { FixedWindowOptions, FixedWindowState } from "./types";
 
-type Options = FixedWindowOptions["in-memory"];
-
 @Executor({ strategy: "fixed-window", storage: "in-memory" })
-export class FixedWindowInMemoryExecutor implements IExecutor<Options> {
+export class FixedWindowInMemoryExecutor implements IExecutor<FixedWindowOptions> {
     public constructor(@InjectStorage() private readonly storage: Map<Key, FixedWindowState>) {}
 
-    public check(key: Key, options: Options) {
+    public check(key: Key, options: FixedWindowOptions) {
         const now = Date.now();
 
         let state = this.storage.get(key);
