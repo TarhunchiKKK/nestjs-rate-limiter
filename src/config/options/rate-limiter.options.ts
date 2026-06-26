@@ -1,5 +1,5 @@
 import type { ModuleMetadata } from "@nestjs/common";
-import type { CleanerOptions } from "../../cleaners";
+import type { CleanerOptions } from "./cleaner.options";
 import type { CustomProvidersOptions } from "./custom-providers.options";
 import type { ExecutorOptions } from "./executor.options";
 import type { KeyExtractorOptions } from "./key-extractors.options";
