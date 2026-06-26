@@ -1,7 +1,7 @@
 import { type CanActivate, type ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import type { ProvidersLocator } from "./config/providers-locator.types";
-import { RateLimit, type RateLimitBaseOptions, type RateLimitKeyExtractorOptions } from "./decorators";
+import { type RateLimitBaseOptions, RateLimitDecorator } from "./decorators";
 import { GUARD_PAYLOAD_TOKEN } from "./di";
 import { type AllStrategiesOptions, type IExecutor, StrategiesRenamingMap, type StrategyOptionsUnion } from "./executors";
 import type { KeyExtractorFn } from "./key-extractors";
@@ -36,16 +36,16 @@ export class RateLimitGuard implements CanActivate {
     }
 
     private getOptions(context: ExecutionContext): GetOptionsResult {
-        const options = this.reflector.get(RateLimit, context.getHandler());
+        const options = this.reflector.get(RateLimitDecorator, context.getHandler());
 
         if (!options) {
             const strategyName = StrategiesRenamingMap[this.payload.defaults.strategy];
             const strategyOptions = this.payload.strategiesOptions[strategyName];
 
             return {
-                extractKeyFn: this.payload.defaults.extractKeyFn,
                 scope: this.payload.defaults.scope,
                 error: this.payload.defaults.error,
+                extractKeyFn: this.payload.defaults.extractKeyFn,
                 strategyOptions: {
                     ...strategyOptions,
                     strategy: this.payload.defaults.strategy
@@ -54,15 +54,48 @@ export class RateLimitGuard implements CanActivate {
         }
 
         let extractKeyFn: KeyExtractorFn;
-        if (("extractKeyFn" satisfies keyof Required<RateLimitKeyExtractorOptions>) in options) {
+        if (options.keyExtractor) {
+            // FIX: key extractor class key getting
+            const existingKeyExtractorFn = this.payload.providers.keyExtractors.get(options.keyExtractor.name);
+
+            if (!existingKeyExtractorFn) {
+                throw new Error(`Cannot find key extractor class for ${options.keyExtractor}`);
+            }
+
+            extractKeyFn = existingKeyExtractorFn;
+        } else if (options.extractKeyFn) {
             extractKeyFn = options.extractKeyFn;
-        } else if (("keyExtractor" satisfies keyof Required<RateLimitKeyExtractorOptions>) in options) {
-            const classname = options.keyExtractor;
-            const keyExtractorProvider = this.payload.providers.keyExtractors.get();
+        } else {
+            extractKeyFn = this.payload.defaults.extractKeyFn;
         }
 
-        const { error, scope } = options;
+        if (!options.strategyOptions.strategy) {
+            const strategyName = StrategiesRenamingMap[this.payload.defaults.strategy];
+            const strategyOptions = this.payload.strategiesOptions[strategyName];
 
-        return {};
+            return {
+                scope: options.scope ?? this.payload.defaults.scope,
+                error: options.error ?? this.payload.defaults.error,
+                extractKeyFn: extractKeyFn,
+                strategyOptions: {
+                    ...strategyOptions,
+                    strategy: this.payload.defaults.strategy
+                } as StrategyOptionsUnion
+            };
+        }
+
+        const strategyName = StrategiesRenamingMap[options.strategyOptions.strategy];
+        const strategyOptions = this.payload.strategiesOptions[strategyName];
+
+        return {
+            scope: options.scope ?? this.payload.defaults.scope,
+            error: options.error ?? this.payload.defaults.error,
+            extractKeyFn: extractKeyFn,
+            strategyOptions: {
+                ...options.strategyOptions,
+                ...strategyOptions,
+                strategy: this.payload.defaults.strategy
+            } as StrategyOptionsUnion
+        };
     }
 }

@@ -9,3 +9,7 @@ export type DeepPartial<T> = {
 };
 
 export type PartialUnionMembers<T> = T extends any ? Partial<T> : never;
+
+export type OptionalToNull<T> = {
+    [K in keyof T]-?: undefined extends T[K] ? T[K] | null : T[K];
+};
