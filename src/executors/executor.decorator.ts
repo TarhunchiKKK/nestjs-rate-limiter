@@ -5,15 +5,16 @@ import "reflect-metadata";
 
 export const EXECUTOR_METADATA_KEY = "__executor__";
 
-export type ExecutorOptions = {
+export type ExecutorMetadata = {
     strategy: Strategies;
+
     storage: StorageTypes;
 };
 
-export function Executor(executorOptions: ExecutorOptions, injectionOptions?: InjectableOptions): ClassDecorator {
+export function Executor(metadata: ExecutorMetadata, options?: InjectableOptions): ClassDecorator {
     return (target: Function) => {
-        Injectable(injectionOptions)(target);
+        Injectable(options)(target);
 
-        Reflect.defineMetadata(EXECUTOR_METADATA_KEY, executorOptions, target);
+        Reflect.defineMetadata(EXECUTOR_METADATA_KEY, metadata, target);
     };
 }
