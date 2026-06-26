@@ -15,7 +15,7 @@ export type RateLimiterOptions = {
 };
 
 export type RateLimiterAsyncOptions = Pick<ModuleMetadata, "imports"> & {
-    inject: any[]
+    inject: any[];
 
-    useFactory: (...args: any[]) => RateLimiterOptions | Promise<RateLimiterOptions>
-}
+    useFactory: (...args: any[]) => RateLimiterOptions | Promise<RateLimiterOptions>;
+};
