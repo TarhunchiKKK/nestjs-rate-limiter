@@ -3,7 +3,6 @@ import * as path from "node:path";
 import type Redis from "ioredis";
 import { InjectStorage } from "../../di";
 import type { Key } from "../../shared/keys";
-import { getRedisKey } from "../../shared/redis";
 import { generateSalt } from "../../shared/salt";
 import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
@@ -19,21 +18,11 @@ export class SlidingWindowLogRedisExecutor implements IExecutor<SlidingWindowLog
     }
 
     public async check(key: Key, options: SlidingWindowLogOptions) {
-        const redisKey = getRedisKey(key);
-        const keysCount = 1;
-
         const startTime = Date.now();
         const salt = generateSalt();
+        const keysCount = 1;
 
-        const result = await this.redis.eval(
-            this.luaScript,
-            keysCount,
-            redisKey,
-            startTime.toString(),
-            options.windowMs.toString(),
-            options.limit.toString(),
-            salt
-        );
+        const result = await this.redis.eval(this.luaScript, keysCount, key, startTime.toString(), options.windowMs.toString(), options.limit.toString(), salt);
 
         return result === 1;
     }
