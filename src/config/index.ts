@@ -1,2 +1,2 @@
 export type { RateLimiterAsyncOptions, RateLimiterOptions } from "./options";
-export { getProviders } from "./helpers"
+export { getProviders } from "./helpers";

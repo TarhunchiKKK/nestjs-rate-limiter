@@ -5,6 +5,7 @@ import type { RateLimitGuardOptions } from "./middleware";
 import { getExecutorMapKey, type IExecutor } from "./executors";
 import { ipKeyExtractor, type IKeyExtractor, type KeyExtractorFn } from "./key-extractors";
 import { EXECUTOR_METADATA_KEY, type ExecutorMetadata } from "./executors/executor.decorator";
+import { isClass } from "./shared/js";
 
 @Module({})
 export class RateLimiterModule {
@@ -28,23 +29,23 @@ export class RateLimiterModule {
                 RateLimiterModule.getProvidersByMultiToken(KEY_EXTRACTORS_TOKEN, keyExtractors),
                 RateLimiterModule.getProvidersByMultiToken(CLEANERS_TOKEN, cleaners),
 
-                RateLimiterModule.getGuardOptions(),
+                RateLimiterModule.getGuardOptions()
             ]
-        }
+        };
     }
 
     private static getProvidersByMultiToken<T>(token: InjectionToken, providers: Provider<T>[]): Provider {
         return {
             provide: token,
-            inject: providers.map(provider => {
+            inject: providers.map((provider) => {
                 if ("provide" in provider) {
                     return provider.provide;
                 }
 
-                throw new Error(`Rate Limiter: Injection token not provided for "${provider}"`)
+                throw new Error(`Injection token not provided for "${provider}"`);
             }),
             useFactory: (...instances: T[]) => instances
-        }
+        };
     }
 
     private static getGuardOptions(): Provider<RateLimitGuardOptions> {
@@ -52,14 +53,15 @@ export class RateLimiterModule {
             provide: GUARD_OPTIONS_TOKEN,
             inject: [OPTIONS_TOKEN, EXECUTORS_TOKEN, KEY_EXTRACTORS_TOKEN],
             useFactory: (options: RateLimiterOptions, executors: IExecutor<unknown>[], keyExtractors: IKeyExtractor[]) => {
-                const executorsMap = new Map<string, IExecutor<unknown>>()
+                // get maps for executors and keyExtractors
+                const executorsMap = new Map<string, IExecutor<unknown>>();
                 const keyExtractorsMap = new Map<InjectionToken, IKeyExtractor>();
 
                 for (const executor of executors) {
                     const metadata: ExecutorMetadata = Reflect.getMetadata(EXECUTOR_METADATA_KEY, executor);
 
                     if (metadata) {
-                        executorsMap.set(getExecutorMapKey(metadata), executor)
+                        executorsMap.set(getExecutorMapKey(metadata), executor);
                     }
                 }
 
@@ -67,24 +69,34 @@ export class RateLimiterModule {
                     keyExtractorsMap.set(keyExtractor.constructor, keyExtractor);
                 }
 
+                // get default executor
                 const defaultExecutor = executorsMap.get(getExecutorMapKey(options.limiter));
 
                 if (!defaultExecutor) {
-                    throw new Error(`Default executor not found for ${options.limiter}`)
+                    throw new Error(`Default executor not found for ${options.limiter}`);
                 }
 
-
+                // get default key extractor
                 let defaultKeyExtractor: KeyExtractorFn | IKeyExtractor;
                 if (!options.keyExtractor?.default) {
-                    defaultKeyExtractor = ipKeyExtractor
-                }
+                    defaultKeyExtractor = ipKeyExtractor;
+                } else {
+                    if (typeof options.keyExtractor.default === "function") {
+                        if (isClass(options.keyExtractor.default)) {
+                            const fromMap = keyExtractorsMap.get(options.keyExtractor.default.constructor);
 
-                // TODO: add is class check
-                // else if (Reflect.getMetadata(options.keyExtractor.default)) {
-                //     defaultKeyExtractor = keyExtractorsMap.get(options.keyExtractor.default.constructor) ?? ipKeyExtractor
-                // } else {
-                //     defaultExecutor = options.keyExtractor.default
-                // }
+                            if (!fromMap) {
+                                throw Error("Default key extractor is not registered in custom key extractors");
+                            }
+
+                            defaultKeyExtractor = fromMap;
+                        } else {
+                            defaultKeyExtractor = options.keyExtractor.default as KeyExtractorFn;
+                        }
+                    }
+
+                    throw new Error(`Incorrect default key extractor: ${options.keyExtractor.default}`);
+                }
 
                 return {
                     limiter: options.limiter,
@@ -96,9 +108,8 @@ export class RateLimiterModule {
                         default: defaultKeyExtractor,
                         custom: keyExtractorsMap
                     }
-                }
-
+                };
             }
-        }
+        };
     }
 }

@@ -10,11 +10,11 @@ export type RateLimitGuardOptions = {
         default: IExecutor<unknown>;
 
         custom: Map<InjectionToken, IExecutor<unknown>>;
-    }
+    };
 
     keyExtractors: {
         default: KeyExtractorFn | IKeyExtractor;
 
-        custom: Map<InjectionToken, IKeyExtractor>
-    }
-}
+        custom: Map<InjectionToken, IKeyExtractor>;
+    };
+};
