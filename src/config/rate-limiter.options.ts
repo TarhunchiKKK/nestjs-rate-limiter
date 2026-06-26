@@ -1,4 +1,4 @@
-import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
+import type { ExecutionContext, ModuleMetadata, Provider, Type } from "@nestjs/common";
 import type { FixedWindowOptions, LeakyBucketOptions, SlidingWindowCounterOptions, SlidingWindowLogOptions, TokenBucketOptions } from "../executors";
 import type { IKeyExtractor, KeyExtractorFn } from "../key-extractors";
 import type { StorageTypes, Strategies } from "../shared/types";
@@ -9,6 +9,7 @@ export type RateLimiterOptions = {
         defaults: {
             strategy?: Strategies;
             scope?: string;
+            error?: (context: ExecutionContext) => Error;
         };
         options: {
             fixedWindow?: Partial<FixedWindowOptions>;
