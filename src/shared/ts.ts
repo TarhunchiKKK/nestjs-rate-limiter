@@ -7,3 +7,5 @@ export type DeepRequired<T> = {
 export type DeepPartial<T> = {
     [Key in keyof T]?: T[Key] extends object ? DeepPartial<Partial<T[Key]>> : Partial<T[Key]>;
 };
+
+export type PartialUnionMembers<T> = T extends any ? Partial<T> : never;
