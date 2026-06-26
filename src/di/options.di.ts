@@ -1,31 +1,29 @@
-import type { IKeyExtractor, KeyExtractorFn } from "../key-extractors"
-import type { StorageTypes, Strategies } from "../shared/types"
-
-
+import type { IKeyExtractor, KeyExtractorFn } from "../key-extractors";
+import type { StorageTypes, Strategies } from "../shared/types";
 
 export type RateLimiterOptions = {
     limiter: {
         strategy: {
-            type: Strategies
-        }
+            type: Strategies;
+        };
         storage: {
-            type: StorageTypes
-        }
-        customExecutors: [],
+            type: StorageTypes;
+        };
+        customExecutors: [];
         logOverWrights: boolean;
-    }
+    };
 
     cleaner: {
         default: {
-            throwOnError: boolean
-            enabled: boolean
-        }
-        customCleaners: [],
-        logOverWrights: []
-    }
+            throwOnError: boolean;
+            enabled: boolean;
+        };
+        customCleaners: [];
+        logOverWrights: [];
+    };
 
     keyExtractors: {
-        default: KeyExtractorFn | IKeyExtractor
-        custom: []
-    }
-}
+        default: KeyExtractorFn | IKeyExtractor;
+        custom: [];
+    };
+};
