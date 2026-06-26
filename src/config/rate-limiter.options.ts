@@ -6,7 +6,10 @@ import type { StorageTypes, Strategies } from "../shared/types";
 export type RateLimiterOptions = {
     limiter: {
         storage: StorageTypes;
-        strategy?: Strategies;
+        defaults: {
+            strategy?: Strategies;
+            scope?: string;
+        };
         options: {
             fixedWindow?: Partial<FixedWindowOptions>;
             tokenBucket?: Partial<TokenBucketOptions>;
