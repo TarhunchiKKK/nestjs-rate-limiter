@@ -20,8 +20,8 @@ export type RateLimitErrorFactoryOptions =
     | { errorFactory?: never; errorFactoryFn: ErrorFactoryFn };
 
 export type RateLimitOptionsFactoryOptions =
-    | { factory: Type<IOptionsFactory> | TokenType; optionsFactoryFn?: never }
-    | { factory?: never; optionsFactoryFn: OptionsFactoryFn };
+    | { factory: Type<IOptionsFactory> | TokenType; factoryFn?: never }
+    | { factory?: never; factoryFn: OptionsFactoryFn };
 
 export type RateLimitStrategyOptions = PartialUnionMembers<StrategyOptionsUnion>;
 

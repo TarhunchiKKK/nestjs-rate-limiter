@@ -1,18 +1,16 @@
 import type { DeepRequired } from "../../shared/ts";
 import type {
-    RateLimitBaseOptions,
-    RateLimitErrorFactoryOptions,
+    RateLimiterModuleBaseOptions,
     RateLimiterModuleCustomProvidersOptions,
-    RateLimiterModuleStorageOptions,
-    RateLimiterModuleStrategyOptions,
-    RateLimitKeyExtractorOptions,
-    RateLimitOptionsFactoryOptions
+    RateLimiterModuleErrorFactoryOptions,
+    RateLimiterModuleKeyExtractorOptions,
+    RateLimiterModuleOptionsFactoryOptions,
+    RateLimiterModuleStrategyOptions
 } from "../options";
 
-export type DefaultOptions = RateLimiterModuleStorageOptions &
+export type DefaultOptions = RateLimiterModuleBaseOptions &
     DeepRequired<RateLimiterModuleStrategyOptions> &
-    RateLimitBaseOptions &
-    RateLimitKeyExtractorOptions &
-    RateLimitErrorFactoryOptions &
-    Partial<RateLimitOptionsFactoryOptions> &
+    RateLimiterModuleKeyExtractorOptions &
+    RateLimiterModuleErrorFactoryOptions &
+    Partial<RateLimiterModuleOptionsFactoryOptions> &
     DeepRequired<RateLimiterModuleCustomProvidersOptions>;
