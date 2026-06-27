@@ -12,5 +12,5 @@ export type ErrorFactoryOptions = {
 export type ErrorFactoryFn = (context: ExecutionContext, options: ErrorFactoryOptions, key: Key) => Error | Promise<Error>;
 
 export interface IErrorFactory {
-    create: ErrorFactoryFn;
+    getError: ErrorFactoryFn;
 }
