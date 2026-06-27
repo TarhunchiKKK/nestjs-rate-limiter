@@ -13,3 +13,16 @@ export type PartialUnionMembers<T> = T extends any ? Partial<T> : never;
 export type OptionalToNull<T> = {
     [K in keyof T]-?: undefined extends T[K] ? T[K] | null : T[K];
 };
+
+export type IsNever<T> = [T] extends [never] ? true : false;
+
+export type TransformNeverToNull<T> = {
+    [K in keyof T]-?: IsNever<T[K]> extends true ? null : T[K];
+};
+
+export type OptionalNeverToNullUnion<T> = T extends any ? TransformNeverToNull<T> : never;
+
+type A = TransformNeverToNull<{
+    a: number;
+    b: never;
+}>;

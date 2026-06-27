@@ -12,16 +12,16 @@ export type RateLimitBaseOptions = {
 };
 
 export type RateLimitKeyExtractorOptions =
-    | { keyExtractor: Type<IKeyExtractor> | TokenType; keyExtractorFn?: never }
-    | { keyExtractor?: never; keyExtractorFn: KeyExtractorFn };
+    | { keyExtractor?: Type<IKeyExtractor> | TokenType; keyExtractorFn?: never }
+    | { keyExtractor?: never; keyExtractorFn?: KeyExtractorFn };
 
 export type RateLimitErrorFactoryOptions =
-    | { errorFactory: Type<IErrorFactory> | TokenType; errorFactoryFn?: never }
-    | { errorFactory?: never; errorFactoryFn: ErrorFactoryFn };
+    | { errorFactory?: Type<IErrorFactory> | TokenType; errorFactoryFn?: never }
+    | { errorFactory?: never; errorFactoryFn?: ErrorFactoryFn };
 
 export type RateLimitOptionsFactoryOptions =
-    | { factory: Type<IOptionsFactory> | TokenType; factoryFn?: never }
-    | { factory?: never; factoryFn: OptionsFactoryFn };
+    | { factory?: Type<IOptionsFactory> | TokenType; factoryFn?: never }
+    | { factory?: never; factoryFn?: OptionsFactoryFn };
 
 export type RateLimitStrategyOptions = PartialUnionMembers<StrategyOptionsUnion>;
 
