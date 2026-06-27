@@ -1,6 +1,6 @@
 import type { Scope, Type } from "@nestjs/common";
+import type { IKeyExtractor, KeyExtractorFn } from "../../custom/key-extractors";
 import type { StrategyOptionsUnion } from "../../executors";
-import type { IKeyExtractor, KeyExtractorFn } from "../../key-extractors";
 
 export type RateLimitBaseOptions = {
     scope: Scope;

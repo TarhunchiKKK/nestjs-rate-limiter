@@ -1,5 +1,5 @@
 import { ForbiddenException } from "@nestjs/common";
-import { ipKeyExtractor } from "../key-extractors";
+import { ipKeyExtractor } from "../custom/key-extractors";
 import { MS_IN_MINUTE } from "../shared/date";
 import type { DeepRequired } from "../shared/ts";
 import type { RateLimiterOptions } from "./rate-limiter-options.types";
