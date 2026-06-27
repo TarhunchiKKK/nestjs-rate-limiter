@@ -1,4 +1,5 @@
 import { Injectable, type InjectableOptions } from "@nestjs/common";
+import "reflect-metadata";
 
 export const ERROR_FACTORY_METADATA = "__rate_limiter_error_factory__";
 
