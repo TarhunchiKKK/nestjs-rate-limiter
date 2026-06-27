@@ -1,10 +1,11 @@
-import type { Scope, Type } from "@nestjs/common";
+import type { Type } from "@nestjs/common";
 import type { ErrorFactoryFn, IErrorFactory } from "../../custom/error-factories";
 import type { IKeyExtractor, KeyExtractorFn } from "../../custom/key-extractors";
 import type { IOptionsFactory, OptionsFactoryFn } from "../../custom/options-factories";
 import type { StrategyOptionsUnion } from "../../executors";
 import type { TokenType } from "../../shared/nestjs";
 import type { PartialUnionMembers } from "../../shared/ts";
+import type { Scope } from "../../shared/types";
 
 export type RateLimitBaseOptions = {
     scope?: Scope;

@@ -2,4 +2,6 @@ export type Strategies = "fixed-window" | "token-bucket" | "sliding-window-count
 
 export type StorageTypes = "in-memory" | "redis";
 
-export type Scope = string;
+export type Scope = string | never;
+
+export const DEFAULT_SCOPE: Scope = "default-scope";

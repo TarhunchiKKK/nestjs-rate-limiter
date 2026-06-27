@@ -18,9 +18,11 @@ export type RateLimiterModuleStorageOptions = {
 };
 
 export type RateLimiterModuleCustomProvidersOptions = {
-    keyExtractors?: Provider<IKeyExtractor>[];
-    errorFactories?: Provider<IErrorFactory>[];
-    optionsFactories?: Provider<IOptionsFactory>[];
+    custom?: {
+        keyExtractors?: Provider<IKeyExtractor>[];
+        errorFactories?: Provider<IErrorFactory>[];
+        optionsFactories?: Provider<IOptionsFactory>[];
+    };
 };
 
 export type RateLimiterModuleOptions = RateLimiterModuleStorageOptions &
