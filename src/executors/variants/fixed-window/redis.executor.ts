@@ -3,8 +3,7 @@ import * as path from "node:path";
 import type Redis from "ioredis";
 import { InjectStorage } from "../../../di";
 import type { Key } from "../../../shared/keys";
-import { Executor } from "../executor.decorator";
-import type { IExecutor } from "../executor.interface";
+import { Executor, type IExecutor } from "../../lib";
 import type { FixedWindowOptions } from "./types";
 
 @Executor({ strategy: "fixed-window", storage: "redis" })

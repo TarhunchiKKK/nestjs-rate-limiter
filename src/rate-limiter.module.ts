@@ -1,26 +1,24 @@
 import { type DynamicModule, type InjectionToken, Module, type Provider } from "@nestjs/common";
-import { getProviders, type RateLimiterOptions } from "./config";
-import { EXECUTORS_TOKEN, KEY_EXTRACTORS_TOKEN, OPTIONS_TOKEN } from "./di";
+import type { RateLimiterModuleOptions } from "./config/options";
+import { GUARD_OPTIONS_TOKEN } from "./di";
 
 @Module({})
 export class RateLimiterModule {
-    public static forRoot(options: RateLimiterOptions): DynamicModule {
-        const { executors, keyExtractors } = getProviders(options);
-
+    public static forRoot(options: RateLimiterModuleOptions): DynamicModule {
         return {
             global: true,
             module: RateLimiterModule,
             providers: [
                 {
-                    provide: OPTIONS_TOKEN,
+                    provide: GUARD_OPTIONS_TOKEN,
                     useValue: options
-                },
+                }
 
-                ...executors,
-                ...keyExtractors,
+                // ...executors,
+                // ...keyExtractors,
 
-                RateLimiterModule.getProvidersByMultiToken(EXECUTORS_TOKEN, executors),
-                RateLimiterModule.getProvidersByMultiToken(KEY_EXTRACTORS_TOKEN, keyExtractors)
+                // RateLimiterModule.getProvidersByMultiToken(EXECUTORS_TOKEN, executors),
+                // RateLimiterModule.getProvidersByMultiToken(KEY_EXTRACTORS_TOKEN, keyExtractors)
             ]
         };
     }

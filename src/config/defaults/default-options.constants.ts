@@ -2,9 +2,9 @@ import { defaultErrorFactoryFn } from "../../custom/error-factories";
 import { ipKeyExtractor } from "../../custom/key-extractors";
 import { MS_IN_MINUTE } from "../../shared/date";
 import { DEFAULT_SCOPE } from "../../shared/types";
-import type { DefaultOptions } from "./default-options.types";
+import type { RateLimiterModuleFullOptions } from "../options";
 
-export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS: DefaultOptions = {
+export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS: RateLimiterModuleFullOptions = {
     storage: "in-memory",
     scope: DEFAULT_SCOPE,
 

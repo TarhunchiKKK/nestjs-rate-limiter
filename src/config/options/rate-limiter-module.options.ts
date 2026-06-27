@@ -2,6 +2,7 @@
 import type { ModuleMetadata, Provider } from "@nestjs/common";
 import type { IKeyExtractor } from "../../custom/key-extractors";
 import type { IOptionsFactory } from "../../custom/options-factories";
+import type { DeepRequired, FlattenOptionalNeverUnion } from "../../shared/ts";
 import type { BaseOptions, ErrorFactoryOptions, KeyExtractorOptions, OptionsFactoryOptions, StorageOptions, StrategyOptions } from "./common.options";
 
 export type CustomProvidersOptions = {
@@ -24,3 +25,11 @@ export type RateLimiterModuleAsyncOptions = Pick<ModuleMetadata, "imports"> & {
     inject?: any[];
     useFactory: (...args: any[]) => RateLimiterModuleOptions | Promise<RateLimiterModuleOptions>;
 };
+
+export type RateLimiterModuleFullOptions = BaseOptions &
+    StorageOptions &
+    StrategyOptions &
+    KeyExtractorOptions &
+    ErrorFactoryOptions &
+    Partial<FlattenOptionalNeverUnion<OptionsFactoryOptions>> &
+    DeepRequired<CustomProvidersOptions>;

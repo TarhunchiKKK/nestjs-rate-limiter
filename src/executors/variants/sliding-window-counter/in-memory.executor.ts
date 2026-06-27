@@ -1,7 +1,6 @@
 import { InjectStorage } from "../../../di";
 import type { Key } from "../../../shared/keys";
-import { Executor } from "../executor.decorator";
-import type { IExecutor } from "../executor.interface";
+import { Executor, type IExecutor } from "../../lib";
 import type { SlidingWindowCounterOptions, SlidingWindowCounterState } from "./types";
 
 @Executor({ strategy: "sliding-window-counter", storage: "in-memory" })

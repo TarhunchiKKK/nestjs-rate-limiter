@@ -1,26 +1,21 @@
-import type {
-    RateLimiterModuleErrorFactoryOptions,
-    RateLimiterModuleKeyExtractorOptions,
-    RateLimiterModuleOptions,
-    RateLimiterModuleOptionsFactoryOptions
-} from "../options";
+import type { ErrorFactoryOptions, KeyExtractorOptions, OptionsFactoryOptions, RateLimiterModuleOptions } from "../options";
 import { RATE_LIMITER_MODULE_DEFAULT_OPTIONS } from "./default-options.constants";
 
 export function mergeDefaultOptions(options: RateLimiterModuleOptions) {
     const keyExtractorOptions = {
         keyExtractor: options.keyExtractor ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.keyExtractor,
         keyExtractorFn: options.keyExtractorFn ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.keyExtractorFn
-    } as RateLimiterModuleKeyExtractorOptions;
+    } as KeyExtractorOptions;
 
     const errorFactoryOptions = {
         errorFactory: options.errorFactory ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.errorFactory,
         errorFactoryFn: options.errorFactoryFn ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.errorFactoryFn
-    } as RateLimiterModuleErrorFactoryOptions;
+    } as ErrorFactoryOptions;
 
     const optionsFactoryOptions = {
-        optionsFactory: options.optionsFactory ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.optionsFactory,
-        optionsFactoryFn: options.optionsFactoryFn ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.optionsFactoryFn
-    } as RateLimiterModuleOptionsFactoryOptions;
+        factory: options.factory ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.factory,
+        factoryFn: options.factoryFn ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.factoryFn
+    } as OptionsFactoryOptions;
 
     return {
         storage: options.storage ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.storage,
@@ -32,7 +27,7 @@ export function mergeDefaultOptions(options: RateLimiterModuleOptions) {
             tokenBucket: options.strategyOptions?.tokenBucket ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.strategyOptions.tokenBucket,
             slidingWindowCounter: options.strategyOptions?.slidingWindowCounter ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.strategyOptions.slidingWindowCounter,
             slidingWindowLog: options.strategyOptions?.slidingWindowLog ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.strategyOptions.slidingWindowLog,
-            leakyBucket: options.strategyOptions?.tokenBucket ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.strategyOptions.leakyBucket
+            leakyBucket: options.strategyOptions?.leakyBucket ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.strategyOptions.leakyBucket
         },
 
         ...keyExtractorOptions,
