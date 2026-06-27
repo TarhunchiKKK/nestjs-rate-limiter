@@ -1,10 +1,10 @@
-import type { ExtractMember } from "../shared/ts";
-import type { Strategies } from "../shared/types";
-import type { FixedWindowOptions } from "./fixed-window";
-import type { LeakyBucketOptions } from "./leaky-bucket";
-import type { SlidingWindowCounterOptions } from "./sliding-window-counter";
-import type { SlidingWindowLogOptions } from "./sliding-window-log";
-import type { TokenBucketOptions } from "./token-bucket";
+import type { ExtractMember } from "../../shared/ts";
+import type { Strategies } from "../../shared/types";
+import type { FixedWindowOptions } from "../variants/fixed-window";
+import type { LeakyBucketOptions } from "../variants/leaky-bucket";
+import type { SlidingWindowCounterOptions } from "../variants/sliding-window-counter";
+import type { SlidingWindowLogOptions } from "../variants/sliding-window-log";
+import type { TokenBucketOptions } from "../variants/token-bucket";
 
 export type AllStrategiesOptions = {
     fixedWindow: FixedWindowOptions;
@@ -12,14 +12,6 @@ export type AllStrategiesOptions = {
     slidingWindowCounter: SlidingWindowCounterOptions;
     slidingWindowLog: SlidingWindowLogOptions;
     leakyBucket: LeakyBucketOptions;
-};
-
-export const StrategiesRenamingMap: Record<Strategies, keyof AllStrategiesOptions> = {
-    "fixed-window": "fixedWindow",
-    "token-bucket": "tokenBucket",
-    "sliding-window-counter": "slidingWindowCounter",
-    "sliding-window-log": "slidingWindowLog",
-    "leaky-bucket": "leakyBucket"
 };
 
 export type StrategyOptionsUnion =

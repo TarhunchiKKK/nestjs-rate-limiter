@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
 import { STORAGE_TOKEN } from "../../../../src/di";
 import { LeakyBucketRedisExecutor } from "../../../../src/executors";
-import type { LeakyBucketOptions } from "../../../../src/executors/leaky-bucket/types";
+import type { LeakyBucketOptions } from "../../../../src/executors/variants/leaky-bucket/types";
 import { clearMock, createRedisMock, MS_IN_MINUTE } from "../../../mocks";
 
 describe("LeakyBucketRedisExecutor", () => {

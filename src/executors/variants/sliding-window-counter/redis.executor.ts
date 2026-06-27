@@ -1,8 +1,8 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type Redis from "ioredis";
-import { InjectStorage } from "../../di";
-import type { Key } from "../../shared/keys";
+import { InjectStorage } from "../../../di";
+import type { Key } from "../../../shared/keys";
 import { Executor } from "../executor.decorator";
 import type { IExecutor } from "../executor.interface";
 import type { SlidingWindowCounterOptions } from "./types";
