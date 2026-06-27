@@ -1,11 +1,10 @@
 import { defaultErrorFactoryFn } from "../../custom/error-factories";
 import { ipKeyExtractor } from "../../custom/key-extractors";
-import type { AllStrategiesOptions } from "../../executors";
 import { MS_IN_MINUTE } from "../../shared/date";
 import { DEFAULT_SCOPE } from "../../shared/types";
-import type { RateLimiterModuleOptions } from "../options";
+import type { DefaultOptions } from "./default-options.types";
 
-export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS = {
+export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS: DefaultOptions = {
     storage: "in-memory",
     scope: DEFAULT_SCOPE,
 
@@ -33,7 +32,7 @@ export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS = {
             leakRate: 2 / MS_IN_MINUTE,
             ttl: 3 * MS_IN_MINUTE
         }
-    } satisfies AllStrategiesOptions,
+    },
 
     keyExtractor: undefined,
     keyExtractorFn: ipKeyExtractor,
@@ -47,4 +46,4 @@ export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS = {
         errorFactories: [],
         optionsFactories: []
     }
-} satisfies RateLimiterModuleOptions;
+};

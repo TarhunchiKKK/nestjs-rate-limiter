@@ -1,5 +1,5 @@
 import type { RateLimiterModuleOptions } from "../options";
-import { RATE_LIMITER_MODULE_DEFAULT_OPTIONS } from "./default-options.constant";
+import { RATE_LIMITER_MODULE_DEFAULT_OPTIONS } from "./default-options.constants";
 
 // FIX: mutually exclusive types for `keyExtractor`, `errorFactory` and `factory` fields
 export function mergeDefaultOptions(options: RateLimiterModuleOptions): RateLimiterModuleOptions {

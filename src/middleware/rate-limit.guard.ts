@@ -1,12 +1,12 @@
 import { type CanActivate, type ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import type { ProvidersLocator } from "./config/providers-locator.types";
-import { type RateLimitBaseOptions, RateLimitDecorator } from "./decorators";
-import { GUARD_PAYLOAD_TOKEN } from "./di";
-import { type AllStrategiesOptions, type IExecutor, StrategiesRenamingMap, type StrategyOptionsUnion } from "./executors";
-import type { KeyExtractorFn } from "./key-extractors";
-import type { DeepRequired } from "./shared/ts";
-import type { Strategies } from "./shared/types";
+import type { ProvidersLocator } from "../config/providers-locator.types";
+import type { KeyExtractorFn } from "../custom/key-extractors";
+import { type RateLimitBaseOptions, RateLimitDecorator } from "../decorators";
+import { GUARD_PAYLOAD_TOKEN } from "../di";
+import { type AllStrategiesOptions, type IExecutor, StrategiesRenamingMap, type StrategyOptionsUnion } from "../executors";
+import type { DeepRequired } from "../shared/ts";
+import type { Strategies } from "../shared/types";
 
 export type RateLimitGuardPayload = {
     defaults: DeepRequired<RateLimitBaseOptions> & {

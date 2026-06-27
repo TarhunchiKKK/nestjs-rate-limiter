@@ -27,10 +27,10 @@ export type RateLimiterModuleCustomProvidersOptions = {
 
 export type RateLimiterModuleOptions = RateLimiterModuleStorageOptions &
     RateLimiterModuleStrategyOptions &
-    RateLimitBaseOptions &
-    RateLimitKeyExtractorOptions &
-    RateLimitErrorFactoryOptions &
-    RateLimitOptionsFactoryOptions &
+    Partial<RateLimitBaseOptions> &
+    Partial<RateLimitKeyExtractorOptions> &
+    Partial<RateLimitErrorFactoryOptions> &
+    Partial<RateLimitOptionsFactoryOptions> &
     RateLimiterModuleCustomProvidersOptions;
 
 export type RateLimiterModuleAsyncOptions = Pick<ModuleMetadata, "imports"> & {
