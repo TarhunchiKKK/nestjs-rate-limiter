@@ -3,8 +3,7 @@ import * as path from "node:path";
 import type Redis from "ioredis";
 import { InjectStorage } from "../../../di";
 import type { Key } from "../../../shared/keys";
-import { Executor } from "../executor.decorator";
-import type { IExecutor } from "../executor.interface";
+import { Executor, type IExecutor } from "../../lib";
 import type { LeakyBucketOptions } from "./types";
 
 @Executor({ strategy: "leaky-bucket", storage: "redis" })

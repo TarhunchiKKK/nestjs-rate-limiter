@@ -1,47 +1,35 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: `any` type is necessary for real type providing */
-import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
-import type { IErrorFactory } from "../../custom/error-factories";
+import type { ModuleMetadata, Provider } from "@nestjs/common";
 import type { IKeyExtractor } from "../../custom/key-extractors";
-import type { IOptionsFactory, OptionsFactoryFn } from "../../custom/options-factories";
-import type { AllStrategiesOptions } from "../../executors";
-import type { TokenType } from "../../shared/nestjs";
-import type { DeepPartial } from "../../shared/ts";
-import type { StorageTypes, Strategies } from "../../shared/types";
-import type { RateLimitBaseOptions, RateLimitErrorFactoryOptions, RateLimitKeyExtractorOptions } from "./rate-limit.options";
+import type { IOptionsFactory } from "../../custom/options-factories";
+import type { DeepRequired, FlattenOptionalNeverUnion } from "../../shared/ts";
+import type { BaseOptions, ErrorFactoryOptions, KeyExtractorOptions, OptionsFactoryOptions, StorageOptions, StrategyOptions } from "./common.options";
 
-export type RateLimiterModuleStrategyOptions = {
-    strategy?: Strategies;
-    strategyOptions?: DeepPartial<AllStrategiesOptions>;
-};
-
-export type RateLimiterModuleBaseOptions = {
-    storage: StorageTypes;
-} & Partial<RateLimitBaseOptions>;
-
-export type RateLimiterModuleKeyExtractorOptions = Partial<RateLimitKeyExtractorOptions>;
-
-export type RateLimiterModuleErrorFactoryOptions = Partial<RateLimitErrorFactoryOptions>;
-
-export type RateLimiterModuleOptionsFactoryOptions =
-    | { optionsFactory: Type<IOptionsFactory> | TokenType; optionsFactoryFn?: never }
-    | { optionsFactory?: never; optionsFactoryFn: OptionsFactoryFn };
-
-export type RateLimiterModuleCustomProvidersOptions = {
+export type CustomProvidersOptions = {
     custom?: {
         keyExtractors?: Provider<IKeyExtractor>[];
-        errorFactories?: Provider<IErrorFactory>[];
+        errorFactories?: Provider<IKeyExtractor>[];
         optionsFactories?: Provider<IOptionsFactory>[];
     };
 };
 
-export type RateLimiterModuleOptions = RateLimiterModuleBaseOptions &
-    RateLimiterModuleStrategyOptions &
-    RateLimiterModuleKeyExtractorOptions &
-    RateLimiterModuleErrorFactoryOptions &
-    RateLimiterModuleOptionsFactoryOptions &
-    RateLimiterModuleCustomProvidersOptions;
+export type RateLimiterModuleOptions = Partial<BaseOptions> &
+    Partial<KeyExtractorOptions> &
+    Partial<ErrorFactoryOptions> &
+    Partial<OptionsFactoryOptions> &
+    Partial<StrategyOptions> &
+    StorageOptions &
+    CustomProvidersOptions;
 
 export type RateLimiterModuleAsyncOptions = Pick<ModuleMetadata, "imports"> & {
     inject?: any[];
     useFactory: (...args: any[]) => RateLimiterModuleOptions | Promise<RateLimiterModuleOptions>;
 };
+
+export type RateLimiterModuleFullOptions = BaseOptions &
+    StorageOptions &
+    StrategyOptions &
+    KeyExtractorOptions &
+    ErrorFactoryOptions &
+    Partial<FlattenOptionalNeverUnion<OptionsFactoryOptions>> &
+    DeepRequired<CustomProvidersOptions>;

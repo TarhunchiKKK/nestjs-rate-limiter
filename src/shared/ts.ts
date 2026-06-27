@@ -14,15 +14,24 @@ export type OptionalToNull<T> = {
     [K in keyof T]-?: undefined extends T[K] ? T[K] | null : T[K];
 };
 
-export type IsNever<T> = [T] extends [never] ? true : false;
+type IsNever<T> = [T] extends [never] ? true : false;
 
-export type TransformNeverToNull<T> = {
-    [K in keyof T]-?: IsNever<T[K]> extends true ? null : T[K];
+type NormalizeOptionalNever<T> = {
+    [K in keyof T]-?: IsNever<Exclude<T[K], undefined>> extends true ? null : T[K] | null;
 };
 
-export type OptionalNeverToNullUnion<T> = T extends any ? TransformNeverToNull<T> : never;
+export type NormalizeOptionalNeverUnion<T> = T extends any ? NormalizeOptionalNever<T> : never;
 
-type A = TransformNeverToNull<{
-    a: number;
-    b: never;
-}>;
+export type Remap<T> = {
+    [K in keyof T]: T[K] extends Record<string, unknown> ? Remap<T[K]> : T[K];
+} & {};
+
+export type Assignable<Base, Child extends Base> = Child extends Base ? true : false;
+
+type ExtractTypeFromUnion<U, K extends string | number | symbol> = U extends any ? (K extends keyof U ? Exclude<U[K], never | undefined> : never) : never;
+
+export type FlattenOptionalNeverUnion<U> = {
+    [K in U extends any ? keyof U : never]?: ExtractTypeFromUnion<U, K>;
+};
+
+export type OmitFields<T, K extends keyof T> = Omit<T, K>;

@@ -1,7 +1,6 @@
 import { InjectStorage } from "../../../di";
 import type { Key } from "../../../shared/keys";
-import { Executor } from "../executor.decorator";
-import type { IExecutor } from "../executor.interface";
+import { Executor, type IExecutor } from "../../lib";
 import type { SlidingWindowLogOptions, SlidingWindowLogState } from "./types";
 
 @Executor({ strategy: "sliding-window-log", storage: "in-memory" })

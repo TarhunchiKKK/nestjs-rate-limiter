@@ -1,1 +1,2 @@
-export { getRelevantExecutors } from "./executors.helpers";
+export { getRelevantExecutors } from "./get-relevant-executors.helpers";
+export { normalizeOptions } from "./normalize-options.helper";

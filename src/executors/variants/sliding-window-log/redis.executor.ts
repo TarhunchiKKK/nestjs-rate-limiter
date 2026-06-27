@@ -4,8 +4,7 @@ import type Redis from "ioredis";
 import { InjectStorage } from "../../../di";
 import type { Key } from "../../../shared/keys";
 import { generateSalt } from "../../../shared/salt";
-import { Executor } from "../executor.decorator";
-import type { IExecutor } from "../executor.interface";
+import { Executor, type IExecutor } from "../../lib";
 import type { SlidingWindowLogOptions } from "./types";
 
 @Executor({ strategy: "sliding-window-log", storage: "redis" })

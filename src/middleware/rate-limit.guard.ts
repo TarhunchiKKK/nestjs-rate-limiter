@@ -1,33 +1,22 @@
 import { type CanActivate, type ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import type { ProvidersLocator } from "../config/providers-locator.types";
+import type { BaseOptions, RateLimitGuardOptions } from "../config/options";
 import type { KeyExtractorFn } from "../custom/key-extractors";
-import { type RateLimitBaseOptions, RateLimitDecorator } from "../decorators";
-import { GUARD_PAYLOAD_TOKEN } from "../di";
-import { type AllStrategiesOptions, type IExecutor, StrategiesRenamingMap, type StrategyOptionsUnion } from "../executors";
+import { RateLimitDecorator } from "../decorators";
+import { GUARD_OPTIONS_TOKEN } from "../di";
+import { StrategiesRenamingMap, type StrategyOptionsUnion } from "../executors";
 import type { DeepRequired } from "../shared/ts";
-import type { Strategies } from "../shared/types";
-
-export type RateLimitGuardPayload = {
-    defaults: DeepRequired<RateLimitBaseOptions> & {
-        executor: IExecutor<unknown>;
-        extractKeyFn: KeyExtractorFn;
-        strategy: Strategies;
-    };
-    strategiesOptions: AllStrategiesOptions;
-    providers: ProvidersLocator;
-};
 
 type GetOptionsResult = {
     strategyOptions: StrategyOptionsUnion;
 
     extractKeyFn: KeyExtractorFn;
-} & DeepRequired<RateLimitBaseOptions>;
+} & DeepRequired<BaseOptions>;
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {
     public constructor(
-        @Inject(GUARD_PAYLOAD_TOKEN) private readonly payload: RateLimitGuardPayload,
+        @Inject(GUARD_OPTIONS_TOKEN) private readonly options: RateLimitGuardOptions,
         @Inject(Reflector) private readonly reflector: Reflector
     ) {}
 
@@ -39,16 +28,16 @@ export class RateLimitGuard implements CanActivate {
         const options = this.reflector.get(RateLimitDecorator, context.getHandler());
 
         if (!options) {
-            const strategyName = StrategiesRenamingMap[this.payload.defaults.strategy];
-            const strategyOptions = this.payload.strategiesOptions[strategyName];
+            const strategyName = StrategiesRenamingMap[this.options.strategy];
+            const strategyOptions = this.options.strategyOptions[strategyName];
 
             return {
-                scope: this.payload.defaults.scope,
-                error: this.payload.defaults.error,
-                extractKeyFn: this.payload.defaults.extractKeyFn,
+                scope: this.options.scope,
+                // error: this.options.errorFactoryFn,
+                extractKeyFn: this.options.keyExtractorFn,
                 strategyOptions: {
                     ...strategyOptions,
-                    strategy: this.payload.defaults.strategy
+                    strategy: this.options.strategy
                 } as StrategyOptionsUnion
             };
         }
@@ -56,45 +45,45 @@ export class RateLimitGuard implements CanActivate {
         let extractKeyFn: KeyExtractorFn;
         if (options.keyExtractor) {
             // FIX: key extractor class key getting
-            const existingKeyExtractorFn = this.payload.providers.keyExtractors.get(options.keyExtractor.name);
+            const existingKeyExtractorFn = this.options.providers.keyExtractors.get(options.keyExtractor.name);
 
             if (!existingKeyExtractorFn) {
                 throw new Error(`Cannot find key extractor class for ${options.keyExtractor}`);
             }
 
             extractKeyFn = existingKeyExtractorFn;
-        } else if (options.extractKeyFn) {
-            extractKeyFn = options.extractKeyFn;
+        } else if (options.keyExtractorFn) {
+            extractKeyFn = options.keyExtractorFn;
         } else {
-            extractKeyFn = this.payload.defaults.extractKeyFn;
+            extractKeyFn = this.options.keyExtractorFn;
         }
 
-        if (!options.strategyOptions.strategy) {
-            const strategyName = StrategiesRenamingMap[this.payload.defaults.strategy];
-            const strategyOptions = this.payload.strategiesOptions[strategyName];
+        if (!options.strategy) {
+            const strategyName = StrategiesRenamingMap[this.options.strategy];
+            const strategyOptions = this.options.strategyOptions[strategyName];
 
             return {
-                scope: options.scope ?? this.payload.defaults.scope,
-                error: options.error ?? this.payload.defaults.error,
+                scope: options.scope ?? this.options.scope,
+                error: options.errorFactoryFn ?? this.options.errorFactoryFn,
                 extractKeyFn: extractKeyFn,
                 strategyOptions: {
                     ...strategyOptions,
-                    strategy: this.payload.defaults.strategy
+                    strategy: this.options.strategy
                 } as StrategyOptionsUnion
             };
         }
 
-        const strategyName = StrategiesRenamingMap[options.strategyOptions.strategy];
-        const strategyOptions = this.payload.strategiesOptions[strategyName];
+        const strategyName = StrategiesRenamingMap[options.strategy];
+        const strategyOptions = this.options.strategyOptions[strategyName];
 
         return {
-            scope: options.scope ?? this.payload.defaults.scope,
-            error: options.error ?? this.payload.defaults.error,
+            scope: options.scope ?? this.options.scope,
+            error: options.errorFactoryFn ?? this.options.errorFactoryFn,
             extractKeyFn: extractKeyFn,
             strategyOptions: {
                 ...options.strategyOptions,
                 ...strategyOptions,
-                strategy: this.payload.defaults.strategy
+                strategy: this.options.strategy
             } as StrategyOptionsUnion
         };
     }
