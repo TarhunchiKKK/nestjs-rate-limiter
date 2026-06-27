@@ -1,5 +1,7 @@
 import type { Provider } from "@nestjs/common";
 import {
+    EXECUTOR_METADATA_KEY,
+    type ExecutorMetadata,
     FixedWindowInMemoryExecutor,
     FixedWindowRedisExecutor,
     type IExecutor,
@@ -11,9 +13,8 @@ import {
     SlidingWindowLogRedisExecutor,
     TokenBucketInMemoryExecutor,
     TokenBucketRedisExecutor
-} from "../executors";
-import { EXECUTOR_METADATA_KEY, type ExecutorMetadata } from "../executors/executor.decorator";
-import type { RateLimiterOptions } from "./rate-limiter-options.types";
+} from "../../executors";
+import type { StorageTypes } from "../../shared/types";
 
 const builtinExecutors: Provider<IExecutor<unknown>>[] = [
     FixedWindowInMemoryExecutor,
@@ -28,14 +29,10 @@ const builtinExecutors: Provider<IExecutor<unknown>>[] = [
     LeakyBucketRedisExecutor
 ];
 
-export function getProviders(options: RateLimiterOptions) {
-    const executors = builtinExecutors.filter((executor) => {
+export function getRelevantExecutors(storage: StorageTypes) {
+    builtinExecutors.filter((executor) => {
         const metadata: ExecutorMetadata = Reflect.getMetadata(EXECUTOR_METADATA_KEY, executor);
 
-        return metadata && metadata.storage === options.limiter.storage;
+        return metadata && metadata.storage === storage;
     });
-
-    const keyExtractors = options.keyExtractors?.custom ?? [];
-
-    return { executors, keyExtractors };
 }
