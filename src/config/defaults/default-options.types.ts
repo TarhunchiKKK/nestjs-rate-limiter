@@ -1,16 +1,18 @@
-import type { DeepRequired } from "../../shared/ts";
+import type { DeepRequired, FlattenOptionalNeverUnion } from "../../shared/ts";
 import type {
-    RateLimiterModuleBaseOptions,
-    RateLimiterModuleCustomProvidersOptions,
-    RateLimiterModuleErrorFactoryOptions,
-    RateLimiterModuleKeyExtractorOptions,
-    RateLimiterModuleOptionsFactoryOptions,
-    RateLimiterModuleStrategyOptions
+    BaseOptions,
+    CustomProvidersOptions,
+    ErrorFactoryOptions,
+    KeyExtractorOptions,
+    OptionsFactoryOptions,
+    StorageOptions,
+    StrategyOptions
 } from "../options";
 
-export type DefaultOptions = RateLimiterModuleBaseOptions &
-    DeepRequired<RateLimiterModuleStrategyOptions> &
-    RateLimiterModuleKeyExtractorOptions &
-    RateLimiterModuleErrorFactoryOptions &
-    Partial<RateLimiterModuleOptionsFactoryOptions> &
-    DeepRequired<RateLimiterModuleCustomProvidersOptions>;
+export type DefaultOptions = BaseOptions &
+    StorageOptions &
+    StrategyOptions &
+    KeyExtractorOptions &
+    ErrorFactoryOptions &
+    Partial<FlattenOptionalNeverUnion<OptionsFactoryOptions>> &
+    DeepRequired<CustomProvidersOptions>;
