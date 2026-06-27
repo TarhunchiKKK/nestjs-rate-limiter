@@ -5,7 +5,7 @@ import { MS_IN_MINUTE } from "../../shared/date";
 import { DEFAULT_SCOPE } from "../../shared/types";
 import type { RateLimiterModuleOptions } from "../options";
 
-export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS: RateLimiterModuleOptions = {
+export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS = {
     storage: "in-memory",
     scope: DEFAULT_SCOPE,
 
@@ -35,9 +35,16 @@ export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS: RateLimiterModuleOptions = {
         }
     } satisfies AllStrategiesOptions,
 
+    keyExtractor: undefined,
     keyExtractorFn: ipKeyExtractor,
+    errorFactory: undefined,
     errorFactoryFn: defaultErrorFactoryFn,
+    factory: undefined,
     optionsFactoryFn: undefined,
 
-    custom: undefined
-};
+    custom: {
+        keyExtractors: [],
+        errorFactories: [],
+        optionsFactories: []
+    }
+} satisfies RateLimiterModuleOptions;
