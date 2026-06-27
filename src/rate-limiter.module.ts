@@ -1,8 +1,11 @@
 import { type DynamicModule, type InjectionToken, Module, type Provider } from "@nestjs/common";
 import type { RateLimiterModuleOptions } from "./config/options";
 import { GUARD_OPTIONS_TOKEN } from "./di";
+import { ProvidersDiscoveryService } from "./services/providers-discovery.service";
 
-@Module({})
+@Module({
+    providers: [ProvidersDiscoveryService]
+})
 export class RateLimiterModule {
     public static forRoot(options: RateLimiterModuleOptions): DynamicModule {
         return {
