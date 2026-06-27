@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
 import { STORAGE_TOKEN } from "../../../../src/di";
 import { TokenBucketRedisExecutor } from "../../../../src/executors";
-import type { TokenBucketOptions } from "../../../../src/executors/token-bucket/types";
+import type { TokenBucketOptions } from "../../../../src/executors/variants/token-bucket/types";
 import { clearMock, createRedisMock, MS_IN_DAY, MS_IN_MINUTE } from "../../../mocks";
 
 describe("TokenBucketRedisExecutor", () => {

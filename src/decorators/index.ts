@@ -1,2 +1,2 @@
-export { RateLimit, type RateLimitOptions } from "./rate-limit.decorator";
-export { SkipRateLimitDecorator } from "./skip-rate-limit.decorator";
+export * from "./rate-limit.decorator";
+export * from "./skip-rate-limit.decorator";
