@@ -9,6 +9,7 @@ import type { ErrorFactoryFn } from "../custom/error-factories";
 import type { OptionsFactoryFn } from "../custom/options-factories";
 import { normalizeOptions } from "../config/helpers";
 import { StrategiesRenamingMap } from "../executors";
+import { getKey } from "../shared/model";
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {
@@ -19,7 +20,11 @@ export class RateLimitGuard implements CanActivate {
     ) {}
 
     public async canActivate(context: ExecutionContext) {
-        return true;
+        const options = await this.getOptions(context);
+
+        const requestAllowed = await this.checkRate(context, options);
+
+        
     }
 
     private async getOptions(context: ExecutionContext): Promise<RateLimitGuardOptions> {
@@ -96,5 +101,17 @@ export class RateLimitGuard implements CanActivate {
             strategy: this.options.strategy,
             strategyOptions: this.options.strategyOptions
         };
+    }
+
+    private async checkRate(context: ExecutionContext, options: RateLimitGuardOptions) {
+        const key = options.keyExtractorFn(context);
+
+        const finalKey = getKey(key, options.strategy, options.scope);
+
+        const executor = this.discoveryService.getExecutor(options.strategy);
+
+        const strategyName = StrategiesRenamingMap[options.strategy];
+
+        return await executor.check(finalKey, options.strategyOptions[strategyName]);
     }
 }
