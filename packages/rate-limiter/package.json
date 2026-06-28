@@ -1,0 +1,40 @@
+{
+    "name": "nestjs-rate-limiter",
+    "description": "Rate Limiter pattern implementation for NestJS framework.",
+    "version": "0.0.0",
+    "author": {
+        "name": "Konstantin Barilo",
+        "email": "kostabarilo12@gmail.com",
+        "url": "https://github.com/TarhunchiKKK"
+    },
+    "license": "MIT",
+    "module": "./src/index.ts",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json && cpx \"src/lua\" dist",
+        "type-check": "tsc --noEmit",
+        "test": "bun test tests --preload ./tests/preload.ts",
+        "test:unit": "bun test tests/unit --preload ./tests/preload.ts",
+        "test:e2e": "bun test tests/e2e --preload ./tests/preload.ts"
+    },
+    "devDependencies": {
+        "@nestjs/common": "^11.1.27",
+        "@nestjs/core": "^11.1.27",
+        "@nestjs/testing": "^11.1.27",
+        "@types/bun": "latest",
+        "@types/express": "^5.0.6",
+        "bun-plugin-swc": "^0.0.1",
+        "cpx": "^1.5.0",
+        "express": "^5.2.1",
+        "ioredis": "^5.11.1",
+        "reflect-metadata": "^0.2.2",
+        "tsd": "^0.33.0"
+    },
+    "peerDependencies": {
+        "@nestjs/common": "^11.0.0",
+        "@nestjs/core": "^11.0.0",
+        "ioredis": "^5.0.0",
+        "typescript": "^5"
+    }
+}
