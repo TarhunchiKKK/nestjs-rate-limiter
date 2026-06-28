@@ -1,7 +1,7 @@
 import type { Type } from "@nestjs/common";
-import type { ErrorFactoryFn, IErrorFactory } from "../../custom/error-factories";
-import type { IKeyExtractor, KeyExtractorFn } from "../../custom/key-extractors";
-import type { IOptionsFactory, OptionsFactoryFn } from "../../custom/options-factories";
+import type { IErrorFactory } from "../../custom/error-factories";
+import type { IKeyExtractor } from "../../custom/key-extractors";
+import type { IOptionsFactory } from "../../custom/options-factories";
 import type { AllStrategiesOptions } from "../../executors";
 import type { ExtractMember, TokenType } from "../../shared/lib";
 import type { RedisStorage, Scope, StorageTypes, Strategies } from "../../shared/model";
@@ -17,12 +17,8 @@ export type StrategyOptions = {
     strategyOptions: AllStrategiesOptions;
 };
 
-export type KeyExtractorOptions =
-    | { keyExtractor: Type<IKeyExtractor> | TokenType; keyExtractorFn?: never }
-    | { keyExtractor?: never; keyExtractorFn: KeyExtractorFn };
-
-export type ErrorFactoryOptions =
-    | { errorFactory: Type<IErrorFactory> | TokenType; errorFactoryFn?: never }
-    | { errorFactory?: never; errorFactoryFn: ErrorFactoryFn };
-
-export type OptionsFactoryOptions = { factory: Type<IOptionsFactory> | TokenType; factoryFn?: never } | { factory?: never; factoryFn: OptionsFactoryFn };
+export type ProvidersOptions = {
+    keyExtractor: Type<IKeyExtractor> | TokenType;
+    errorFactory: Type<IErrorFactory> | TokenType;
+    factory?: Type<IOptionsFactory> | TokenType;
+};

@@ -1,27 +1,29 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: `any` type is necessary for real type providing */
-import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
+import type { ModuleMetadata, Provider } from "@nestjs/common";
 import type { IErrorFactory } from "../../custom/error-factories";
 import type { IKeyExtractor } from "../../custom/key-extractors";
-import type { IOptionsFactory, OptionsFactoryFn } from "../../custom/options-factories";
+import type { IOptionsFactory } from "../../custom/options-factories";
 import type { AllStrategiesOptions } from "../../executors";
-import type { DeepPartial, DeepRequired, FlattenOptionalNeverUnion, TokenType } from "../../shared/lib";
-import type { BaseOptions, ErrorFactoryOptions, KeyExtractorOptions, StorageOptions, StrategyOptions } from "./common.options";
+import type { DeepRequired, OmitFields } from "../../shared/lib";
+import type { BaseOptions, ProvidersOptions, StorageOptions, StrategyOptions } from "./common.options";
 
 export type ModuleStrategyOptions = Pick<StrategyOptions, "strategy"> & {
-    strategyOptions: {
-        fixedWindow: AllStrategiesOptions["fixed-window"];
-        tokenBucket: AllStrategiesOptions["token-bucket"];
-        slidingWindowCounter: AllStrategiesOptions["sliding-window-counter"];
-        slidingWindowLog: AllStrategiesOptions["sliding-window-log"];
-        leakyBucket: AllStrategiesOptions["leaky-bucket"];
+    strategyOptions?: {
+        fixedWindow?: Partial<AllStrategiesOptions["fixed-window"]>;
+        tokenBucket?: Partial<AllStrategiesOptions["token-bucket"]>;
+        slidingWindowCounter?: Partial<AllStrategiesOptions["sliding-window-counter"]>;
+        slidingWindowLog?: Partial<AllStrategiesOptions["sliding-window-log"]>;
+        leakyBucket?: Partial<AllStrategiesOptions["leaky-bucket"]>;
     };
 };
 
-export type ModuleOptionsFactoryOptions =
-    | { optionsFactory: Type<IOptionsFactory> | TokenType; optionsFactoryFn?: never }
-    | { optionsFactory?: never; optionsFactoryFn: OptionsFactoryFn };
+export type ModuleProvidersOptions = Partial<
+    Pick<ProvidersOptions, "keyExtractor" | "errorFactory"> & {
+        optionsFactory: ProvidersOptions["factory"];
+    }
+>;
 
-export type CustomProvidersOptions = {
+export type ModuleCustomProvidersOptions = {
     custom?: {
         keyExtractors?: Provider<IKeyExtractor>[];
         errorFactories?: Provider<IErrorFactory>[];
@@ -29,23 +31,13 @@ export type CustomProvidersOptions = {
     };
 };
 
-export type RateLimiterModuleOptions = Partial<BaseOptions> &
-    StorageOptions &
-    DeepPartial<ModuleStrategyOptions> &
-    Partial<KeyExtractorOptions> &
-    Partial<ErrorFactoryOptions> &
-    Partial<ModuleOptionsFactoryOptions> &
-    CustomProvidersOptions;
+export type RateLimiterModuleOptions = Partial<BaseOptions> & StorageOptions & ModuleStrategyOptions & ModuleProvidersOptions & ModuleCustomProvidersOptions;
 
 export type RateLimiterModuleAsyncOptions = Pick<ModuleMetadata, "imports"> & {
     inject?: any[];
     useFactory: (...args: any[]) => RateLimiterModuleOptions | Promise<RateLimiterModuleOptions>;
 };
 
-export type RateLimiterModuleFullOptions = BaseOptions &
-    StorageOptions &
-    ModuleStrategyOptions &
-    KeyExtractorOptions &
-    ErrorFactoryOptions &
-    Partial<FlattenOptionalNeverUnion<ModuleOptionsFactoryOptions>> &
-    DeepRequired<CustomProvidersOptions>;
+export type RateLimiterModuleFullOptions = DeepRequired<OmitFields<RateLimiterModuleOptions, "optionsFactory">> & {
+    optionsFactory: ProvidersOptions["factory"];
+};

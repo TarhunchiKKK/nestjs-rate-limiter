@@ -1,5 +1,5 @@
-import { defaultErrorFactoryFn } from "../../custom/error-factories";
-import { ipKeyExtractor } from "../../custom/key-extractors";
+import { BuiltinErrorFactory } from "../../custom/error-factories";
+import { BuiltinKeyExtractor } from "../../custom/key-extractors";
 import { MS_IN_MINUTE } from "../../shared/lib";
 import { DEFAULT_SCOPE } from "../../shared/model";
 import type { RateLimiterModuleFullOptions } from "../options";
@@ -34,12 +34,9 @@ export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS = {
         }
     },
 
-    keyExtractor: undefined,
-    keyExtractorFn: ipKeyExtractor,
-    errorFactory: undefined,
-    errorFactoryFn: defaultErrorFactoryFn,
+    keyExtractor: BuiltinKeyExtractor,
+    errorFactory: BuiltinErrorFactory,
     optionsFactory: undefined,
-    optionsFactoryFn: undefined,
 
     custom: {
         keyExtractors: [],
