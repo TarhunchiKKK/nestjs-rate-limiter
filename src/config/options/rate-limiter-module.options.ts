@@ -3,11 +3,11 @@ import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
 import type { IErrorFactory } from "../../custom/error-factories";
 import type { IKeyExtractor } from "../../custom/key-extractors";
 import type { IOptionsFactory, OptionsFactoryFn } from "../../custom/options-factories";
+import type { AllStrategiesOptions } from "../../executors";
 import type { DeepPartial, DeepRequired, FlattenOptionalNeverUnion, TokenType } from "../../shared/lib";
 import type { BaseOptions, ErrorFactoryOptions, KeyExtractorOptions, StorageOptions, StrategyOptions } from "./common.options";
-import type { AllStrategiesOptions } from "../../executors";
 
-type ModuleStrategyOptions = Pick<StrategyOptions, "strategy"> & {
+export type ModuleStrategyOptions = Pick<StrategyOptions, "strategy"> & {
     strategyOptions: {
         fixedWindow: AllStrategiesOptions["fixed-window"];
         tokenBucket: AllStrategiesOptions["token-bucket"];
@@ -17,11 +17,11 @@ type ModuleStrategyOptions = Pick<StrategyOptions, "strategy"> & {
     };
 };
 
-type ModuleOptionsFactoryOptions =
+export type ModuleOptionsFactoryOptions =
     | { optionsFactory: Type<IOptionsFactory> | TokenType; optionsFactoryFn?: never }
     | { optionsFactory?: never; optionsFactoryFn: OptionsFactoryFn };
 
-type CustomProvidersOptions = {
+export type CustomProvidersOptions = {
     custom?: {
         keyExtractors?: Provider<IKeyExtractor>[];
         errorFactories?: Provider<IErrorFactory>[];

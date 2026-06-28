@@ -4,7 +4,7 @@ import { MS_IN_MINUTE } from "../../shared/lib";
 import { DEFAULT_SCOPE } from "../../shared/model";
 import type { RateLimiterModuleFullOptions } from "../options";
 
-export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS: RateLimiterModuleFullOptions = {
+export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS = {
     storage: "in-memory",
     scope: DEFAULT_SCOPE,
 
@@ -46,4 +46,4 @@ export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS: RateLimiterModuleFullOptions =
         errorFactories: [],
         optionsFactories: []
     }
-};
+} satisfies RateLimiterModuleFullOptions;

@@ -3,16 +3,14 @@ import type { ErrorFactoryFn, IErrorFactory } from "../../custom/error-factories
 import type { IKeyExtractor, KeyExtractorFn } from "../../custom/key-extractors";
 import type { IOptionsFactory, OptionsFactoryFn } from "../../custom/options-factories";
 import type { AllStrategiesOptions } from "../../executors";
-import type { TokenType } from "../../shared/lib";
-import type { Scope, StorageTypes, Strategies } from "../../shared/model";
+import type { ExtractMember, TokenType } from "../../shared/lib";
+import type { RedisStorage, Scope, StorageTypes, Strategies } from "../../shared/model";
 
 export type BaseOptions = {
     scope: Scope;
 };
 
-export type StorageOptions = {
-    storage: StorageTypes;
-};
+export type StorageOptions = { storage: ExtractMember<StorageTypes, "in-memory"> } | { storage: ExtractMember<StorageTypes, "redis">; instance: RedisStorage };
 
 export type StrategyOptions = {
     strategy: Strategies;
