@@ -8,7 +8,6 @@ import { ProvidersDiscoveryService } from "../services/providers-discovery.servi
 import type { ErrorFactoryFn, ErrorFactoryOptions } from "../custom/error-factories";
 import type { OptionsFactoryFn } from "../custom/options-factories";
 import { normalizeOptions } from "../config/helpers";
-import { StrategiesRenamingMap } from "../executors";
 import { getKey } from "../shared/model";
 
 @Injectable()
@@ -27,13 +26,11 @@ export class RateLimitGuard implements CanActivate {
         const requestAllowed = await this.checkRate(key, options);
 
         if (!requestAllowed) {
-            const strategyName = StrategiesRenamingMap[options.strategy];
-
             const errorOptions: ErrorFactoryOptions = {
                 key: key,
                 scope: options.scope,
                 strategy: options.strategy,
-                strategyOptions: options.strategyOptions[strategyName]
+                strategyOptions: options.strategyOptions[options.strategy]
             };
 
             throw options.errorFactoryFn(context, errorOptions);
@@ -89,7 +86,6 @@ export class RateLimitGuard implements CanActivate {
 
         // there is non-default strategy in decorator options
         if (options.strategy) {
-            const strategyName = StrategiesRenamingMap[options.strategy];
 
             return {
                 scope: finalDecoratorOptions.scope ?? this.options.scope,
@@ -99,9 +95,9 @@ export class RateLimitGuard implements CanActivate {
                 strategy: options.strategy,
                 strategyOptions: {
                     ...this.options.strategyOptions,
-                    [strategyName]: {
-                        ...this.options.strategyOptions[strategyName],
-                        ...finalDecoratorOptions.strategyOptions?.[strategyName]
+                    [options.strategy]: {
+                        ...this.options.strategyOptions[options.strategy],
+                        ...finalDecoratorOptions.strategyOptions?.[options.strategy]
                     }
                 }
             };
@@ -123,8 +119,6 @@ export class RateLimitGuard implements CanActivate {
 
         const executor = this.discoveryService.getExecutor(options.strategy);
 
-        const strategyName = StrategiesRenamingMap[options.strategy];
-
-        return await executor.check(finalKey, options.strategyOptions[strategyName]);
+        return await executor.check(finalKey, options.strategyOptions[options.strategy]);
     }
 }

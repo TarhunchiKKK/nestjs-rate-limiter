@@ -3,7 +3,7 @@ import { ModulesContainer, Reflector } from "@nestjs/core";
 import { ERROR_FACTORY_METADATA, type ErrorFactoryFn, type IErrorFactory } from "../custom/error-factories";
 import { type IKeyExtractor, KEY_EXTRACTOR_METADATA, type KeyExtractorFn } from "../custom/key-extractors";
 import { type IOptionsFactory, OPTIONS_FACTORY_METADATA, type OptionsFactoryFn } from "../custom/options-factories";
-import { type AllStrategiesOptions, EXECUTOR_METADATA_KEY, type ExecutorMetadata, type IExecutor, type StrategiesRenamingMap } from "../executors";
+import { type AllStrategiesOptions, EXECUTOR_METADATA_KEY, type ExecutorMetadata, type IExecutor } from "../executors";
 import type { Strategies } from "../shared/model";
 
 @Injectable()
@@ -25,7 +25,7 @@ export class ProvidersDiscoveryService implements OnModuleInit {
             throw new Error(`No executor found for strategy: "${strategy}""`);
         }
 
-        return executor as IExecutor<AllStrategiesOptions[(typeof StrategiesRenamingMap)[Strategy]]>;
+        return executor as IExecutor<AllStrategiesOptions[Strategy]>;
     }
 
     public getKeyExtractor(token: InjectionToken) {
@@ -79,7 +79,7 @@ export class ProvidersDiscoveryService implements OnModuleInit {
                 }
 
                 if (this.isValidProvider<IErrorFactory>(instance, "getError", ERROR_FACTORY_METADATA)) {
-                    this.errorFactoriesMap.set(token, (context, options, key) => instance.getError(context, options, key));
+                    this.errorFactoriesMap.set(token, (context, options) => instance.getError(context, options));
                 }
 
                 if (this.isValidProvider<IOptionsFactory>(instance, "getOptions", OPTIONS_FACTORY_METADATA)) {

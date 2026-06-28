@@ -1,4 +1,3 @@
-import { StrategiesRenamingMap } from "../../executors";
 import type { RateLimitNormalizedOptions, RateLimitOptions } from "../options";
 
 export function normalizeOptions(options: RateLimitOptions): RateLimitNormalizedOptions {
@@ -11,6 +10,6 @@ export function normalizeOptions(options: RateLimitOptions): RateLimitNormalized
         factory,
         factoryFn,
         strategy,
-        strategyOptions: strategy ? { [StrategiesRenamingMap[strategy]]: strategyOptions } : undefined
+        strategyOptions: strategy ? { [strategy]: strategyOptions } : undefined
     };
 }

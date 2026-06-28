@@ -13,7 +13,7 @@ type ModuleStrategyOptions = Pick<StrategyOptions, "strategy"> & {
         tokenBucket: AllStrategiesOptions["token-bucket"];
         slidingWindowCounter: AllStrategiesOptions["sliding-window-counter"];
         slidingWindowLog: AllStrategiesOptions["sliding-window-log"];
-        leakyBucket: AllStrategiesOptions["leakey-bucket"];
+        leakyBucket: AllStrategiesOptions["leaky-bucket"];
     };
 };
 

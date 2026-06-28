@@ -11,7 +11,7 @@ export type AllStrategiesOptions = {
     "token-bucket": TokenBucketOptions;
     "sliding-window-counter": SlidingWindowCounterOptions;
     "sliding-window-log": SlidingWindowLogOptions;
-    "leakey-bucket": LeakyBucketOptions;
+    "leaky-bucket": LeakyBucketOptions;
 };
 
 export type StrategyOptionsUnion =
