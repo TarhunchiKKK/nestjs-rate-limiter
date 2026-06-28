@@ -1,5 +1,5 @@
-import type { ExtractMember } from "../../shared/ts";
-import type { Strategies } from "../../shared/types";
+import type { ExtractMember } from "../../shared/lib";
+import type { Strategies } from "../../shared/model";
 import type { FixedWindowOptions } from "../variants/fixed-window";
 import type { LeakyBucketOptions } from "../variants/leaky-bucket";
 import type { SlidingWindowCounterOptions } from "../variants/sliding-window-counter";

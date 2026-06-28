@@ -1,7 +1,6 @@
-import type { ExecutionContext } from "@nestjs/common";
+import type { ExecutionContext, Scope } from "@nestjs/common";
 import type { StrategyOptionsUnion } from "../../executors";
-import type { Key } from "../../shared/keys";
-import type { Scope } from "../../shared/types";
+import type { Key } from "../../shared/model";
 
 export type ErrorFactoryOptions = {
     scope: Scope;

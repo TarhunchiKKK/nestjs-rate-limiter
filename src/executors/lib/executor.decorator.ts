@@ -1,5 +1,5 @@
 import { Injectable, type InjectableOptions } from "@nestjs/common";
-import type { StorageTypes, Strategies } from "../../shared/types";
+import type { StorageTypes, Strategies } from "../../shared/model";
 import "reflect-metadata";
 
 export const EXECUTOR_METADATA_KEY = "__rate_limiter_executor__";

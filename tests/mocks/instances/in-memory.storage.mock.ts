@@ -1,5 +1,5 @@
 import { mock } from "bun:test";
-import type { Key } from "../../../src/shared/keys";
+import type { Key } from "../../../src/shared/model/keys";
 
 export function createInMemoryStorageMock<Value>() {
     return {

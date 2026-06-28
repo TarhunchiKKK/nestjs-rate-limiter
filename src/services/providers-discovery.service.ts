@@ -4,7 +4,7 @@ import { ERROR_FACTORY_METADATA, type ErrorFactoryFn, type IErrorFactory } from 
 import { type IKeyExtractor, KEY_EXTRACTOR_METADATA, type KeyExtractorFn } from "../custom/key-extractors";
 import { type IOptionsFactory, OPTIONS_FACTORY_METADATA, type OptionsFactoryFn } from "../custom/options-factories";
 import { type AllStrategiesOptions, EXECUTOR_METADATA_KEY, type ExecutorMetadata, type IExecutor, type StrategiesRenamingMap } from "../executors";
-import type { Strategies } from "../shared/types";
+import type { Strategies } from "../shared/model";
 
 @Injectable()
 export class ProvidersDiscoveryService implements OnModuleInit {

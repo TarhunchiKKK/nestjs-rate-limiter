@@ -2,7 +2,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import type Redis from "ioredis";
 import { InjectStorage } from "../../../di";
-import type { Key } from "../../../shared/keys";
+import type { Key } from "../../../shared/model";
 import { Executor, type IExecutor } from "../../lib";
 import type { TokenBucketOptions } from "./types";
 

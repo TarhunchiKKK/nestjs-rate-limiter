@@ -14,7 +14,7 @@ import {
     TokenBucketInMemoryExecutor,
     TokenBucketRedisExecutor
 } from "../../executors";
-import type { StorageTypes } from "../../shared/types";
+import type { StorageTypes } from "../../shared/model";
 
 const builtinExecutors: Provider<IExecutor<unknown>>[] = [
     FixedWindowInMemoryExecutor,

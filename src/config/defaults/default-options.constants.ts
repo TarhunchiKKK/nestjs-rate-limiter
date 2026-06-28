@@ -1,7 +1,7 @@
 import { defaultErrorFactoryFn } from "../../custom/error-factories";
 import { ipKeyExtractor } from "../../custom/key-extractors";
-import { MS_IN_MINUTE } from "../../shared/date";
-import { DEFAULT_SCOPE } from "../../shared/types";
+import { MS_IN_MINUTE } from "../../shared/lib";
+import { DEFAULT_SCOPE } from "../../shared/model";
 import type { RateLimiterModuleFullOptions } from "../options";
 
 export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS: RateLimiterModuleFullOptions = {

@@ -1,4 +1,4 @@
-import type { Strategies } from "../../shared/types";
+import type { Strategies } from "../../shared/model";
 import type { AllStrategiesOptions } from "./types";
 
 export const StrategiesRenamingMap: Record<Strategies, keyof AllStrategiesOptions> = {

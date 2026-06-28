@@ -6,7 +6,7 @@ import { RateLimitDecorator } from "../decorators";
 import { GUARD_OPTIONS_TOKEN } from "../di";
 import { StrategiesRenamingMap, type StrategyOptionsUnion } from "../executors";
 import { ProvidersDiscoveryService } from "../services/providers-discovery.service";
-import type { DeepRequired } from "../shared/ts";
+import type { DeepRequired } from "../shared/lib";
 
 type GetOptionsResult = {
     strategyOptions: StrategyOptionsUnion;
