@@ -1,9 +1,11 @@
-import { type DynamicModule, type FactoryProvider, Global, Module } from "@nestjs/common";
+import { type DynamicModule, type FactoryProvider, Global, Module, type ValueProvider } from "@nestjs/common";
 import { mergeDefaultOptions } from "./config/defaults";
-import type { RateLimiterModuleFullOptions, RateLimiterModuleOptions, RateLimitGuardOptions } from "./config/options";
+import { getRelevantExecutors } from "./config/helpers";
+import type { RateLimiterModuleFullOptions, RateLimiterModuleOptions, RateLimitGuardOptions, StorageOptions } from "./config/options";
 import type { ErrorFactoryFn } from "./custom/error-factories";
 import type { KeyExtractorFn } from "./custom/key-extractors";
 import type { OptionsFactoryFn } from "./custom/options-factories";
+import { STORAGE_TOKEN } from "./di";
 import { RateLimitGuard } from "./middleware";
 import { ProvidersDiscoveryService } from "./services/providers-discovery.service";
 
@@ -13,10 +15,26 @@ export class RateLimiterModule {
     public static forRoot(options: RateLimiterModuleOptions): DynamicModule {
         const fullOptions = mergeDefaultOptions(options);
 
+        const executors = getRelevantExecutors(options.storage);
+
         return {
             global: true,
             module: RateLimiterModule,
-            providers: []
+            providers: [
+                RateLimiterModule.createStorageProvider(fullOptions),
+                ...executors,
+                ...fullOptions.custom.keyExtractors,
+                ...fullOptions.custom.errorFactories,
+                ...fullOptions.custom.optionsFactories,
+                RateLimiterModule.createGuardProvider(fullOptions)
+            ]
+        };
+    }
+
+    private static createStorageProvider(options: StorageOptions): ValueProvider {
+        return {
+            provide: STORAGE_TOKEN,
+            useValue: options.storage === "redis" ? options.instance : new Map()
         };
     }
 

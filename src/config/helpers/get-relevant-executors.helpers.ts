@@ -30,7 +30,7 @@ const builtinExecutors: Provider<IExecutor<unknown>>[] = [
 ];
 
 export function getRelevantExecutors(storage: StorageTypes) {
-    builtinExecutors.filter((executor) => {
+    return builtinExecutors.filter((executor) => {
         const metadata: ExecutorMetadata = Reflect.getMetadata(EXECUTOR_METADATA_KEY, executor);
 
         return metadata && metadata.storage === storage;
