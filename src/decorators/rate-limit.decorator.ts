@@ -5,6 +5,6 @@ import type { RateLimitNormalizedOptions, RateLimitOptions } from "../config/opt
 
 export const RateLimitDecorator = Reflector.createDecorator<RateLimitNormalizedOptions>();
 
-export function RateLimit(options: RateLimitOptions) {
-    return applyDecorators(RateLimitDecorator(options ? normalizeOptions(options) : {}));
+export function RateLimit(options?: RateLimitOptions) {
+    return applyDecorators(RateLimitDecorator(options ? normalizeOptions(options) : undefined));
 }

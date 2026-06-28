@@ -5,4 +5,4 @@ export type RateLimitGuardOptions = BaseOptions &
     StrategyOptions &
     Required<Pick<FlattenOptionalNeverUnion<KeyExtractorOptions>, "keyExtractorFn">> &
     Required<Pick<FlattenOptionalNeverUnion<ErrorFactoryOptions>, "errorFactoryFn">> &
-    Required<Pick<FlattenOptionalNeverUnion<OptionsFactoryOptions>, "factoryFn">>;
+    Pick<FlattenOptionalNeverUnion<OptionsFactoryOptions>, "factoryFn">;

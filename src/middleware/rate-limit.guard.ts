@@ -1,18 +1,14 @@
 import { type CanActivate, type ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import type { BaseOptions, RateLimitGuardOptions } from "../config/options";
+import type { RateLimitGuardOptions, RateLimitNormalizedOptions } from "../config/options";
 import type { KeyExtractorFn } from "../custom/key-extractors";
 import { RateLimitDecorator } from "../decorators";
 import { GUARD_OPTIONS_TOKEN } from "../di";
-import { StrategiesRenamingMap, type StrategyOptionsUnion } from "../executors";
 import { ProvidersDiscoveryService } from "../services/providers-discovery.service";
-import type { DeepRequired } from "../shared/lib";
-
-type GetOptionsResult = {
-    strategyOptions: StrategyOptionsUnion;
-
-    extractKeyFn: KeyExtractorFn;
-} & DeepRequired<BaseOptions>;
+import type { ErrorFactoryFn } from "../custom/error-factories";
+import type { OptionsFactoryFn } from "../custom/options-factories";
+import { normalizeOptions } from "../config/helpers";
+import { StrategiesRenamingMap } from "../executors";
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {
@@ -26,67 +22,79 @@ export class RateLimitGuard implements CanActivate {
         return true;
     }
 
-    private getOptions(context: ExecutionContext): GetOptionsResult {
+    private async getOptions(context: ExecutionContext): Promise<RateLimitGuardOptions> {
         const options = this.reflector.get(RateLimitDecorator, context.getHandler());
 
         if (!options) {
-            const strategyName = StrategiesRenamingMap[this.options.strategy];
-            const strategyOptions = this.options.strategyOptions[strategyName];
-
-            return {
-                scope: this.options.scope,
-                // error: this.options.errorFactoryFn,
-                extractKeyFn: this.options.keyExtractorFn,
-                strategyOptions: {
-                    ...strategyOptions,
-                    strategy: this.options.strategy
-                } as StrategyOptionsUnion
-            };
+            return this.options;
         }
 
-        let extractKeyFn: KeyExtractorFn;
+        // get key extractor
+        let keyExtractorFn: KeyExtractorFn;
         if (options.keyExtractor) {
-            // FIX: key extractor class key getting
-            const existingKeyExtractorFn = this.options.providers.keyExtractors.get(options.keyExtractor.name);
-
-            if (!existingKeyExtractorFn) {
-                throw new Error(`Cannot find key extractor class for ${options.keyExtractor}`);
-            }
-
-            extractKeyFn = existingKeyExtractorFn;
+            keyExtractorFn = this.discoveryService.getKeyExtractor(options.keyExtractor);
         } else if (options.keyExtractorFn) {
-            extractKeyFn = options.keyExtractorFn;
+            keyExtractorFn = options.keyExtractorFn;
         } else {
-            extractKeyFn = this.options.keyExtractorFn;
+            keyExtractorFn = this.options.keyExtractorFn;
         }
 
-        if (!options.strategy) {
-            const strategyName = StrategiesRenamingMap[this.options.strategy];
-            const strategyOptions = this.options.strategyOptions[strategyName];
+        // get error factory
+        let errorFactoryFn: ErrorFactoryFn;
+        if (options.errorFactory) {
+            errorFactoryFn = this.discoveryService.getErrorFactory(options.errorFactory);
+        } else if (options.errorFactoryFn) {
+            errorFactoryFn = options.errorFactoryFn;
+        } else {
+            errorFactoryFn = this.options.errorFactoryFn;
+        }
+
+        // get options factory
+        let optionsFactoryFn: OptionsFactoryFn | undefined;
+        if (options.factory) {
+            optionsFactoryFn = this.discoveryService.getOptionsFactory(options.factory);
+        } else if (options.factoryFn) {
+            optionsFactoryFn = options.factoryFn;
+        } else {
+            optionsFactoryFn = this.options.factoryFn;
+        }
+
+        // merge dynamic options with
+        const dynamicOptions = optionsFactoryFn ? await optionsFactoryFn(context) : {};
+
+        const finalDecoratorOptions: RateLimitNormalizedOptions = {
+            ...normalizeOptions(dynamicOptions),
+            ...options
+        };
+
+        // there is non-default strategy in decorator options
+        if (options.strategy) {
+            const strategyName = StrategiesRenamingMap[options.strategy];
 
             return {
-                scope: options.scope ?? this.options.scope,
-                error: options.errorFactoryFn ?? this.options.errorFactoryFn,
-                extractKeyFn: extractKeyFn,
+                scope: finalDecoratorOptions.scope ?? this.options.scope,
+                keyExtractorFn: keyExtractorFn,
+                errorFactoryFn: errorFactoryFn,
+                factoryFn: optionsFactoryFn,
+                strategy: options.strategy,
                 strategyOptions: {
-                    ...strategyOptions,
-                    strategy: this.options.strategy
-                } as StrategyOptionsUnion
+                    ...this.options.strategyOptions,
+                    [strategyName]: {
+                        ...this.options.strategyOptions[strategyName],
+                        ...finalDecoratorOptions.strategyOptions?.[strategyName]
+                    }
+                }
             };
         }
 
-        const strategyName = StrategiesRenamingMap[options.strategy];
-        const strategyOptions = this.options.strategyOptions[strategyName];
-
+        // default strategy is used
         return {
-            scope: options.scope ?? this.options.scope,
-            error: options.errorFactoryFn ?? this.options.errorFactoryFn,
-            extractKeyFn: extractKeyFn,
-            strategyOptions: {
-                ...options.strategyOptions,
-                ...strategyOptions,
-                strategy: this.options.strategy
-            } as StrategyOptionsUnion
+            scope: finalDecoratorOptions.scope ?? this.options.scope,
+            keyExtractorFn: keyExtractorFn,
+            errorFactoryFn: errorFactoryFn,
+            factoryFn: optionsFactoryFn,
+            strategy: this.options.strategy,
+            strategyOptions: this.options.strategyOptions
         };
     }
 }
