@@ -5,7 +5,7 @@ import type { KeyExtractorFn } from "../custom/key-extractors";
 import { RateLimitDecorator } from "../decorators";
 import { GUARD_OPTIONS_TOKEN } from "../di";
 import { ProvidersDiscoveryService } from "../services/providers-discovery.service";
-import type { ErrorFactoryFn } from "../custom/error-factories";
+import type { ErrorFactoryFn, ErrorFactoryOptions } from "../custom/error-factories";
 import type { OptionsFactoryFn } from "../custom/options-factories";
 import { normalizeOptions } from "../config/helpers";
 import { StrategiesRenamingMap } from "../executors";
@@ -22,9 +22,24 @@ export class RateLimitGuard implements CanActivate {
     public async canActivate(context: ExecutionContext) {
         const options = await this.getOptions(context);
 
-        const requestAllowed = await this.checkRate(context, options);
+        const key = options.keyExtractorFn(context);
 
-        
+        const requestAllowed = await this.checkRate(key, options);
+
+        if (!requestAllowed) {
+            const strategyName = StrategiesRenamingMap[options.strategy];
+
+            const errorOptions: ErrorFactoryOptions = {
+                key: key,
+                scope: options.scope,
+                strategy: options.strategy,
+                strategyOptions: options.strategyOptions[strategyName]
+            };
+
+            throw options.errorFactoryFn(context, errorOptions);
+        }
+
+        return true;
     }
 
     private async getOptions(context: ExecutionContext): Promise<RateLimitGuardOptions> {
@@ -103,9 +118,7 @@ export class RateLimitGuard implements CanActivate {
         };
     }
 
-    private async checkRate(context: ExecutionContext, options: RateLimitGuardOptions) {
-        const key = options.keyExtractorFn(context);
-
+    private async checkRate(key: unknown, options: RateLimitGuardOptions) {
         const finalKey = getKey(key, options.strategy, options.scope);
 
         const executor = this.discoveryService.getExecutor(options.strategy);
