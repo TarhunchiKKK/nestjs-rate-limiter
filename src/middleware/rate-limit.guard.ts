@@ -86,7 +86,6 @@ export class RateLimitGuard implements CanActivate {
 
         // there is non-default strategy in decorator options
         if (options.strategy) {
-
             return {
                 scope: finalDecoratorOptions.scope ?? this.options.scope,
                 keyExtractorFn: keyExtractorFn,
