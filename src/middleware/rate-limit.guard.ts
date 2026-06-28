@@ -1,15 +1,19 @@
 import { type CanActivate, type ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { normalizeOptions } from "../config/helpers";
-import type { BaseOptions, RateLimitGuardOptions, RateLimitNormalizedOptions, StrategyOptions } from "../config/options";
+import type { RateLimitGuardOptions, RateLimitNormalizedOptions, StrategyOptions } from "../config/options";
 import type { ErrorFactoryOptions, IErrorFactory } from "../custom/error-factories";
 import type { IKeyExtractor } from "../custom/key-extractors";
-import { RateLimitDecorator, SkipRateLimitDecorator } from "../decorators";
+import { RateLimit, SkipRateLimitDecorator } from "../decorators";
 import { GUARD_OPTIONS_TOKEN } from "../di";
 import { ProvidersDiscoveryService } from "../services/providers-discovery.service";
-import { getKey } from "../shared/model";
+import { getKey, type Scope } from "../shared/model";
 
-type RunOptions = BaseOptions & StrategyOptions & { keyExtractor: IKeyExtractor; errorFactory: IErrorFactory };
+type RunOptions = StrategyOptions & {
+    scope: Scope;
+    keyExtractor: IKeyExtractor;
+    errorFactory: IErrorFactory;
+};
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {
@@ -57,7 +61,7 @@ export class RateLimitGuard implements CanActivate {
     }
 
     private async getOptions(context: ExecutionContext): Promise<RunOptions> {
-        const options = this.reflector.get(RateLimitDecorator, context.getHandler());
+        const options = this.reflector.get(RateLimit, context.getHandler());
 
         if (!options) {
             return {
