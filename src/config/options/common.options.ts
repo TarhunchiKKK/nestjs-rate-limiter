@@ -3,8 +3,8 @@ import type { ErrorFactoryFn, IErrorFactory } from "../../custom/error-factories
 import type { IKeyExtractor, KeyExtractorFn } from "../../custom/key-extractors";
 import type { IOptionsFactory, OptionsFactoryFn } from "../../custom/options-factories";
 import type { AllStrategiesOptions } from "../../executors";
-import type { TokenType } from "../../shared/nestjs";
-import type { Scope, StorageTypes, Strategies } from "../../shared/types";
+import type { TokenType } from "../../shared/lib";
+import type { Scope, StorageTypes, Strategies } from "../../shared/model";
 
 export type BaseOptions = {
     scope: Scope;

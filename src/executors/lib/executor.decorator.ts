@@ -1,9 +1,8 @@
-/** biome-ignore-all lint/complexity/noBannedTypes: `Function` type is necessary for `reflect-metadata` library */
 import { Injectable, type InjectableOptions } from "@nestjs/common";
-import type { StorageTypes, Strategies } from "../../shared/types";
+import type { StorageTypes, Strategies } from "../../shared/model";
 import "reflect-metadata";
 
-export const EXECUTOR_METADATA_KEY = "__executor__";
+export const EXECUTOR_METADATA_KEY = "__rate_limiter_executor__";
 
 export type ExecutorMetadata = {
     strategy: Strategies;
@@ -12,7 +11,7 @@ export type ExecutorMetadata = {
 };
 
 export function Executor(metadata: ExecutorMetadata, options?: InjectableOptions): ClassDecorator {
-    return (target: Function) => {
+    return (target) => {
         Injectable(options)(target);
 
         Reflect.defineMetadata(EXECUTOR_METADATA_KEY, metadata, target);

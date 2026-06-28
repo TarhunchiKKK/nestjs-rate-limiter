@@ -5,7 +5,8 @@ import type { KeyExtractorFn } from "../custom/key-extractors";
 import { RateLimitDecorator } from "../decorators";
 import { GUARD_OPTIONS_TOKEN } from "../di";
 import { StrategiesRenamingMap, type StrategyOptionsUnion } from "../executors";
-import type { DeepRequired } from "../shared/ts";
+import { ProvidersDiscoveryService } from "../services/providers-discovery.service";
+import type { DeepRequired } from "../shared/lib";
 
 type GetOptionsResult = {
     strategyOptions: StrategyOptionsUnion;
@@ -17,6 +18,7 @@ type GetOptionsResult = {
 export class RateLimitGuard implements CanActivate {
     public constructor(
         @Inject(GUARD_OPTIONS_TOKEN) private readonly options: RateLimitGuardOptions,
+        @Inject(ProvidersDiscoveryService) private readonly discoveryService: ProvidersDiscoveryService,
         @Inject(Reflector) private readonly reflector: Reflector
     ) {}
 

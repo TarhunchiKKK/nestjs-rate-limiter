@@ -1,4 +1,4 @@
-import type { FlattenOptionalNeverUnion } from "../../shared/ts";
+import type { FlattenOptionalNeverUnion } from "../../shared/lib";
 import type { BaseOptions, ErrorFactoryOptions, KeyExtractorOptions, OptionsFactoryOptions, StrategyOptions } from "./common.options";
 
 export type RateLimitGuardOptions = BaseOptions &

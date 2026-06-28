@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: `any` type is necessary for valid type mappings */
 export type ExtractMember<T, U extends T> = T extends U ? T : never;
 
 export type DeepRequired<T> = {

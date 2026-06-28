@@ -1,14 +1,15 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: `any` type is necessary for real type providing */
 import type { ModuleMetadata, Provider } from "@nestjs/common";
+import type { IErrorFactory } from "../../custom/error-factories";
 import type { IKeyExtractor } from "../../custom/key-extractors";
 import type { IOptionsFactory } from "../../custom/options-factories";
-import type { DeepRequired, FlattenOptionalNeverUnion } from "../../shared/ts";
+import type { DeepRequired, FlattenOptionalNeverUnion } from "../../shared/lib";
 import type { BaseOptions, ErrorFactoryOptions, KeyExtractorOptions, OptionsFactoryOptions, StorageOptions, StrategyOptions } from "./common.options";
 
 export type CustomProvidersOptions = {
     custom?: {
         keyExtractors?: Provider<IKeyExtractor>[];
-        errorFactories?: Provider<IKeyExtractor>[];
+        errorFactories?: Provider<IErrorFactory>[];
         optionsFactories?: Provider<IOptionsFactory>[];
     };
 };

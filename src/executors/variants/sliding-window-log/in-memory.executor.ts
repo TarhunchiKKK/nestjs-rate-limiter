@@ -1,5 +1,5 @@
 import { InjectStorage } from "../../../di";
-import type { Key } from "../../../shared/keys";
+import type { Key } from "../../../shared/model";
 import { Executor, type IExecutor } from "../../lib";
 import type { SlidingWindowLogOptions, SlidingWindowLogState } from "./types";
 
