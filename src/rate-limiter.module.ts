@@ -8,6 +8,7 @@ import type { OptionsFactoryFn } from "./custom/options-factories";
 import { STORAGE_TOKEN } from "./di";
 import { RateLimitGuard } from "./middleware";
 import { ProvidersDiscoveryService } from "./services/providers-discovery.service";
+import type { Storage } from "./shared/model";
 
 @Global()
 @Module({})
@@ -26,18 +27,21 @@ export class RateLimiterModule {
                 ...fullOptions.custom.keyExtractors,
                 ...fullOptions.custom.errorFactories,
                 ...fullOptions.custom.optionsFactories,
+                ProvidersDiscoveryService,
                 RateLimiterModule.createGuardProvider(fullOptions)
-            ]
+            ],
+            exports: [RateLimitGuard]
         };
     }
 
-    private static createStorageProvider(options: StorageOptions): ValueProvider {
+    private static createStorageProvider(options: StorageOptions): ValueProvider<Storage> {
         return {
             provide: STORAGE_TOKEN,
             useValue: options.storage === "redis" ? options.instance : new Map()
         };
     }
 
+    // FIX
     private static createGuardProvider(options: RateLimiterModuleFullOptions): FactoryProvider<RateLimitGuardOptions> {
         return {
             provide: RateLimitGuard,

@@ -1,11 +1,11 @@
 import { InjectStorage } from "../../../di";
-import type { Key } from "../../../shared/model";
+import type { InMemoryStorage, Key } from "../../../shared/model";
 import { Executor, type IExecutor } from "../../lib";
 import type { LeakyBucketOptions, LeakyBucketState } from "./types";
 
 @Executor({ strategy: "leaky-bucket", storage: "in-memory" })
 export class LeakyBucketInMemoryExecutor implements IExecutor<LeakyBucketOptions> {
-    public constructor(@InjectStorage() private readonly storage: Map<Key, LeakyBucketState>) {}
+    public constructor(@InjectStorage() private readonly storage: InMemoryStorage<LeakyBucketState>) {}
 
     public check(key: Key, options: LeakyBucketOptions) {
         const startTime = Date.now();

@@ -1,11 +1,11 @@
 import { InjectStorage } from "../../../di";
-import type { Key } from "../../../shared/model";
+import type { InMemoryStorage, Key } from "../../../shared/model";
 import { Executor, type IExecutor } from "../../lib";
 import type { SlidingWindowCounterOptions, SlidingWindowCounterState } from "./types";
 
 @Executor({ strategy: "sliding-window-counter", storage: "in-memory" })
 export class SlidingWindowCounterInMemoryExecutor implements IExecutor<SlidingWindowCounterOptions> {
-    public constructor(@InjectStorage() private readonly storage: Map<Key, SlidingWindowCounterState>) {}
+    public constructor(@InjectStorage() private readonly storage: InMemoryStorage<SlidingWindowCounterState>) {}
 
     public check(key: Key, options: SlidingWindowCounterOptions) {
         const startTime = Date.now();

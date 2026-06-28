@@ -1,11 +1,11 @@
 import { InjectStorage } from "../../../di";
-import type { Key } from "../../../shared/model";
+import type { InMemoryStorage, Key } from "../../../shared/model";
 import { Executor, type IExecutor } from "../../lib";
 import type { TokenBucketOptions, TokenBucketState } from "./types";
 
 @Executor({ strategy: "token-bucket", storage: "in-memory" })
 export class TokenBucketInMemoryExecutor implements IExecutor<TokenBucketOptions> {
-    public constructor(@InjectStorage() private readonly storage: Map<Key, TokenBucketState>) {}
+    public constructor(@InjectStorage() private readonly storage: InMemoryStorage<TokenBucketState>) {}
 
     public check(key: Key, options: TokenBucketOptions) {
         const state = this.storage.get(key);

@@ -1,11 +1,11 @@
 import { InjectStorage } from "../../../di";
-import type { Key } from "../../../shared/model";
+import type { InMemoryStorage, Key } from "../../../shared/model";
 import { Executor, type IExecutor } from "../../lib";
 import type { SlidingWindowLogOptions, SlidingWindowLogState } from "./types";
 
 @Executor({ strategy: "sliding-window-log", storage: "in-memory" })
 export class SlidingWindowLogInMemoryExecutor implements IExecutor<SlidingWindowLogOptions> {
-    public constructor(@InjectStorage() private readonly storage: Map<Key, SlidingWindowLogState>) {}
+    public constructor(@InjectStorage() private readonly storage: InMemoryStorage<SlidingWindowLogState>) {}
 
     public check(key: Key, options: SlidingWindowLogOptions) {
         const now = Date.now();

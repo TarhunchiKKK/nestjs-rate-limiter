@@ -1,11 +1,11 @@
 import { InjectStorage } from "../../../di";
-import type { Key } from "../../../shared/model";
+import type { InMemoryStorage, Key } from "../../../shared/model";
 import { Executor, type IExecutor } from "../../lib";
 import type { FixedWindowOptions, FixedWindowState } from "./types";
 
 @Executor({ strategy: "fixed-window", storage: "in-memory" })
 export class FixedWindowInMemoryExecutor implements IExecutor<FixedWindowOptions> {
-    public constructor(@InjectStorage() private readonly storage: Map<Key, FixedWindowState>) {}
+    public constructor(@InjectStorage() private readonly storage: InMemoryStorage<FixedWindowState>) {}
 
     public check(key: Key, options: FixedWindowOptions) {
         const now = Date.now();
