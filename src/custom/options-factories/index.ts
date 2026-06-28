@@ -1,2 +1,2 @@
-export * from "./decorators";
-export * from "./types";
+export * from "./options-factory.decorator";
+export * from "./options-factory.interface";

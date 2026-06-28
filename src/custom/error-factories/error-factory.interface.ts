@@ -2,7 +2,7 @@ import type { ExecutionContext } from "@nestjs/common";
 import type { AllStrategiesOptions } from "../../executors";
 import type { Scope, Strategies } from "../../shared/model";
 
-export type ErrorOptions = {
+export type ErrorFactoryOptions = {
     key: unknown;
 
     scope: Scope;
@@ -12,8 +12,6 @@ export type ErrorOptions = {
     strategyOptions: AllStrategiesOptions[keyof AllStrategiesOptions];
 };
 
-export type ErrorFactoryFn = (context: ExecutionContext, options: ErrorOptions) => Error | Promise<Error>;
-
 export interface IErrorFactory {
-    getError: ErrorFactoryFn;
+    getError: (context: ExecutionContext, options: ErrorOptions) => Error | Promise<Error>;
 }
