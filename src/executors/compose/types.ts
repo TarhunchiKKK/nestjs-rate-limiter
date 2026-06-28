@@ -7,11 +7,11 @@ import type { SlidingWindowLogOptions } from "../variants/sliding-window-log";
 import type { TokenBucketOptions } from "../variants/token-bucket";
 
 export type AllStrategiesOptions = {
-    fixedWindow: FixedWindowOptions;
-    tokenBucket: TokenBucketOptions;
-    slidingWindowCounter: SlidingWindowCounterOptions;
-    slidingWindowLog: SlidingWindowLogOptions;
-    leakyBucket: LeakyBucketOptions;
+    "fixed-window": FixedWindowOptions;
+    "token-bucket": TokenBucketOptions;
+    "sliding-window-counter": SlidingWindowCounterOptions;
+    "sliding-window-log": SlidingWindowLogOptions;
+    "leaky-bucket": LeakyBucketOptions;
 };
 
 export type StrategyOptionsUnion =

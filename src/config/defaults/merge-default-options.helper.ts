@@ -13,8 +13,8 @@ export function mergeDefaultOptions(options: RateLimiterModuleOptions) {
     } as ErrorFactoryOptions;
 
     const optionsFactoryOptions = {
-        factory: options.factory ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.factory,
-        factoryFn: options.factoryFn ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.factoryFn
+        factory: options.optionsFactory ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.optionsFactory,
+        factoryFn: options.optionsFactoryFn ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.optionsFactoryFn
     } as OptionsFactoryOptions;
 
     return {

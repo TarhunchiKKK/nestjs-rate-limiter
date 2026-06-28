@@ -38,8 +38,8 @@ export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS: RateLimiterModuleFullOptions =
     keyExtractorFn: ipKeyExtractor,
     errorFactory: undefined,
     errorFactoryFn: defaultErrorFactoryFn,
-    factory: undefined,
-    factoryFn: undefined,
+    optionsFactory: undefined,
+    optionsFactoryFn: undefined,
 
     custom: {
         keyExtractors: [],
