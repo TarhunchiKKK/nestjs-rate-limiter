@@ -1,8 +1,6 @@
-import type { FlattenOptionalNeverUnion } from "../../shared/lib";
-import type { BaseOptions, ErrorFactoryOptions, KeyExtractorOptions, OptionsFactoryOptions, StrategyOptions } from "./common.options";
+import type { StrategyOptions } from "./common.options";
+import type { RateLimitOptions } from "./rate-limit.options";
 
-export type RateLimitGuardOptions = BaseOptions &
-    StrategyOptions &
-    Required<Pick<FlattenOptionalNeverUnion<KeyExtractorOptions>, "keyExtractorFn">> &
-    Required<Pick<FlattenOptionalNeverUnion<ErrorFactoryOptions>, "errorFactoryFn">> &
-    Pick<FlattenOptionalNeverUnion<OptionsFactoryOptions>, "factoryFn">;
+export type RateLimitGuardOptions = Required<Pick<RateLimitOptions, "scope" | "keyExtractor" | "errorFactory">> &
+    Pick<RateLimitOptions, "factory"> &
+    StrategyOptions;

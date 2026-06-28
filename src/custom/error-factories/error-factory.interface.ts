@@ -12,8 +12,6 @@ export type ErrorFactoryOptions = {
     strategyOptions: AllStrategiesOptions[keyof AllStrategiesOptions];
 };
 
-export type ErrorFactoryFn = (context: ExecutionContext, options: ErrorFactoryOptions) => Error | Promise<Error>;
-
 export interface IErrorFactory {
-    getError: ErrorFactoryFn;
+    getError: (context: ExecutionContext, options: ErrorFactoryOptions) => Error | Promise<Error>;
 }

@@ -1,8 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type Redis from "ioredis";
 import { InjectStorage } from "../../../di";
-import type { Key } from "../../../shared/model";
+import type { Key, RedisStorage } from "../../../shared/model";
 import { Executor, type IExecutor } from "../../lib";
 import type { TokenBucketOptions } from "./types";
 
@@ -10,7 +9,7 @@ import type { TokenBucketOptions } from "./types";
 export class TokenBucketRedisExecutor implements IExecutor<TokenBucketOptions> {
     private readonly luaScript: string;
 
-    public constructor(@InjectStorage() private readonly redis: Redis) {
+    public constructor(@InjectStorage() private readonly redis: RedisStorage) {
         const luaScriptPath = path.join(__dirname, "../../../lua/token-bucket.lua");
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }

@@ -1,14 +1,19 @@
 import { type CanActivate, type ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import type { RateLimitGuardOptions, RateLimitNormalizedOptions } from "../config/options";
-import type { KeyExtractorFn } from "../custom/key-extractors";
-import { RateLimitDecorator } from "../decorators";
+import { normalizeOptions } from "../config/helpers";
+import type { RateLimitGuardOptions, RateLimitNormalizedOptions, StrategyOptions } from "../config/options";
+import type { ErrorFactoryOptions, IErrorFactory } from "../custom/error-factories";
+import type { IKeyExtractor } from "../custom/key-extractors";
+import { RateLimit, SkipRateLimitDecorator } from "../decorators";
 import { GUARD_OPTIONS_TOKEN } from "../di";
 import { ProvidersDiscoveryService } from "../services/providers-discovery.service";
-import type { ErrorFactoryFn, ErrorFactoryOptions } from "../custom/error-factories";
-import type { OptionsFactoryFn } from "../custom/options-factories";
-import { normalizeOptions } from "../config/helpers";
-import { getKey } from "../shared/model";
+import { getKey, type Scope } from "../shared/model";
+
+type RunOptions = StrategyOptions & {
+    scope: Scope;
+    keyExtractor: IKeyExtractor;
+    errorFactory: IErrorFactory;
+};
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {
@@ -19,9 +24,15 @@ export class RateLimitGuard implements CanActivate {
     ) {}
 
     public async canActivate(context: ExecutionContext) {
+        const skip = this.checkSkip(context);
+
+        if (skip) {
+            return true;
+        }
+
         const options = await this.getOptions(context);
 
-        const key = options.keyExtractorFn(context);
+        const key = options.keyExtractor.extract(context);
 
         const requestAllowed = await this.checkRate(key, options);
 
@@ -33,87 +44,67 @@ export class RateLimitGuard implements CanActivate {
                 strategyOptions: options.strategyOptions[options.strategy]
             };
 
-            throw options.errorFactoryFn(context, errorOptions);
+            throw options.errorFactory.getError(context, errorOptions);
         }
 
         return true;
     }
 
-    private async getOptions(context: ExecutionContext): Promise<RateLimitGuardOptions> {
-        const options = this.reflector.get(RateLimitDecorator, context.getHandler());
+    private checkSkip(context: ExecutionContext) {
+        const shouldSkip = this.reflector.get(SkipRateLimitDecorator, context.getHandler());
+
+        if (shouldSkip) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private async getOptions(context: ExecutionContext): Promise<RunOptions> {
+        const options = this.reflector.get(RateLimit, context.getHandler());
 
         if (!options) {
-            return this.options;
-        }
-
-        // get key extractor
-        let keyExtractorFn: KeyExtractorFn;
-        if (options.keyExtractor) {
-            keyExtractorFn = this.discoveryService.getKeyExtractor(options.keyExtractor);
-        } else if (options.keyExtractorFn) {
-            keyExtractorFn = options.keyExtractorFn;
-        } else {
-            keyExtractorFn = this.options.keyExtractorFn;
-        }
-
-        // get error factory
-        let errorFactoryFn: ErrorFactoryFn;
-        if (options.errorFactory) {
-            errorFactoryFn = this.discoveryService.getErrorFactory(options.errorFactory);
-        } else if (options.errorFactoryFn) {
-            errorFactoryFn = options.errorFactoryFn;
-        } else {
-            errorFactoryFn = this.options.errorFactoryFn;
-        }
-
-        // get options factory
-        let optionsFactoryFn: OptionsFactoryFn | undefined;
-        if (options.factory) {
-            optionsFactoryFn = this.discoveryService.getOptionsFactory(options.factory);
-        } else if (options.factoryFn) {
-            optionsFactoryFn = options.factoryFn;
-        } else {
-            optionsFactoryFn = this.options.factoryFn;
-        }
-
-        // merge dynamic options with
-        const dynamicOptions = optionsFactoryFn ? await optionsFactoryFn(context) : {};
-
-        const finalDecoratorOptions: RateLimitNormalizedOptions = {
-            ...normalizeOptions(dynamicOptions),
-            ...options
-        };
-
-        // there is non-default strategy in decorator options
-        if (options.strategy) {
             return {
-                scope: finalDecoratorOptions.scope ?? this.options.scope,
-                keyExtractorFn: keyExtractorFn,
-                errorFactoryFn: errorFactoryFn,
-                factoryFn: optionsFactoryFn,
-                strategy: options.strategy,
-                strategyOptions: {
-                    ...this.options.strategyOptions,
-                    [options.strategy]: {
-                        ...this.options.strategyOptions[options.strategy],
-                        ...finalDecoratorOptions.strategyOptions?.[options.strategy]
-                    }
-                }
+                ...this.options,
+                keyExtractor: this.discoveryService.getKeyExtractor(this.options.keyExtractor),
+                errorFactory: this.discoveryService.getErrorFactory(this.options.errorFactory)
             };
         }
 
-        // default strategy is used
+        const keyExtractorToken = options.keyExtractor ?? this.options.keyExtractor;
+        const errorFactoryToken = options.errorFactory ?? this.options.errorFactory;
+        const optionsFactoryToken = options.factory ?? this.options.factory;
+
+        let finalDecoratorOptions: RateLimitNormalizedOptions = options;
+        if (optionsFactoryToken) {
+            const optionsFactoryInstance = this.discoveryService.getOptionsFactory(optionsFactoryToken);
+
+            const dynamicOptions = await optionsFactoryInstance.getOptions(context);
+
+            finalDecoratorOptions = {
+                ...normalizeOptions(dynamicOptions),
+                ...options
+            };
+        }
+
         return {
             scope: finalDecoratorOptions.scope ?? this.options.scope,
-            keyExtractorFn: keyExtractorFn,
-            errorFactoryFn: errorFactoryFn,
-            factoryFn: optionsFactoryFn,
-            strategy: this.options.strategy,
-            strategyOptions: this.options.strategyOptions
+            keyExtractor: this.discoveryService.getKeyExtractor(keyExtractorToken),
+            errorFactory: this.discoveryService.getErrorFactory(errorFactoryToken),
+            strategy: finalDecoratorOptions.strategy ?? this.options.strategy,
+            strategyOptions: !options.strategy
+                ? this.options.strategyOptions
+                : {
+                      ...this.options.strategyOptions,
+                      [options.strategy]: {
+                          ...this.options.strategyOptions[options.strategy],
+                          ...finalDecoratorOptions.strategyOptions?.[options.strategy]
+                      }
+                  }
         };
     }
 
-    private async checkRate(key: unknown, options: RateLimitGuardOptions) {
+    private async checkRate(key: unknown, options: RunOptions) {
         const finalKey = getKey(key, options.strategy, options.scope);
 
         const executor = this.discoveryService.getExecutor(options.strategy);

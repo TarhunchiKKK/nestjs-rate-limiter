@@ -1,3 +1,3 @@
-export * from "./decorators";
-export * from "./defaults";
-export * from "./types";
+export * from "./error-factory.decorator";
+export * from "./error-factory.default";
+export * from "./error-factory.interface";

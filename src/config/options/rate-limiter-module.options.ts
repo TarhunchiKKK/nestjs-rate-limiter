@@ -2,26 +2,28 @@
 import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
 import type { IErrorFactory } from "../../custom/error-factories";
 import type { IKeyExtractor } from "../../custom/key-extractors";
-import type { IOptionsFactory, OptionsFactoryFn } from "../../custom/options-factories";
-import type { DeepPartial, DeepRequired, FlattenOptionalNeverUnion, TokenType } from "../../shared/lib";
-import type { BaseOptions, ErrorFactoryOptions, KeyExtractorOptions, StorageOptions, StrategyOptions } from "./common.options";
+import type { IOptionsFactory } from "../../custom/options-factories";
 import type { AllStrategiesOptions } from "../../executors";
+import type { OmitFields, TokenType } from "../../shared/lib";
+import type { Scope, Strategies } from "../../shared/model";
+import type { StorageOptions } from "./common.options";
 
-type ModuleStrategyOptions = Pick<StrategyOptions, "strategy"> & {
+export type RateLimiterModuleOptions = StorageOptions & {
+    scope?: Scope;
+
+    strategy?: Strategies;
     strategyOptions: {
-        fixedWindow: AllStrategiesOptions["fixed-window"];
-        tokenBucket: AllStrategiesOptions["token-bucket"];
-        slidingWindowCounter: AllStrategiesOptions["sliding-window-counter"];
-        slidingWindowLog: AllStrategiesOptions["sliding-window-log"];
-        leakyBucket: AllStrategiesOptions["leaky-bucket"];
+        fixedWindow?: Partial<AllStrategiesOptions["fixed-window"]>;
+        tokenBucket?: Partial<AllStrategiesOptions["token-bucket"]>;
+        slidingWindowCounter?: Partial<AllStrategiesOptions["sliding-window-counter"]>;
+        slidingWindowLog?: Partial<AllStrategiesOptions["sliding-window-log"]>;
+        leakyBucket?: Partial<AllStrategiesOptions["leaky-bucket"]>;
     };
-};
 
-type ModuleOptionsFactoryOptions =
-    | { optionsFactory: Type<IOptionsFactory> | TokenType; optionsFactoryFn?: never }
-    | { optionsFactory?: never; optionsFactoryFn: OptionsFactoryFn };
+    keyExtractor?: Type<IKeyExtractor> | TokenType;
+    errorFactory?: Type<IErrorFactory> | TokenType;
+    optionsFactory?: Type<IOptionsFactory> | TokenType;
 
-type CustomProvidersOptions = {
     custom?: {
         keyExtractors?: Provider<IKeyExtractor>[];
         errorFactories?: Provider<IErrorFactory>[];
@@ -29,23 +31,31 @@ type CustomProvidersOptions = {
     };
 };
 
-export type RateLimiterModuleOptions = Partial<BaseOptions> &
-    StorageOptions &
-    DeepPartial<ModuleStrategyOptions> &
-    Partial<KeyExtractorOptions> &
-    Partial<ErrorFactoryOptions> &
-    Partial<ModuleOptionsFactoryOptions> &
-    CustomProvidersOptions;
-
 export type RateLimiterModuleAsyncOptions = Pick<ModuleMetadata, "imports"> & {
     inject?: any[];
-    useFactory: (...args: any[]) => RateLimiterModuleOptions | Promise<RateLimiterModuleOptions>;
+    useFactory: (...args: any[]) => OmitFields<RateLimiterModuleOptions, "custom"> | Promise<OmitFields<RateLimiterModuleOptions, "custom">>;
+    custom?: RateLimiterModuleOptions["custom"];
 };
 
-export type RateLimiterModuleFullOptions = BaseOptions &
-    StorageOptions &
-    ModuleStrategyOptions &
-    KeyExtractorOptions &
-    ErrorFactoryOptions &
-    Partial<FlattenOptionalNeverUnion<ModuleOptionsFactoryOptions>> &
-    DeepRequired<CustomProvidersOptions>;
+export type RateLimiterModuleFullOptions = StorageOptions & {
+    scope: Scope;
+
+    strategy: Strategies;
+    strategyOptions: {
+        fixedWindow: AllStrategiesOptions["fixed-window"];
+        tokenBucket: AllStrategiesOptions["token-bucket"];
+        slidingWindowCounter: AllStrategiesOptions["sliding-window-counter"];
+        slidingWindowLog: AllStrategiesOptions["sliding-window-log"];
+        leakyBucket: AllStrategiesOptions["leaky-bucket"];
+    };
+
+    keyExtractor: Type<IKeyExtractor> | TokenType;
+    errorFactory: Type<IErrorFactory> | TokenType;
+    optionsFactory?: Type<IOptionsFactory> | TokenType;
+
+    custom: {
+        keyExtractors: Provider<IKeyExtractor>[];
+        errorFactories: Provider<IErrorFactory>[];
+        optionsFactories: Provider<IOptionsFactory>[];
+    };
+};
