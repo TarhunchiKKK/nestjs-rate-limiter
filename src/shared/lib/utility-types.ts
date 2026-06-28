@@ -1,9 +1,9 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: `any` type is necessary for valid type mappings */
 export type ExtractMember<T, U extends T> = T extends U ? T : never;
 
-export type DeepRequired<T> = {
-    [Key in keyof T]-?: T[Key] extends object ? DeepRequired<Required<T[Key]>> : Required<T[Key]>;
-};
+// export type DeepRequired<T> = {
+//     [Key in keyof T]-?: T[Key] extends Record<string, unknown> ? DeepRequired<T[Key]> : T[Key];
+// };
 
 export type DeepPartial<T> = {
     [Key in keyof T]?: T[Key] extends object ? DeepPartial<Partial<T[Key]>> : Partial<T[Key]>;
@@ -36,3 +36,9 @@ export type FlattenOptionalNeverUnion<U> = {
 };
 
 export type OmitFields<T, K extends keyof T> = Omit<T, K>;
+
+export type DeepRequired<T> = T extends object
+    ? {
+          [P in keyof T]-?: DeepRequired<T[P]>;
+      }
+    : T;
