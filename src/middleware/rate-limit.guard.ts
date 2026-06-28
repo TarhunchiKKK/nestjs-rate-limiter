@@ -1,13 +1,13 @@
 import { type CanActivate, type ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { normalizeOptions } from "../config/helpers";
 import type { RateLimitGuardOptions, RateLimitNormalizedOptions } from "../config/options";
+import type { ErrorFactoryFn, ErrorFactoryOptions } from "../custom/error-factories";
 import type { KeyExtractorFn } from "../custom/key-extractors";
-import { RateLimitDecorator } from "../decorators";
+import type { OptionsFactoryFn } from "../custom/options-factories";
+import { RateLimitDecorator, SkipRateLimitDecorator } from "../decorators";
 import { GUARD_OPTIONS_TOKEN } from "../di";
 import { ProvidersDiscoveryService } from "../services/providers-discovery.service";
-import type { ErrorFactoryFn, ErrorFactoryOptions } from "../custom/error-factories";
-import type { OptionsFactoryFn } from "../custom/options-factories";
-import { normalizeOptions } from "../config/helpers";
 import { getKey } from "../shared/model";
 
 @Injectable()
@@ -19,6 +19,12 @@ export class RateLimitGuard implements CanActivate {
     ) {}
 
     public async canActivate(context: ExecutionContext) {
+        const skip = this.checkSkip(context);
+
+        if (skip) {
+            return true;
+        }
+
         const options = await this.getOptions(context);
 
         const key = options.keyExtractorFn(context);
@@ -37,6 +43,16 @@ export class RateLimitGuard implements CanActivate {
         }
 
         return true;
+    }
+
+    private checkSkip(context: ExecutionContext) {
+        const shouldSkip = this.reflector.get(SkipRateLimitDecorator, context.getHandler());
+
+        if (shouldSkip) {
+            return true;
+        }
+
+        return false;
     }
 
     private async getOptions(context: ExecutionContext): Promise<RateLimitGuardOptions> {
