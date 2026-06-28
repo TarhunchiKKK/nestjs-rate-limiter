@@ -1,9 +1,9 @@
 import { Inject, Injectable, type InjectionToken, type OnModuleInit } from "@nestjs/common";
-import { ModulesContainer } from "@nestjs/core";
-import type { ErrorFactoryFn, IErrorFactory } from "../custom/error-factories";
-import type { IKeyExtractor, KeyExtractorFn } from "../custom/key-extractors";
-import type { IOptionsFactory, OptionsFactoryFn } from "../custom/options-factories";
-import type { IExecutor } from "../executors";
+import { ModulesContainer, Reflector } from "@nestjs/core";
+import { ERROR_FACTORY_METADATA, type ErrorFactoryFn, type IErrorFactory } from "../custom/error-factories";
+import { type IKeyExtractor, KEY_EXTRACTOR_METADATA, type KeyExtractorFn } from "../custom/key-extractors";
+import { type IOptionsFactory, OPTIONS_FACTORY_METADATA, type OptionsFactoryFn } from "../custom/options-factories";
+import { EXECUTOR_METADATA_KEY, type IExecutor } from "../executors";
 
 @Injectable()
 export class ProvidersDiscoveryService implements OnModuleInit {
@@ -12,7 +12,10 @@ export class ProvidersDiscoveryService implements OnModuleInit {
     private readonly errorFactoriesMap: Map<InjectionToken, ErrorFactoryFn>;
     private readonly optionsFactoriesMap: Map<InjectionToken, OptionsFactoryFn>;
 
-    public constructor(@Inject(ModulesContainer) private readonly modulesContainer: ModulesContainer) {}
+    public constructor(
+        @Inject(ModulesContainer) private readonly modulesContainer: ModulesContainer,
+        @Inject(Reflector) private readonly reflector: Reflector
+    ) {}
 
     public onModuleInit() {
         for (const moduleInstance of this.modulesContainer.values()) {
@@ -24,50 +27,34 @@ export class ProvidersDiscoveryService implements OnModuleInit {
                     continue;
                 }
 
-                if (this.isExecutor(instance)) {
+                if (this.isValidProvider<IExecutor<unknown>>(instance, "check", EXECUTOR_METADATA_KEY)) {
                     this.executorsMap.set(token, instance);
                 }
 
-                if (this.isKeyExtractor(instance)) {
+                if (this.isValidProvider<IKeyExtractor>(instance, "extract", KEY_EXTRACTOR_METADATA)) {
                     this.keyExtractorsMap.set(token, (context) => instance.extract(context));
                 }
 
-                if (this.isErrorFactory(instance)) {
+                if (this.isValidProvider<IErrorFactory>(instance, "getError", ERROR_FACTORY_METADATA)) {
                     this.errorFactoriesMap.set(token, (context, options, key) => instance.getError(context, options, key));
                 }
 
-                if (this.isOptionsFactory(instance)) {
+                if (this.isValidProvider<IOptionsFactory>(instance, "getOptions", OPTIONS_FACTORY_METADATA)) {
                     this.optionsFactoriesMap.set(token, (context) => instance.getOptions(context));
                 }
             }
         }
     }
 
-    private isExecutor(provider: any) {
-        const methodKey = "check" satisfies keyof IExecutor<unknown>;
+    private isValidProvider<T>(provider: any, methodKey: keyof T, metadataKey: string): provider is T {
+        if (!provider?.constructor) {
+            return false;
+        }
 
-        return this.isValidProvider<IExecutor<unknown>>(provider, methodKey);
-    }
+        const hasMethod = methodKey in provider && typeof provider[methodKey] === "function";
 
-    private isKeyExtractor(provider: any) {
-        const methodKey = "extract" satisfies keyof IKeyExtractor;
+        const hasMetadata = this.reflector.get(metadataKey, provider.constructor);
 
-        return this.isValidProvider<IKeyExtractor>(provider, methodKey);
-    }
-
-    private isErrorFactory(provider: any) {
-        const methodKey = "getError" satisfies keyof IErrorFactory;
-
-        return this.isValidProvider<IErrorFactory>(provider, methodKey);
-    }
-
-    private isOptionsFactory(provider: any) {
-        const methodKey = "getOptions" satisfies keyof IOptionsFactory;
-
-        return this.isValidProvider<IOptionsFactory>(provider, methodKey);
-    }
-
-    private isValidProvider<T>(provider: any, methodKey: string): provider is T {
-        return provider && methodKey in provider && typeof provider[methodKey] === "function";
+        return hasMethod && hasMetadata;
     }
 }
