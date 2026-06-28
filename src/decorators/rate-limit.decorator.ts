@@ -1,10 +1,10 @@
-import { applyDecorators } from "@nestjs/common";
+import { applyDecorators, UseGuards } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { normalizeOptions } from "../config/helpers";
-import type { RateLimitNormalizedOptions, RateLimitOptions } from "../config/options";
+import type { RateLimitOptions } from "../config/options";
+import { RateLimitGuard } from "../middleware";
 
-export const RateLimitDecorator = Reflector.createDecorator<RateLimitNormalizedOptions>();
+export const RateLimitDecorator = Reflector.createDecorator<RateLimitOptions>();
 
 export function RateLimit(options?: RateLimitOptions) {
-    return applyDecorators(RateLimitDecorator(options ? normalizeOptions(options) : undefined));
+    return applyDecorators(UseGuards(RateLimitGuard), RateLimitDecorator(options));
 }

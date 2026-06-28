@@ -1,17 +1,17 @@
 import { Inject, Injectable, type InjectionToken, type OnModuleInit } from "@nestjs/common";
 import { ModulesContainer, Reflector } from "@nestjs/core";
-import { ERROR_FACTORY_METADATA, type ErrorFactoryFn, type IErrorFactory } from "../custom/error-factories";
-import { type IKeyExtractor, KEY_EXTRACTOR_METADATA, type KeyExtractorFn } from "../custom/key-extractors";
-import { type IOptionsFactory, OPTIONS_FACTORY_METADATA, type OptionsFactoryFn } from "../custom/options-factories";
+import { ERROR_FACTORY_METADATA, type IErrorFactory } from "../custom/error-factories";
+import { type IKeyExtractor, KEY_EXTRACTOR_METADATA } from "../custom/key-extractors";
+import { type IOptionsFactory, OPTIONS_FACTORY_METADATA } from "../custom/options-factories";
 import { type AllStrategiesOptions, EXECUTOR_METADATA_KEY, type ExecutorMetadata, type IExecutor } from "../executors";
 import type { Strategies } from "../shared/model";
 
 @Injectable()
 export class ProvidersDiscoveryService implements OnModuleInit {
     private readonly executorsMap = new Map<Strategies, IExecutor<unknown>>();
-    private readonly keyExtractorsMap = new Map<InjectionToken, KeyExtractorFn>();
-    private readonly errorFactoriesMap = new Map<InjectionToken, ErrorFactoryFn>();
-    private readonly optionsFactoriesMap = new Map<InjectionToken, OptionsFactoryFn>();
+    private readonly keyExtractorsMap = new Map<InjectionToken, IKeyExtractor>();
+    private readonly errorFactoriesMap = new Map<InjectionToken, IErrorFactory>();
+    private readonly optionsFactoriesMap = new Map<InjectionToken, IOptionsFactory>();
 
     public constructor(
         @Inject(ModulesContainer) private readonly modulesContainer: ModulesContainer,
@@ -75,15 +75,15 @@ export class ProvidersDiscoveryService implements OnModuleInit {
                 }
 
                 if (this.isValidProvider<IKeyExtractor>(instance, "extract", KEY_EXTRACTOR_METADATA)) {
-                    this.keyExtractorsMap.set(token, (context) => instance.extract(context));
+                    this.keyExtractorsMap.set(token, instance);
                 }
 
                 if (this.isValidProvider<IErrorFactory>(instance, "getError", ERROR_FACTORY_METADATA)) {
-                    this.errorFactoriesMap.set(token, (context, options) => instance.getError(context, options));
+                    this.errorFactoriesMap.set(token, instance);
                 }
 
                 if (this.isValidProvider<IOptionsFactory>(instance, "getOptions", OPTIONS_FACTORY_METADATA)) {
-                    this.optionsFactoriesMap.set(token, (context) => instance.getOptions(context));
+                    this.optionsFactoriesMap.set(token, instance);
                 }
             }
         }

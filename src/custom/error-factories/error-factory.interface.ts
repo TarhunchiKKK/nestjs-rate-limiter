@@ -13,5 +13,5 @@ export type ErrorFactoryOptions = {
 };
 
 export interface IErrorFactory {
-    getError: (context: ExecutionContext, options: ErrorOptions) => Error | Promise<Error>;
+    getError: (context: ExecutionContext, options: ErrorFactoryOptions) => Error | Promise<Error>;
 }
