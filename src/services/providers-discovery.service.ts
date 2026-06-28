@@ -89,6 +89,7 @@ export class ProvidersDiscoveryService implements OnModuleInit {
         }
     }
 
+    // biome-ignore lint/suspicious/noExplicitAny: `any` type is necessary for safe casting from `unknown` type
     private isValidProvider<T>(provider: any, methodKey: keyof T, metadataKey: string): provider is T {
         if (!provider?.constructor) {
             return false;
