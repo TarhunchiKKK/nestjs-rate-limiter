@@ -1,6 +1,6 @@
 import { type DynamicModule, type FactoryProvider, Module } from "@nestjs/common";
 import { mergeDefaultOptions } from "./config/defaults";
-import { getRelevantExecutors } from "./config/helpers";
+import { getExecutorsByStorage } from "./config/helpers";
 import type {
     RateLimiterModuleAsyncOptions,
     RateLimiterModuleFullOptions,
@@ -9,16 +9,16 @@ import type {
     StorageOptions
 } from "./config/options";
 import { GUARD_OPTIONS_TOKEN, MODULE_OPTIONS_TOKEN, STORAGE_TOKEN } from "./di";
+import { AVAILABLE_EXECUTORS } from "./executors";
 import { RateLimitGuard } from "./middleware";
 import { ProvidersDiscoveryService } from "./services/providers-discovery.service";
+import type { OmitFields } from "./shared/lib";
 import type { Storage } from "./shared/model";
 
 @Module({})
 export class RateLimiterModule {
     public static forRoot(options: RateLimiterModuleOptions): DynamicModule {
         const fullOptions = mergeDefaultOptions(options);
-
-        const executors = getRelevantExecutors(options.storage);
 
         return {
             global: true,
@@ -27,10 +27,10 @@ export class RateLimiterModule {
                 { provide: MODULE_OPTIONS_TOKEN, useValue: fullOptions },
                 { provide: STORAGE_TOKEN, useValue: RateLimiterModule.createStorage(fullOptions) },
 
-                ...executors,
-                ...fullOptions.custom.keyExtractors,
-                ...fullOptions.custom.errorFactories,
-                ...fullOptions.custom.optionsFactories,
+                ...getExecutorsByStorage(options.storage),
+                ...(options.custom?.keyExtractors ?? []),
+                ...(options.custom?.errorFactories ?? []),
+                ...(options.custom?.optionsFactories ?? []),
 
                 { provide: GUARD_OPTIONS_TOKEN, useValue: RateLimiterModule.createGuardOptions(fullOptions) },
                 ProvidersDiscoveryService,
@@ -41,7 +41,7 @@ export class RateLimiterModule {
     }
 
     public static forRootAsync(options: RateLimiterModuleAsyncOptions): DynamicModule {
-        const moduleOptionsProvider: FactoryProvider<RateLimiterModuleOptions> = {
+        const moduleOptionsProvider: FactoryProvider<OmitFields<RateLimiterModuleOptions, "custom">> = {
             provide: MODULE_OPTIONS_TOKEN,
             inject: options.inject ?? [],
             useFactory: options.useFactory
@@ -71,7 +71,10 @@ export class RateLimiterModule {
                 moduleOptionsProvider,
                 storageProvider,
 
-                // TODO: executors and custom providers
+                ...AVAILABLE_EXECUTORS,
+                ...(options.custom?.keyExtractors ?? []),
+                ...(options.custom?.errorFactories ?? []),
+                ...(options.custom?.optionsFactories ?? []),
 
                 guardOptionsProvider,
                 RateLimitGuard,

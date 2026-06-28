@@ -4,7 +4,7 @@ import type { IErrorFactory } from "../../custom/error-factories";
 import type { IKeyExtractor } from "../../custom/key-extractors";
 import type { IOptionsFactory } from "../../custom/options-factories";
 import type { AllStrategiesOptions } from "../../executors";
-import type { TokenType } from "../../shared/lib";
+import type { OmitFields, TokenType } from "../../shared/lib";
 import type { Scope, Strategies } from "../../shared/model";
 import type { StorageOptions } from "./common.options";
 
@@ -33,7 +33,8 @@ export type RateLimiterModuleOptions = StorageOptions & {
 
 export type RateLimiterModuleAsyncOptions = Pick<ModuleMetadata, "imports"> & {
     inject?: any[];
-    useFactory: (...args: any[]) => RateLimiterModuleOptions | Promise<RateLimiterModuleOptions>;
+    useFactory: (...args: any[]) => OmitFields<RateLimiterModuleOptions, "custom"> | Promise<OmitFields<RateLimiterModuleOptions, "custom">>;
+    custom?: RateLimiterModuleOptions["custom"];
 };
 
 export type RateLimiterModuleFullOptions = StorageOptions & {

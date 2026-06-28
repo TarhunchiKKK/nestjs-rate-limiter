@@ -1,8 +1,10 @@
 import { Inject, Injectable, type InjectionToken, type OnModuleInit } from "@nestjs/common";
 import { ModulesContainer, Reflector } from "@nestjs/core";
+import type { RateLimiterModuleOptions } from "../config/options";
 import { ERROR_FACTORY_METADATA, type IErrorFactory } from "../custom/error-factories";
 import { type IKeyExtractor, KEY_EXTRACTOR_METADATA } from "../custom/key-extractors";
 import { type IOptionsFactory, OPTIONS_FACTORY_METADATA } from "../custom/options-factories";
+import { MODULE_OPTIONS_TOKEN } from "../di";
 import { type AllStrategiesOptions, EXECUTOR_METADATA_KEY, type ExecutorMetadata, type IExecutor } from "../executors";
 import type { Strategies } from "../shared/model";
 
@@ -15,7 +17,8 @@ export class ProvidersDiscoveryService implements OnModuleInit {
 
     public constructor(
         @Inject(ModulesContainer) private readonly modulesContainer: ModulesContainer,
-        @Inject(Reflector) private readonly reflector: Reflector
+        @Inject(Reflector) private readonly reflector: Reflector,
+        @Inject(MODULE_OPTIONS_TOKEN) private readonly moduleOptions: RateLimiterModuleOptions
     ) {}
 
     public getExecutor<Strategy extends Strategies>(strategy: Strategy) {
@@ -71,7 +74,9 @@ export class ProvidersDiscoveryService implements OnModuleInit {
                 if (this.isValidProvider<IExecutor<unknown>>(instance, "check", EXECUTOR_METADATA_KEY)) {
                     const metadata = this.reflector.get<ExecutorMetadata>(EXECUTOR_METADATA_KEY, instance.constructor);
 
-                    this.executorsMap.set(metadata.strategy, instance);
+                    if (metadata && metadata.storage === this.moduleOptions.storage) {
+                        this.executorsMap.set(metadata.strategy, instance);
+                    }
                 }
 
                 if (this.isValidProvider<IKeyExtractor>(instance, "extract", KEY_EXTRACTOR_METADATA)) {
