@@ -1,17 +1,34 @@
 import { type CanActivate, type ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { normalizeOptions } from "../config/helpers";
-import type { RateLimitGuardOptions, RateLimitNormalizedOptions } from "../config/options";
-import type { ErrorFactoryFn, ErrorFactoryOptions } from "../custom/error-factories";
+import type {
+    BaseOptions,
+    ErrorFactoryOptions,
+    KeyExtractorOptions,
+    OptionsFactoryOptions,
+    RateLimitGuardOptions,
+    RateLimitNormalizedOptions,
+    StrategyOptions
+} from "../config/options";
+import type { ErrorFactoryFn, ErrorOptions } from "../custom/error-factories";
 import type { KeyExtractorFn } from "../custom/key-extractors";
 import type { OptionsFactoryFn } from "../custom/options-factories";
 import { RateLimitDecorator, SkipRateLimitDecorator } from "../decorators";
 import { GUARD_OPTIONS_TOKEN } from "../di";
 import { ProvidersDiscoveryService } from "../services/providers-discovery.service";
+import type { FlattenOptionalNeverUnion } from "../shared/lib";
 import { getKey } from "../shared/model";
+
+type RunOptions = BaseOptions &
+    StrategyOptions &
+    Required<Pick<FlattenOptionalNeverUnion<KeyExtractorOptions>, "keyExtractorFn">> &
+    Required<Pick<FlattenOptionalNeverUnion<ErrorFactoryOptions>, "errorFactoryFn">> &
+    Pick<FlattenOptionalNeverUnion<OptionsFactoryOptions>, "factoryFn">;
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {
+    private defaultRunOptions?: RunOptions;
+
     public constructor(
         @Inject(GUARD_OPTIONS_TOKEN) private readonly options: RateLimitGuardOptions,
         @Inject(ProvidersDiscoveryService) private readonly discoveryService: ProvidersDiscoveryService,
@@ -25,14 +42,18 @@ export class RateLimitGuard implements CanActivate {
             return true;
         }
 
-        const options = await this.getOptions(context);
+        if (!this.defaultRunOptions) {
+            this.defaultRunOptions = this.getDefaultRunOptions();
+        }
+
+        const options = await this.getRunOptions(context, this.defaultRunOptions);
 
         const key = options.keyExtractorFn(context);
 
         const requestAllowed = await this.checkRate(key, options);
 
         if (!requestAllowed) {
-            const errorOptions: ErrorFactoryOptions = {
+            const errorOptions: ErrorOptions = {
                 key: key,
                 scope: options.scope,
                 strategy: options.strategy,
@@ -55,11 +76,11 @@ export class RateLimitGuard implements CanActivate {
         return false;
     }
 
-    private async getOptions(context: ExecutionContext): Promise<RateLimitGuardOptions> {
+    private async getRunOptions(context: ExecutionContext, defaultRunOptions: RunOptions): Promise<RunOptions> {
         const options = this.reflector.get(RateLimitDecorator, context.getHandler());
 
         if (!options) {
-            return this.options;
+            return defaultRunOptions;
         }
 
         // get key extractor
@@ -69,7 +90,7 @@ export class RateLimitGuard implements CanActivate {
         } else if (options.keyExtractorFn) {
             keyExtractorFn = options.keyExtractorFn;
         } else {
-            keyExtractorFn = this.options.keyExtractorFn;
+            keyExtractorFn = defaultRunOptions.keyExtractorFn;
         }
 
         // get error factory
@@ -79,7 +100,7 @@ export class RateLimitGuard implements CanActivate {
         } else if (options.errorFactoryFn) {
             errorFactoryFn = options.errorFactoryFn;
         } else {
-            errorFactoryFn = this.options.errorFactoryFn;
+            errorFactoryFn = defaultRunOptions.errorFactoryFn;
         }
 
         // get options factory
@@ -89,7 +110,7 @@ export class RateLimitGuard implements CanActivate {
         } else if (options.factoryFn) {
             optionsFactoryFn = options.factoryFn;
         } else {
-            optionsFactoryFn = this.options.factoryFn;
+            optionsFactoryFn = defaultRunOptions.factoryFn;
         }
 
         // merge dynamic options with
@@ -129,7 +150,43 @@ export class RateLimitGuard implements CanActivate {
         };
     }
 
-    private async checkRate(key: unknown, options: RateLimitGuardOptions) {
+    private getDefaultRunOptions(): RunOptions {
+        let keyExtractorFn: KeyExtractorFn;
+        if (this.options.keyExtractor) {
+            keyExtractorFn = this.discoveryService.getKeyExtractor(this.options.keyExtractor);
+        } else if (this.options.keyExtractorFn) {
+            keyExtractorFn = this.options.keyExtractorFn;
+        } else {
+            throw new Error(`Cannot resolve key extractor`);
+        }
+
+        let errorFactoryFn: ErrorFactoryFn;
+        if (this.options.errorFactory) {
+            errorFactoryFn = this.discoveryService.getErrorFactory(this.options.errorFactory);
+        } else if (this.options.errorFactoryFn) {
+            errorFactoryFn = this.options.errorFactoryFn;
+        } else {
+            throw new Error(`Cannot resolve error factory`);
+        }
+
+        let optionsFactoryFn: OptionsFactoryFn | undefined;
+        if (this.options.factory) {
+            optionsFactoryFn = this.discoveryService.getOptionsFactory(this.options.factory);
+        } else if (this.options.factoryFn) {
+            optionsFactoryFn = this.options.factoryFn;
+        }
+
+        return {
+            scope: this.options.scope,
+            strategy: this.options.strategy,
+            strategyOptions: this.options.strategyOptions,
+            keyExtractorFn: keyExtractorFn,
+            errorFactoryFn: errorFactoryFn,
+            factoryFn: optionsFactoryFn
+        };
+    }
+
+    private async checkRate(key: unknown, options: RunOptions) {
         const finalKey = getKey(key, options.strategy, options.scope);
 
         const executor = this.discoveryService.getExecutor(options.strategy);
