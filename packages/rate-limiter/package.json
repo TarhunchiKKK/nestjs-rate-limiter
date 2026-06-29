@@ -1,6 +1,12 @@
 {
     "name": "nestjs-rate-limiter",
-    "description": "Rate Limiter pattern implementation for NestJS framework",
+    "description": "Rate Limiter module for NestJS framework",
+    "keywords": [
+        "nest",
+        "rate limit",
+        "throttle",
+        "nodejs"
+    ],
     "version": "0.0.0",
     "license": "MIT",
     "private": true,
