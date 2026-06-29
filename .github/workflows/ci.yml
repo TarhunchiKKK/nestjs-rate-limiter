@@ -21,6 +21,9 @@ jobs:
 
       - name: Lint
         run: bun lint:check
+      
+      - name: Knip
+        run: bun knip
 
   build:
     runs-on: ubuntu-latest
