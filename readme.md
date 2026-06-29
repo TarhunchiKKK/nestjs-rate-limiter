@@ -12,7 +12,7 @@
 ## Features
 
 * **NestJS Native**: Dependency injection and async configuration.
-* **Different limiting strategies**:  *Fixed Window*, *Token Bucket*, *Wliding Window Counter*, *Sliding Window Log* and *Leaky Bucket*.
+* **Different limiting strategies**:  *Fixed Window*, *Token Bucket*, *Sliding Window Counter*, *Sliding Window Log* and *Leaky Bucket*.
 * **Different Storages**: In-memory (Map) and <a href="https://redis.io/?ref=soroushjp.com">Redis</a> (With <a href="https://www.lua.org/">Lua</a> scripts).
 * **Custom Key Extractors**: Provide your custom key extraction logic. 
 * **Custom Error Factories**: Customize you rate limit exhausted error.

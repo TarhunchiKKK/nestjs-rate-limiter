@@ -5,6 +5,7 @@
     "description": "",
     "author": "",
     "license": "UNLICENSED",
+    "type": "module",
     "scripts": {
         "build": "turbo run build",
         "type-check": "turbo run type-check",
@@ -15,7 +16,8 @@
         "format:fix": "bunx biome format --write",
         "lint:check": "bunx --bun biome lint",
         "lint:fix": "bunx --bun biome lint --write",
-        "knip": "knip"
+        "knip": "knip",
+        "sync-meta": "node ./scripts/sync-meta.js"
     },
     "devDependencies": {
         "@biomejs/biome": "^2.5.1",
