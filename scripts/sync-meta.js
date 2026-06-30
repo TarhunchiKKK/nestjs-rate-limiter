@@ -3,7 +3,7 @@ import * as path from "node:path";
 
 const rootDir = process.cwd();
 
-const destinationDir = path.join(rootDir, "packages/rate-limiter")
+const destinationDir = path.join(rootDir, "packages/rate-limiter");
 
 const filenames = ["readme.md", "license"];
 
@@ -16,4 +16,3 @@ for (const filename of filenames) {
 
     console.info(`✅ '${destinationFile}' updated!`);
 }
-
