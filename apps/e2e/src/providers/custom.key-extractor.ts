@@ -4,7 +4,7 @@ import { type IKeyExtractor, KeyExtractor } from "nestjs-rate-limiter";
 
 @KeyExtractor()
 export class CustomKeyExtractor implements IKeyExtractor {
-    public constructor(@Inject(ConfigService) private readonly configService: ConfigService) {}
+    public constructor(@Inject(ConfigService) private readonly configService: ConfigService) { }
 
     public extract(context: ExecutionContext) {
         const controller = context.getClass().name;
