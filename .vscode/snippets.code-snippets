@@ -19,7 +19,12 @@
 
     // * Tests
 
-    "NestJS Bun Unit Test Handler": {
+    "NestJS Bun Unit Test Mock": {
+        "prefix": "t-mock",
+        "scope": "typescript",
+        "body": ["mock<${1:Type}>((() => {}) as any)"]
+    },
+    "NestJS Bun Unit-Test": {
         "prefix": "t-unit",
         "scope": "typescript",
         "body": [
@@ -49,9 +54,35 @@
             "});"
         ]
     },
-    "NestJS Bun Unit Test Mock": {
-        "prefix": "t-mock",
+    "NestJS Bun E2e-Test": {
+        "prefix": "t-e2e",
         "scope": "typescript",
-        "body": ["mock<${1:Type}>((() => {}) as any)"]
-    }
+        "body": [
+            "import { afterAll, beforeAll, describe, it } from \"bun:test\";",
+            "import type { INestApplication } from \"@nestjs/common\";",
+            "import { Test } from \"@nestjs/testing\";",
+            "import request from \"supertest\";",
+            "",
+            "describe(\"${1:Description} (e2e)\", () => {",
+            "   let app: INestApplication;",
+            "",
+            "    beforeAll(async () => {",
+            "        const module = await Test.createTestingModule({",
+            "            imports: [AppModule]",
+            "        }).compile();",
+            "",
+            "       app = module.createNestApplication();",
+            "       await app.init();",
+            "    });",
+            "",
+            "    afterAll(() => {",
+            "        app.close();",
+            "    });",
+            "",
+            "    it(\"\", () => {",
+            "         return request(app.getHttpServer()).get(\"/\").expect(200).expect(null);",
+            "    });",
+            "});"
+        ]
+    },
 }

@@ -1,12 +1,7 @@
 {
     "name": "nestjs-rate-limiter",
     "description": "Rate Limiter module for NestJS framework",
-    "keywords": [
-        "nest",
-        "rate limit",
-        "throttle",
-        "nodejs"
-    ],
+    "keywords": ["nest", "rate limit", "throttle", "nodejs"],
     "version": "0.0.0",
     "license": "MIT",
     "private": true,
@@ -15,11 +10,6 @@
         "email": "kostabarilo12@gmail.com",
         "url": "https://github.com/TarhunchiKKK"
     },
-    "type": "module",
-    "module": "./src/index.ts",
-    "main": "./dist/src/index.js",
-    "types": "./dist/src/index.d.ts",
-    "files": ["./dist/**", "readme.md", "license"],
     "exports": {
         ".": {
             "types": "./dist/src/index.d.ts",
@@ -27,6 +17,11 @@
             "require": "./dist/src/index.js"
         }
     },
+    "type": "commonjs",
+    "module": "./src/index.ts",
+    "main": "./dist/src/index.js",
+    "types": "./dist/src/index.d.ts",
+    "files": ["./dist/**", "readme.md", "license"],
     "scripts": {
         "build": "tsc -p tsconfig.build.json && cpx \"lua/*\" dist/lua",
         "type-check": "tsc --noEmit",
@@ -52,5 +47,11 @@
         "@nestjs/core": "^11.0.0",
         "ioredis": "^5.0.0",
         "typescript": "^5"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "dependencies": {
+        "@types/node": "^26.0.1"
     }
 }
