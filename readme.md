@@ -1,13 +1,11 @@
 <p align="center">
     <a href="http://nestjs.com/" target="blank">
-        <img src="https://docs.nestjs.com/assets/logo-small-gradient.svg" width="320" alt="Nest Logo" />
+        <img src="https://docs.nestjs.com/assets/logo-small-gradient.svg" width="250" alt="Nest Logo" />
     </a>
+    <p align="center">
+        A rate limiter module for <a href="http://nestjs.com/">NestJS</a> framework (Node.js).
+    </p>
 </p>
-
-<p align="center">
-    A rate limiter module for <a href="http://nestjs.com/">NestJS</a> framework (Node.js).
-</p>
-
 
 ## Features
 
@@ -28,6 +26,46 @@ yarn add nestjs-rate-limiter
 pnpm i nestjs-rate-limiter
 # or
 bun i nestjs-rate-limiter
+```
+
+## Quick Start
+
+```typescript
+// app.module.ts
+import { Module } from "@nestjs/common";
+import { RateLimiterModule } from "nestjs-rate-limiter";
+import { AppController } from "./app.controller.ts";
+
+@Module({
+    imports: [
+        RateLimiterModule.forRoot({
+            storage: "in-memory",
+            scope: "my-scope",
+            strategy: "token-bucket",
+            strategyOptions: {
+                // different strategies options (Optional)
+            }
+        })
+    ],
+    controllers: [AppController]
+})
+export class AppModule {}
+```
+
+```typescript
+// app.controller.ts
+import { Controller, Get, UseGuards } from "@nestjs/common";
+import { RateLimit, RateLimitGuard } from "nestjs-rate-limiter";
+
+@Controller()
+@UseGuards(RateLimitGuard)
+export class AppController {
+    @Get("/hello")
+    @RateLimit({ /* override default options */ }) 
+    public hello() {
+        return "Hello";
+    }
+}
 ```
 
 ## License
