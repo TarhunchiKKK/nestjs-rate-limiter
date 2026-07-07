@@ -185,6 +185,30 @@ Your custom options will be merged with this:
 
 ### Decorator Options
 
+By default guard uses options provided in `RateLimiterModule` configuration. You can override this options in decorator:
+
+```typescript
+// Your custom providers
+import { 
+    MyCustomKeyExtractor, 
+    MyCustomErrorFactory, 
+    MyCustomOptionsFactory 
+} from "./providers"
+
+@RateLimit({
+    scope: "my-custom-scope",
+
+    keyExtractor: MyCustomKeyExtractor,
+    errorFactory: MyCustomErrorFactory,
+    factory: MyCustomOptionsFactory,
+
+    // strategy-specific options
+    strategy: "sliding-window-counter",
+    limit: 100,
+    windowMs: 1_000
+})
+```
+
 ## Techniques
 
 ### Async Configuration
