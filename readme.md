@@ -118,21 +118,16 @@ RateLimiterModule.forRoot({
     },
 
     // default providers
+    // ⚠️ NOTE: if you use custom providers here, they should be provided in `custom` field
     keyExtractor: undefined,
     errorFactory: undefined,
     optionsFactory: undefined,
 
     // custom providers
     custom: {
-        keyExtractors: [
-            /* You custom key extractors */
-        ],
-        errorFactories: [
-            /* You custom error factories */
-        ],
-        optionsFactories: [
-            /* You custom options factories */
-        ]
+        keyExtractors: [/* You custom key extractors */],
+        errorFactories: [/* You custom error factories */],
+        optionsFactories: [/* You custom options factories */]
     }
 });
 ```
@@ -212,6 +207,27 @@ import {
 ## Techniques
 
 ### Async Configuration
+
+> ⚠️ **Note**
+>
+> `custom` property should be provided in top of configuration object.
+
+```typescript
+RateLimiterModule.forRootAsync({
+    imports: [],
+    inject: [],
+    useFactory: () => ({
+        // This options are same to `forRoot` method excluding `custom` property
+    }),
+
+    // custom providers should be listed here
+    custom: {
+        keyExtractors: [],
+        errorFactories: [],
+        optionsFactories: []
+    }
+});
+```
 
 ### Redis Implementation
 
