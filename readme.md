@@ -302,6 +302,23 @@ RateLimiterModule.forRootAsync({
 
 ### Skipping
 
+You can also skip rate limiting for method/controller:
+
+```typescript
+import { SkipRateLimit, RateLimitGuard } from "nestjs-rate-limiter";
+
+@Controller()
+@UseGuards(RateLimitGuard)
+export class MyController {
+
+    public method1() {}
+
+    // Rate limiting for this method will be skipped
+    @SkipRateLimit()
+    public method2() {}
+}
+```
+
 ## Custom Providers
 
 ### Key Extractors
