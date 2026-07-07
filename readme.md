@@ -89,6 +89,53 @@ export class AppController {
 
 ### Module Configuration
 
+There is only one required field in configuration - `storage`.
+
+```typescript
+RateLimiterModule.forRoot({
+    storage: "in-memory",
+    scope: "my-scope",
+
+    // strategy configuration
+    strategy: "token-bucket",
+    strategyOptions: {
+        fixedWindow: {
+            // strategy-specific options
+        },
+        tokenBucket: {
+            // strategy-specific options
+        },
+        slidingWindowCounter: {
+            // strategy-specific options
+        },
+        slidingWindowLog: {
+            // strategy-specific options
+        },
+        leakyBucket: {
+            // strategy-specific options
+        }
+    },
+
+    // default providers
+    keyExtractor: undefined,
+    errorFactory: undefined,
+    optionsFactory: undefined,
+
+    // custom providers
+    custom: {
+        keyExtractors: [
+            /* You custom key extractors */
+        ],
+        errorFactories: [
+            /* You custom error factories */
+        ],
+        optionsFactories: [
+            /* You custom options factories */
+        ]
+    }
+});
+```
+
 ### Default Module Options
 
 ### Decorator Options
