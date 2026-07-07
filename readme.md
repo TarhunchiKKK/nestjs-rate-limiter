@@ -7,6 +7,23 @@
     </p>
 </p>
 
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+  - [Module Configuration](#module-configuration)
+  - [Default Module Options](#default-module-options)
+  - [Decorator Options](#decorator-options)
+- [Techniques](#techniques)
+  - [Redis Injection](#redis-injection)
+  - [Skipping](#skipping)
+- [Custom Providers](#custom-providers)
+  - [Key Extractors](#key-extractors)
+  - [Error Factories](#error-factories)
+  - [Options Factories](#options-factories)
+- [License](#license)
+
+
 ## Features
 
 * **NestJS Native**: Dependency injection and async configuration.
@@ -67,6 +84,28 @@ export class AppController {
     }
 }
 ```
+
+## Configuration
+
+### Module Configuration
+
+### Default Module Options
+
+### Decorator Options
+
+## Techniques
+
+### Redis Injection
+
+### Skipping
+
+## Custom Providers
+
+### Key Extractors
+
+### Error Factories
+
+### Options Factories
 
 ## License
 
