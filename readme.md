@@ -16,7 +16,7 @@
   - [Decorator Options](#decorator-options)
 - [Techniques](#techniques)
   - [Async Configuration](#async-configuration)
-  - [Redis Implementation](#redis-implementation)
+  - [Redis](#redis)
   - [Skipping](#skipping)
 - [Custom Providers](#custom-providers)
   - [Key Extractors](#key-extractors)
@@ -229,7 +229,76 @@ RateLimiterModule.forRootAsync({
 });
 ```
 
-### Redis Implementation
+### Redis
+
+For using Redis storage you need to create object or provider that implements `RedisStorage` type. 
+
+1. Setting up your provider:
+
+```typescript
+import Redis, { type RedisValue } from "ioredis";
+import type { RedisStorage } from "nestjs-rate-limiter";
+
+@Injectable()
+export class RedisService implements RedisStorage {
+    private readonly client: Redis;
+
+    public constructor(private readonly configService: ConfigService) {
+        this.client = new Redis(/* ... */);
+    }
+
+    public async eval(script: string | Buffer<ArrayBufferLike>, numkeys: string | number, ...args: RedisValue[]) {
+        return await this.client.eval(script, numkeys, ...args);
+    }
+}
+```
+
+> 📌 **Note**
+>
+> `Redis` type of `ioredis` package already implements `RedisStorage` type.
+>
+> You can use you provider this way:
+> ```typescript
+> import Redis, { type RedisValue } from "ioredis";
+> import type { RedisStorage } from "nestjs-rate-limiter";
+> 
+> @Injectable()
+> export class RedisService implements RedisStorage {
+>     private readonly client: Redis;
+> 
+>     public constructor(private readonly configService: ConfigService) {
+>         this.client = new Redis(/* ... */);
+>     }
+> 
+>     public getClient() {
+>         return this.client;  // Your client will be used as storage provider
+>     }
+> }
+> ```
+
+2. Register you module:
+
+```typescript
+@Module({
+    providers: [RedisService],
+    exports: [RedisService]
+})
+export class RedisModule {}
+```
+
+3. Inject you Redis provider:
+
+```typescript
+RateLimiterModule.forRootAsync({
+    imports: [RedisModule],
+    inject: [RedisService],
+    useFactory: (redisService: RedisService) => ({
+        storage: "redis",
+        instance: redisService  // or `redisService.getClient()`
+    }),
+    // ...
+});
+```
 
 ### Skipping
 
