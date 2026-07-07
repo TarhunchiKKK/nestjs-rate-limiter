@@ -15,7 +15,8 @@
   - [Default Module Options](#default-module-options)
   - [Decorator Options](#decorator-options)
 - [Techniques](#techniques)
-  - [Redis Injection](#redis-injection)
+  - [Async Configuration](#async-configuration)
+  - [Redis Implementation](#redis-implementation)
   - [Skipping](#skipping)
 - [Custom Providers](#custom-providers)
   - [Key Extractors](#key-extractors)
@@ -138,11 +139,57 @@ RateLimiterModule.forRoot({
 
 ### Default Module Options
 
+Your custom options will be merged with this:
+
+```typescript
+{
+    scope: "default-scope",
+
+    strategy: "fixed-window",
+    strategyOptions: {
+        fixedWindow: {
+            limit: 100,
+            ttl: MS_IN_MINUTE
+        },
+        slidingWindowCounter: {
+            limit: 100,
+            windowMs: MS_IN_MINUTE
+        },
+        slidingWindowLog: {
+            limit: 50,
+            windowMs: MS_IN_MINUTE
+        },
+        tokenBucket: {
+            capacity: 20,
+            refillRate: 5 / MS_IN_MINUTE,
+            ttl: 3 * MS_IN_MINUTE
+        },
+        leakyBucket: {
+            capacity: 10,
+            leakRate: 2 / MS_IN_MINUTE,
+            ttl: 3 * MS_IN_MINUTE
+        }
+    },
+
+    keyExtractor: BuiltinKeyExtractor,  // IP-address is used as key
+    errorFactory: BuiltinErrorFactory,  // throws HttpException (from @nestjs/common)
+    optionsFactory: undefined,          // no dynamic options by default
+
+    custom: {
+        keyExtractors: [],
+        errorFactories: [],
+        optionsFactories: []
+    }
+}
+```
+
 ### Decorator Options
 
 ## Techniques
 
-### Redis Injection
+### Async Configuration
+
+### Redis Implementation
 
 ### Skipping
 
