@@ -178,6 +178,10 @@ Your custom options will be merged with this:
 }
 ```
 
+> ⚠️ **Warning**
+>
+> If you provide some provider to `optionsFactory` property, this provider will be executed on every request. 
+
 ### Decorator Options
 
 By default guard uses options provided in `RateLimiterModule` configuration. You can override this options in decorator:
@@ -324,6 +328,57 @@ export class MyController {
 ### Key Extractors
 
 ### Error Factories
+
+1. Define you custom error factory:
+
+```typescript
+import { type ExecutionContext, HttpException } from "@nestjs/common";
+import { ErrorFactory, type ErrorFactoryOptions, type IErrorFactory } from "nestjs-rate-limiter";
+
+export class RateLimitError extends HttpException {
+    public constructor(message: string) {
+        super(message, 429);
+    }
+}
+
+@ErrorFactory()
+export class MyCustomErrorFactory implements IErrorFactory {
+    public constructor(/* You can use any providers */) {}
+
+    public getError(context: ExecutionContext, options: ErrorFactoryOptions) {
+        return new RateLimitError(`Rate limit exhausted on ${context.getType()} transporter for scope "${options.scope}" and key "${options.key}".`);
+    }
+}
+```
+
+2. List you error factory in `RateLimiterModule` configuration:
+
+```typescript
+RateLimiterModule.forRoot({
+    // ...
+
+    // Optional: You can use it as default error factory
+    errorFactory: MyCustomErrorFactory,
+    custom: {
+        // ...
+        errorFactories: [MyCustomErrorFactory],
+    }
+});
+```
+
+3. Specify you custom error factory in decorator:
+
+```typescript
+@RateLimit({
+    // ...
+    errorFactory: MyCustomErrorFactory
+})
+```
+
+// CHECK: How `Remind` translates?
+> 📌 **Remind**
+>
+> If you specify `MyCustomErrorFactory` as default error factory it will become not required to specify it in `RateLimit` decorator.
 
 ### Options Factories
 
