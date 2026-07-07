@@ -14,14 +14,14 @@
   - [Module Configuration](#module-configuration)
   - [Default Module Options](#default-module-options)
   - [Decorator Options](#decorator-options)
-- [Techniques](#techniques)
-  - [Async Configuration](#async-configuration)
-  - [Redis](#redis)
-  - [Skipping](#skipping)
 - [Custom Providers](#custom-providers)
   - [Key Extractors](#key-extractors)
   - [Error Factories](#error-factories)
   - [Options Factories](#options-factories)
+- [Techniques](#techniques)
+  - [Async Configuration](#async-configuration)
+  - [Redis](#redis)
+  - [Skipping](#skipping)
 - [License](#license)
 
 
@@ -118,7 +118,7 @@ RateLimiterModule.forRoot({
     },
 
     // default providers
-    // ⚠️ NOTE: if you use custom providers here, they should be provided in `custom` field
+    // ⚠️ NOTE: if you use custom providers here, they should be specified in `custom` field
     keyExtractor: undefined,
     errorFactory: undefined,
     optionsFactory: undefined,
@@ -178,10 +178,6 @@ Your custom options will be merged with this:
 }
 ```
 
-> ⚠️ **Warning**
->
-> If you provide some provider to `optionsFactory` property, this provider will be executed on every request. 
-
 ### Decorator Options
 
 By default guard uses options provided in `RateLimiterModule` configuration. You can override this options in decorator:
@@ -207,6 +203,125 @@ import {
     windowMs: 1_000
 })
 ```
+
+## Custom Providers
+
+// FIX: Translation
+> ⚠️ Important ⚠️
+> 
+> You custom providers (key extractors, error factories and options factories) will be called on every request. 
+> Do not perform any expensive computations here. It can hart performance.
+
+### Key Extractors
+
+1. Define your custom key extractor:
+
+```typescript
+import { type ExecutionContext } from "@nestjs/common";
+import { type IKeyExtractor, KeyExtractor } from "nestjs-rate-limiter";
+
+@KeyExtractor()
+export class MyCustomKeyExtractor implements IKeyExtractor {
+    public constructor(private readonly jwtService: JwtService) {}
+
+    public extract(context: ExecutionContext) {
+        const request = context.switchToHttp().getRequest();
+
+        const authorization = request.headers["Authorization"];
+
+        const [, token] = authorization.split(" ")[1];
+
+        const { userId } = this.jwtService.verify(token);
+
+        return userId;
+    }
+}
+```
+
+2. List your key extractor in `RateLimiterModule` configuration:
+
+```typescript
+RateLimiterModule.forRoot({
+    // ...
+
+    // Optional: You can use it as default key extractor
+    keyExtractor: MyCustomKeyExtractor,
+    custom: {
+        // ...
+        keyExtractors: [MyCustomKeyExtractor],
+    }
+});
+```
+
+3. Specify your custom key extractor in decorator:
+
+```typescript
+@RateLimit({
+    // ...
+    keyExtractor: MyCustomKeyExtractor
+})
+```
+
+
+// CHECK: How `Remind` translates?
+> 📌 **Remind**
+>
+> If you specify `MyCustomKeyExtractor` as default key extractor it will become not required to specify it in `RateLimit` decorator.
+
+### Error Factories
+
+1. Define your custom error factory:
+
+```typescript
+import { type ExecutionContext, HttpException } from "@nestjs/common";
+import { ErrorFactory, type ErrorFactoryOptions, type IErrorFactory } from "nestjs-rate-limiter";
+
+export class RateLimitError extends HttpException {
+    public constructor(message: string) {
+        super(message, 429);
+    }
+}
+
+@ErrorFactory()
+export class MyCustomErrorFactory implements IErrorFactory {
+    public constructor(/* You can use any providers */) {}
+
+    public getError(context: ExecutionContext, options: ErrorFactoryOptions) {
+        return new RateLimitError(`Rate limit exhausted on ${context.getType()} transporter for scope "${options.scope}" and key "${options.key}".`);
+    }
+}
+```
+
+2. List your error factory in `RateLimiterModule` configuration:
+
+```typescript
+RateLimiterModule.forRoot({
+    // ...
+
+    // Optional: You can use it as default error factory
+    errorFactory: MyCustomErrorFactory,
+    custom: {
+        // ...
+        errorFactories: [MyCustomErrorFactory],
+    }
+});
+```
+
+3. Specify your custom error factory in decorator:
+
+```typescript
+@RateLimit({
+    // ...
+    errorFactory: MyCustomErrorFactory
+})
+```
+
+// CHECK: How `Remind` translates?
+> 📌 **Remind**
+>
+> If you specify `MyCustomErrorFactory` as default error factory it will become not required to specify it in `RateLimit` decorator.
+
+### Options Factories
 
 ## Techniques
 
@@ -309,7 +424,7 @@ RateLimiterModule.forRootAsync({
 You can also skip rate limiting for method/controller:
 
 ```typescript
-import { SkipRateLimit, RateLimitGuard } from "nestjs-rate-limiter";
+import { RateLimitGuard, SkipRateLimit } from "nestjs-rate-limiter";
 
 @Controller()
 @UseGuards(RateLimitGuard)
@@ -322,65 +437,6 @@ export class MyController {
     public method2() {}
 }
 ```
-
-## Custom Providers
-
-### Key Extractors
-
-### Error Factories
-
-1. Define you custom error factory:
-
-```typescript
-import { type ExecutionContext, HttpException } from "@nestjs/common";
-import { ErrorFactory, type ErrorFactoryOptions, type IErrorFactory } from "nestjs-rate-limiter";
-
-export class RateLimitError extends HttpException {
-    public constructor(message: string) {
-        super(message, 429);
-    }
-}
-
-@ErrorFactory()
-export class MyCustomErrorFactory implements IErrorFactory {
-    public constructor(/* You can use any providers */) {}
-
-    public getError(context: ExecutionContext, options: ErrorFactoryOptions) {
-        return new RateLimitError(`Rate limit exhausted on ${context.getType()} transporter for scope "${options.scope}" and key "${options.key}".`);
-    }
-}
-```
-
-2. List you error factory in `RateLimiterModule` configuration:
-
-```typescript
-RateLimiterModule.forRoot({
-    // ...
-
-    // Optional: You can use it as default error factory
-    errorFactory: MyCustomErrorFactory,
-    custom: {
-        // ...
-        errorFactories: [MyCustomErrorFactory],
-    }
-});
-```
-
-3. Specify you custom error factory in decorator:
-
-```typescript
-@RateLimit({
-    // ...
-    errorFactory: MyCustomErrorFactory
-})
-```
-
-// CHECK: How `Remind` translates?
-> 📌 **Remind**
->
-> If you specify `MyCustomErrorFactory` as default error factory it will become not required to specify it in `RateLimit` decorator.
-
-### Options Factories
 
 ## License
 
