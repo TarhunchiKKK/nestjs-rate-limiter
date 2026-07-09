@@ -39,8 +39,7 @@
         "cpx": "^1.5.0",
         "express": "^5.2.1",
         "ioredis": "^5.11.1",
-        "reflect-metadata": "^0.2.2",
-        "tsd": "^0.33.0"
+        "reflect-metadata": "^0.2.2"
     },
     "peerDependencies": {
         "@nestjs/common": "^11.0.0",

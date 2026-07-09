@@ -7,6 +7,8 @@
     </p>
 </p>
 
+## Table of Contents
+
 - [Features](#features)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
