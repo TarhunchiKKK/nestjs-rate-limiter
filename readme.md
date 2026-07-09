@@ -1,6 +1,6 @@
 <p align="center">
     <a href="http://nestjs.com/" target="blank">
-        <img src="https://docs.nestjs.com/assets/logo-small-gradient.svg" width="250" alt="Nest Logo" />
+        <img src="https://docs.nestjs.com/assets/logo-small-gradient.svg" width="200" alt="Nest Logo" />
     </a>
     <p align="center">
         A rate limiter module for <a href="http://nestjs.com/">NestJS</a> framework (Node.js).
@@ -37,13 +37,7 @@
 ## Installation
 
 ```bash
-npm i nestjs-rate-limiter
-# or
-yarn add nestjs-rate-limiter
-# or
-pnpm i nestjs-rate-limiter
-# or
-bun i nestjs-rate-limiter
+npm install nestjs-rate-limiter
 ```
 
 ## Quick Start
@@ -206,7 +200,6 @@ import {
 
 ## Custom Providers
 
-// FIX: Translation
 > ⚠️ Important ⚠️
 > 
 > You custom providers (key extractors, error factories and options factories) will be called on every request. 
@@ -262,9 +255,7 @@ RateLimiterModule.forRoot({
 })
 ```
 
-
-// CHECK: How `Remind` translates?
-> 📌 **Remind**
+> 📌 **Remember**
 >
 > If you specify `MyCustomKeyExtractor` as default key extractor it will become not required to specify it in `RateLimit` decorator.
 
@@ -316,12 +307,63 @@ RateLimiterModule.forRoot({
 })
 ```
 
-// CHECK: How `Remind` translates?
-> 📌 **Remind**
+> 📌 **Remember**
 >
 > If you specify `MyCustomErrorFactory` as default error factory it will become not required to specify it in `RateLimit` decorator.
 
 ### Options Factories
+
+1. Define your custom options factory:
+
+```typescript
+import { type ExecutionContext } from "@nestjs/common";
+import { type IOptionsFactory, OptionsFactory } from "nestjs-rate-limiter";
+
+@OptionsFactory()
+export class MyCustomOptionsFactory implements IOptionsFactory {
+    public constructor(private readonly configService: ConfigService) {}
+
+    public getOptions(context: ExecutionContext) {
+        const scope = this.configService.get("RATE_LIMITER_SCOPE") ?? "custom-scope";
+
+        return {
+            scope
+        };
+    }
+}
+```
+
+2. List your options factory in `RateLimiterModule` configuration:
+
+```typescript
+RateLimiterModule.forRoot({
+    // ...
+
+    // Optional: You can use it as default options factory
+    optionsFactory: MyCustomOptionsFactory,
+    custom: {
+        // ...
+        optionsFactories: [MyCustomOptionsFactory],
+    }
+});
+```
+
+3. Specify your custom options factory in decorator:
+
+```typescript
+@RateLimit({
+    // ...
+    factory: MyCustomOptionsFactory
+})
+```
+
+> ⚠️ **Note**
+>
+> If `RateLimit` decorator has static options (like `scope`) this static options will override corresponding properties returned by `factory`.
+
+> 📌 **Remember**
+>
+> If you specify `MyCustomOptionsFactory` as default options factory it will become not required to specify it in `RateLimit` decorator.
 
 ## Techniques
 
@@ -372,7 +414,7 @@ export class RedisService implements RedisStorage {
 }
 ```
 
-> 📌 **Note**
+> 📌 **Hack**
 >
 > `Redis` type of `ioredis` package already implements `RedisStorage` type.
 >
