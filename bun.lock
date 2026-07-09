@@ -43,15 +43,13 @@
     "packages/rate-limiter": {
       "name": "nestjs-rate-limiter",
       "version": "0.0.0",
-      "dependencies": {
-        "@types/node": "^26.0.1",
-      },
       "devDependencies": {
         "@nestjs/common": "^11.1.27",
         "@nestjs/core": "^11.1.27",
         "@nestjs/testing": "^11.1.27",
         "@types/bun": "latest",
         "@types/express": "^5.0.6",
+        "@types/node": "^26.1.1",
         "bun-plugin-swc": "^0.0.1",
         "cpx": "^1.5.0",
         "express": "^5.2.1",
@@ -335,7 +333,7 @@
 
     "@types/methods": ["@types/methods@1.1.4", "", {}, "sha512-ymXWVrDiCxTBE3+RIrrP533E70eA+9qu7zdWoHuOmGujkYtzf4HQF96b8nwHLqhuf4ykX61IGRIB38CC6/sImQ=="],
 
-    "@types/node": ["@types/node@26.0.1", "", { "dependencies": { "undici-types": "~8.3.0" } }, "sha512-fc3KiUoBt6kie0N9bIW3E47vZsuaMf0PM2AaUpLCLT0s/LvX1nxAim6Fc049cNxODPpGm6qRAuUOB86SkRuPQw=="],
+    "@types/node": ["@types/node@26.1.1", "", { "dependencies": { "undici-types": "~8.3.0" } }, "sha512-nxAkRSVkN1Y0JC1W8ky/fTfkGsMmcrRsbx+3XoZE+rMOX71kLYTV7fLXpqud1GpbpP5TuffXFqfX7fH2GgZREw=="],
 
     "@types/qs": ["@types/qs@6.15.1", "", {}, "sha512-GZHUBZR9hckSUhrxmp1nG6NwdpM9fCunJwyThLW1X3AyHgd9IlHb6VANpQQqDr2o/qQp6McZ3y/IA2rVzKzSbw=="],
 
