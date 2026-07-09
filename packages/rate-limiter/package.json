@@ -1,10 +1,9 @@
 {
     "name": "nestjs-rate-limiter",
     "description": "Rate Limiter module for NestJS framework",
-    "keywords": ["nest", "rate limit", "throttle", "nodejs"],
+    "keywords": ["nestjs", "rate limit", "throttle", "nodejs"],
     "version": "0.0.0",
     "license": "MIT",
-    "private": true,
     "author": {
         "name": "Konstantin Barilo",
         "email": "kostabarilo12@gmail.com",
