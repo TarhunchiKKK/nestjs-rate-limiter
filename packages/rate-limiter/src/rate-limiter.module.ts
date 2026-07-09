@@ -25,6 +25,7 @@ export class RateLimiterModule {
             module: RateLimiterModule,
             providers: [
                 { provide: MODULE_OPTIONS_TOKEN, useValue: fullOptions },
+                // QUESTION: Maybe use `useExisting` for Redis storage
                 { provide: STORAGE_TOKEN, useValue: RateLimiterModule.createStorage(fullOptions) },
 
                 ...getExecutorsByStorage(options.storage),
