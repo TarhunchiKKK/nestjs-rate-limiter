@@ -1,8 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { Test } from "@nestjs/testing";
 import { STORAGE_TOKEN } from "../../../../src/di";
-import { FixedWindowInMemoryExecutor } from "../../../../src/executors";
-import type { FixedWindowOptions, FixedWindowState } from "../../../../src/executors/variants/fixed-window/types";
+import { FixedWindowInMemoryExecutor, type FixedWindowOptions, type FixedWindowState } from "../../../../src/executors";
 import { clearMock, createInMemoryStorageMock, MS_IN_DAY, TOMORROW, YESTERDAY } from "../../../mocks";
 
 describe("FixedWindowInMemoryExecutor", () => {
@@ -21,7 +20,6 @@ describe("FixedWindowInMemoryExecutor", () => {
         }).compile();
 
         executor = module.get(FixedWindowInMemoryExecutor);
-        // REFACTOR: add storageMock getting
     });
 
     afterEach(() => {
