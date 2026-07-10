@@ -1,6 +1,6 @@
 {
     "$schema": "https://unpkg.com/knip@5/schema.json",
-    "ignore": ["./apps/**/*"],
+    "ignore": ["./e2e/**/*"],
     "ignoreBinaries": [],
     "ignoreDependencies": [],
     "rules": {
