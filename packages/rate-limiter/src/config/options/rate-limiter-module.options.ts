@@ -12,8 +12,7 @@ export type RateLimiterModuleOptions = StorageOptions & {
     scope?: Scope;
 
     strategy?: Strategies;
-    // FIX: this field should be optional
-    strategyOptions: {
+    strategyOptions?: {
         fixedWindow?: Partial<AllStrategiesOptions["fixed-window"]>;
         tokenBucket?: Partial<AllStrategiesOptions["token-bucket"]>;
         slidingWindowCounter?: Partial<AllStrategiesOptions["sliding-window-counter"]>;
