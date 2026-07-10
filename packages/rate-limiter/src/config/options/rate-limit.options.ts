@@ -14,5 +14,4 @@ export type RateLimitOptions = {
     factory?: Type<IOptionsFactory> | TokenType;
 } & PartialUnionMembers<StrategyOptionsUnion>;
 
-// DELETE: is this typ necessary
 export type RateLimitNormalizedOptions = Pick<RateLimitOptions, "scope" | "keyExtractor" | "errorFactory" | "factory"> & DeepPartial<StrategyOptions>;
