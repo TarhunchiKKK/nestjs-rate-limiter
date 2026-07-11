@@ -1,20 +1,23 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node10",
+        "strict": false,
         "declaration": true,
         "noImplicitAny": false,
-        "noUnusedLocals": true,
-        "removeComments": true,
-        "skipLibCheck": true,
+        "noUnusedLocals": false,
+        "removeComments": false,
+        "strictNullChecks": true,
+        "forceConsistentCasingInFileNames": true,
+        "strictBindCallApply": true,
+        "noLib": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "strictNullChecks": true,
-        "target": "es6",
-        "sourceMap": true,
+        "target": "ES2021",
+        "sourceMap": false,
         "outDir": "./dist",
-        "types": ["bun"]
+        "rootDir": ".",
+        "types": ["node", "bun"]
     },
     "include": ["src", "tests"]
 }
