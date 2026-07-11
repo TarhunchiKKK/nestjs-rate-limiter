@@ -4,31 +4,26 @@
     "description": "Rate Limiter module for NestJS framework",
     "keywords": ["nestjs", "rate limit", "throttle", "nodejs"],
     "license": "MIT",
+    "private": false,
     "author": {
         "name": "Konstantin Barilo",
         "email": "kostabarilo12@gmail.com",
         "url": "https://github.com/TarhunchiKKK"
     },
-    "url": "https://github.com/TarhunchiKKK/nestjs-rate-limiter.git#readme",
+    "homepage": "https://github.com/TarhunchiKKK/nestjs-rate-limiter.git#readme",
     "repository": {
         "type": "git",
         "url": "https://github.com/TarhunchiKKK/nestjs-rate-limiter.git"
     },
-    "type": "commonjs",
-    "types": "./dist/index.d.ts",
     "main": "./dist/index.js",
-    "module": "./src/index.ts",
-    "files": ["./dist/**", "./lua/**", "readme.md", "license"],
+    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.js"
+            "default": "./dist/index.js"
         }
     },
-    "publishConfig": {
-        "access": "public"
-    },
+    "files": ["./dist/**", "./lua/**", "readme.md", "license"],
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
         "type-check": "tsc --noEmit",
