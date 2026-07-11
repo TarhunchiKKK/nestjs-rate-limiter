@@ -1,0 +1,52 @@
+{
+    "name": "nestjs-rate-limiter",
+    "version": "0.0.0",
+    "description": "Rate Limiter module for NestJS framework",
+    "keywords": ["nestjs", "rate limit", "throttle", "nodejs"],
+    "license": "MIT",
+    "private": false,
+    "author": {
+        "name": "Konstantin Barilo",
+        "email": "kostabarilo12@gmail.com",
+        "url": "https://github.com/TarhunchiKKK"
+    },
+    "homepage": "https://github.com/TarhunchiKKK/nestjs-rate-limiter.git#readme",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/TarhunchiKKK/nestjs-rate-limiter.git"
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    },
+    "files": ["./dist/**", "./lua/**", "readme.md", "license"],
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json",
+        "type-check": "tsc --noEmit",
+        "test": "bun test tests --preload ./tests/preload.ts",
+        "test:unit": "bun test tests/unit --preload ./tests/preload.ts",
+        "test:e2e": "bun test tests/e2e --preload ./tests/preload.ts"
+    },
+    "devDependencies": {
+        "@nestjs/common": "^11.1.27",
+        "@nestjs/core": "^11.1.27",
+        "@nestjs/testing": "^11.1.27",
+        "@types/bun": "latest",
+        "@types/express": "^5.0.6",
+        "@types/node": "^26.1.1",
+        "bun-plugin-swc": "^0.0.1",
+        "express": "^5.2.1",
+        "ioredis": "^5.11.1",
+        "reflect-metadata": "^0.2.2"
+    },
+    "peerDependencies": {
+        "@nestjs/common": "^11.0.0",
+        "@nestjs/core": "^11.0.0",
+        "ioredis": "^5.0.0",
+        "typescript": "^5"
+    }
+}
