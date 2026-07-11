@@ -10,7 +10,7 @@
         "type": "git",
         "url": "https://github.com/TarhunchiKKK/nestjs-rate-limiter.git"
     },
-    "main": "./dist/src/index.js",
+    "main": "./dist/index.js",
     "module": "./src/index.ts",
     "devDependencies": {
         "@nestjs/common": "^11.1.27",
@@ -33,9 +33,9 @@
     },
     "exports": {
         ".": {
-            "types": "./dist/src/index.d.ts",
-            "import": "./dist/src/index.js",
-            "require": "./dist/src/index.js"
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.js"
         }
     },
     "description": "Rate Limiter module for NestJS framework",
@@ -46,12 +46,12 @@
         "access": "public"
     },
     "scripts": {
-        "build": "tsc -p tsconfig.build.json && cpx \"lua/*\" dist/lua",
+        "build": "tsc -p tsconfig.build.json",
         "type-check": "tsc --noEmit",
         "test": "bun test tests --preload ./tests/preload.ts",
         "test:unit": "bun test tests/unit --preload ./tests/preload.ts",
         "test:e2e": "bun test tests/e2e --preload ./tests/preload.ts"
     },
     "type": "commonjs",
-    "types": "./dist/src/index.d.ts"
+    "types": "./dist/index.d.ts"
 }
