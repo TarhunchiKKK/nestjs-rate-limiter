@@ -47,7 +47,7 @@ describe("SlidingWindowLogRedisExecutor", () => {
             windowMs: MS_IN_DAY
         };
 
-        redisMock.eval.mockResolvedValue(1);
+        redisMock.eval.mockResolvedValue(0);
 
         const result = await executor.check(key, options);
 
