@@ -10,7 +10,7 @@ export class LeakyBucketRedisExecutor implements IExecutor<LeakyBucketOptions> {
     private readonly luaScript: string;
 
     public constructor(@InjectStorage() private readonly redis: RedisStorage) {
-        const luaScriptPath = path.join(__dirname, "../../../lua/leaky-bucket.lua");
+        const luaScriptPath = path.join(__dirname, "../../../../lua/leaky-bucket.lua");
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 

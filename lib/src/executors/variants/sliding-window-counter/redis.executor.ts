@@ -10,7 +10,7 @@ export class SlidingWindowCounterRedisExecutor implements IExecutor<SlidingWindo
     private readonly luaScript: string;
 
     public constructor(@InjectStorage() private readonly redis: RedisStorage) {
-        const luaScriptPath = path.join(__dirname, "../../../lua/sliding-window-counter.lua");
+        const luaScriptPath = path.join(__dirname, "../../../../lua/sliding-window-counter.lua");
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
