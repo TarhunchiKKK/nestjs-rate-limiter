@@ -15,7 +15,6 @@
         "build": "turbo run build",
         "type-check": "turbo run type-check",
         "test:unit": "turbo run test:unit",
-        "test:types": "turbo run test:types",
         "test:e2e": "turbo run test:e2e",
         "format:check": "biome format",
         "format:fix": "biome format --write",

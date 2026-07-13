@@ -26,10 +26,7 @@
     "files": ["./dist/**", "./lua/**", "readme.md", "license"],
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
-        "type-check": "tsc --noEmit",
-        "test": "bun test tests --preload ./tests/preload.ts",
-        "test:unit": "bun test tests/unit --preload ./tests/preload.ts",
-        "test:e2e": "bun test tests/e2e --preload ./tests/preload.ts"
+        "test:unit": "bun test tests/unit --preload ./tests/preload.ts"
     },
     "devDependencies": {
         "@nestjs/common": "^11.1.27",
