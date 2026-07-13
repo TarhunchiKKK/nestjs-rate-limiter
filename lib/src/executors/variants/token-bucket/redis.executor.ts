@@ -10,7 +10,7 @@ export class TokenBucketRedisExecutor implements IExecutor<TokenBucketOptions> {
     private readonly luaScript: string;
 
     public constructor(@InjectStorage() private readonly redis: RedisStorage) {
-        const luaScriptPath = path.join(__dirname, "../../../lua/token-bucket.lua");
+        const luaScriptPath = path.join(__dirname, "../../../../lua/token-bucket.lua");
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 

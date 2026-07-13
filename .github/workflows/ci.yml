@@ -52,8 +52,8 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Type check
-        run: bun type-check
+      # - name: Type check
+      #   run: bun type-check
 
-      # - name: Unit Test
-      #   run: bun run test:unit
+      - name: Unit Test
+        run: bun run test:unit

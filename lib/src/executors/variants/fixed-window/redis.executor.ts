@@ -10,7 +10,7 @@ export class FixedWindowRedisExecutor implements IExecutor<FixedWindowOptions> {
     private readonly luaScript: string;
 
     public constructor(@InjectStorage() private readonly redis: RedisStorage) {
-        const luaScriptPath = path.join(__dirname, "../../../lua/fixed-window.lua");
+        const luaScriptPath = path.join(__dirname, "../../../../lua/fixed-window.lua");
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 

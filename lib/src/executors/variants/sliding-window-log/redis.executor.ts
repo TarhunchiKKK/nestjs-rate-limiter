@@ -11,7 +11,7 @@ export class SlidingWindowLogRedisExecutor implements IExecutor<SlidingWindowLog
     private readonly luaScript: string;
 
     public constructor(@InjectStorage() private readonly redis: RedisStorage) {
-        const luaScriptPath = path.join(__dirname, "../../../lua/sliding-window-log.lua");
+        const luaScriptPath = path.join(__dirname, "../../../../lua/sliding-window-log.lua");
         this.luaScript = fs.readFileSync(luaScriptPath, "utf-8");
     }
 
