@@ -133,4 +133,36 @@ describe("normalizeOptions", () => {
             expect(result).toEqual(outputs[i]);
         }
     });
+
+    it("with full options", () => {
+        const input: RateLimitOptions = {
+            scope: "custom-scope",
+            keyExtractor: "key-extractor-token",
+            errorFactory: "error-factory-token",
+            factory: "factory-token",
+            strategy: "token-bucket",
+            ttl: 10,
+            refillRate: 10,
+            capacity: 10
+        };
+
+        const output: RateLimitNormalizedOptions = {
+            scope: "custom-scope",
+            keyExtractor: "key-extractor-token",
+            errorFactory: "error-factory-token",
+            factory: "factory-token",
+            strategy: "token-bucket",
+            strategyOptions: {
+                "token-bucket": {
+                    ttl: 10,
+                    refillRate: 10,
+                    capacity: 10
+                }
+            }
+        };
+
+        const result = normalizeOptions(input);
+
+        expect(result).toEqual(output);
+    });
 });
