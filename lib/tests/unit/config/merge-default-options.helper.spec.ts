@@ -29,9 +29,30 @@ describe("mergeDefaultOptions", () => {
     });
 
     describe("storage", () => {
-        it("in-memory storage", () => {});
+        it("in-memory storage", () => {
+            const input = {
+                storage: "in-memory"
+            } satisfies RateLimiterModuleOptions;
 
-        it("redis storage", () => {});
+            const result = mergeDefaultOptions(input);
+
+            expect(result.storage).toBe(input.storage);
+        });
+
+        it("redis storage", () => {
+            const input = {
+                storage: "redis",
+                instance: {
+                    eval: () => Promise.resolve(1)
+                }
+            } satisfies RateLimiterModuleOptions;
+
+            const result = mergeDefaultOptions(input);
+
+            expect(result.storage).toBe(input.storage);
+            // biome-ignore lint/complexity/useLiteralKeys: This property is not visible for TypeScript
+            expect(result["instance"]).toEqual(input.instance);
+        });
     });
 
     describe("strategy", () => {
