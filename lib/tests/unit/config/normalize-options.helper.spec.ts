@@ -5,7 +5,7 @@ import type { RateLimitNormalizedOptions } from "../../../src/config/options";
 
 describe("normalizeOptions", () => {
     it("with different strategies", () => {
-        const input: RateLimitOptions[] = [
+        const inputs: RateLimitOptions[] = [
             {
                 strategy: "fixed-window",
                 ttl: 10,
@@ -35,7 +35,7 @@ describe("normalizeOptions", () => {
             }
         ];
 
-        const output: RateLimitNormalizedOptions[] = [
+        const outputs: RateLimitNormalizedOptions[] = [
             {
                 strategy: "fixed-window",
                 strategyOptions: {
@@ -85,10 +85,52 @@ describe("normalizeOptions", () => {
             }
         ];
 
-        for (let i = 0; i < input.length; i++) {
-            const result = normalizeOptions(input[i]);
+        for (let i = 0; i < inputs.length; i++) {
+            const result = normalizeOptions(inputs[i]);
 
-            expect(result).toEqual(output[i]);
+            expect(result).toEqual(outputs[i]);
+        }
+    });
+
+    it("with custom providers", () => {
+        const inputs: RateLimitOptions[] = [
+            {
+                keyExtractor: "key-extractor-token"
+            },
+            {
+                errorFactory: "error-factory-token"
+            },
+            {
+                factory: "factory-token"
+            },
+            {
+                keyExtractor: "key-extractor-token",
+                errorFactory: "error-factory-token",
+                factory: "factory-token"
+            }
+        ];
+
+        const outputs: RateLimitNormalizedOptions[] = [
+            {
+                keyExtractor: "key-extractor-token"
+            },
+            {
+                errorFactory: "error-factory-token"
+            },
+            {
+                factory: "factory-token"
+            },
+            {
+                keyExtractor: "key-extractor-token",
+                errorFactory: "error-factory-token",
+                factory: "factory-token"
+            }
+        ];
+
+        for (let i = 0; i < inputs.length; i++) {
+            const result = normalizeOptions(inputs[i]);
+
+            expect(result).toEqual(outputs[i]);
         }
     });
 });
