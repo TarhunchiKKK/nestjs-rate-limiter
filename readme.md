@@ -2,10 +2,24 @@
     <a href="http://nestjs.com/" target="blank">
         <img src="https://docs.nestjs.com/assets/logo-small-gradient.svg" width="200" alt="Nest Logo" />
     </a>
-    <p align="center">
-        A rate limiter module for <a href="http://nestjs.com/">NestJS</a> framework (Node.js).
-    </p>
 </p>
+
+<p align="center">
+    A rate limiter module for <a href="http://nestjs.com/">NestJS</a> framework (Node.js).
+</p>
+
+<p align="center">
+    <a href="https://www.npmjs.com/package/nestjs-rate-limitr">
+        <img src="https://img.shields.io/npm/v/nestjs-rate-limitr.svg" alt="NPM Version" />
+    </a>
+    <a href="https://www.npmjs.com/package/nestjs-rate-limitr">
+        <img src="https://img.shields.io/npm/l/nestjs-rate-limitr.svg" alt="Package License" />
+    </a>
+    <a href="https://www.npmjs.com/package/nestjs-rate-limitr">
+        <img src="https://img.shields.io/npm/dm/nestjs-rate-limitr.svg" alt="NPM Downloads" />
+    </a>
+</p>
+
 
 ## Table of Contents
 
