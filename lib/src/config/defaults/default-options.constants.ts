@@ -34,13 +34,9 @@ export const RATE_LIMITER_MODULE_DEFAULT_OPTIONS = {
         }
     },
 
-    keyExtractor: BuiltinKeyExtractor,
-    errorFactory: BuiltinErrorFactory,
-    optionsFactory: undefined,
-
-    custom: {
-        keyExtractors: [],
-        errorFactories: [],
-        optionsFactories: []
+    defaultProviders: {
+        keyExtractor: BuiltinKeyExtractor,
+        errorFactory: BuiltinErrorFactory,
+        optionsFactory: undefined
     }
 } satisfies RateLimiterModuleFullOptions;

@@ -8,6 +8,7 @@ import { MODULE_OPTIONS_TOKEN } from "../di";
 import { type AllStrategiesOptions, EXECUTOR_METADATA_KEY, type ExecutorMetadata, type IExecutor } from "../executors";
 import type { Strategies } from "../shared/model";
 
+// DELETE: Is this class necessary?
 @Injectable()
 export class ProvidersDiscoveryService implements OnModuleInit {
     private readonly executorsMap = new Map<Strategies, IExecutor<unknown>>();

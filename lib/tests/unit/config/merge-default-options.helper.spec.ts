@@ -123,54 +123,27 @@ describe("mergeDefaultOptions", () => {
 
             const result = mergeDefaultOptions(input);
 
-            expect(result.keyExtractor).toBeDefined();
-            expect(result.errorFactory).toBeDefined();
-            expect(result.optionsFactory).toBeUndefined();
-
-            expect(result.custom.keyExtractors).toHaveLength(0);
-            expect(result.custom.errorFactories).toHaveLength(0);
-            expect(result.custom.optionsFactories).toHaveLength(0);
+            expect(result.defaultProviders.keyExtractor).toBeDefined();
+            expect(result.defaultProviders.errorFactory).toBeDefined();
+            expect(result.defaultProviders.optionsFactory).toBeUndefined();
         });
 
         it("override default", () => {
             const input = {
                 storage: "in-memory",
 
-                keyExtractor: "key-extractor-token",
-                errorFactory: "error-factory-token",
-                optionsFactory: "options-factory-token"
-            } satisfies RateLimiterModuleOptions;
-
-            const result = mergeDefaultOptions(input);
-
-            expect(result.keyExtractor).toEqual(input.keyExtractor);
-            expect(result.errorFactory).toEqual(input.errorFactory);
-            expect(result.optionsFactory).toEqual(input.optionsFactory);
-        });
-
-        it("custom", () => {
-            const input = {
-                storage: "in-memory",
-
-                custom: {
-                    keyExtractors: [
-                        {
-                            provide: "key-extractor-token",
-                            useValue: { extract: () => "key" }
-                        }
-                    ],
-                    errorFactories: [
-                        // no providers listed
-                    ]
-                    // no providers for options factories
+                defaultProviders: {
+                    keyExtractor: "key-extractor-token",
+                    errorFactory: "error-factory-token",
+                    optionsFactory: "options-factory-token"
                 }
             } satisfies RateLimiterModuleOptions;
 
             const result = mergeDefaultOptions(input);
 
-            expect(result.custom.keyExtractors).toEqual(input.custom.keyExtractors);
-            expect(result.custom.errorFactories).toEqual(RATE_LIMITER_MODULE_DEFAULT_OPTIONS.custom.errorFactories);
-            expect(result.custom.optionsFactories).toEqual(RATE_LIMITER_MODULE_DEFAULT_OPTIONS.custom.optionsFactories);
+            expect(result.defaultProviders.keyExtractor).toEqual(input.defaultProviders.keyExtractor);
+            expect(result.defaultProviders.errorFactory).toEqual(input.defaultProviders.errorFactory);
+            expect(result.defaultProviders.optionsFactory).toEqual(input.defaultProviders.optionsFactory);
         });
     });
 });

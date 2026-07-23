@@ -33,14 +33,10 @@ export function mergeDefaultOptions(options: RateLimiterModuleOptions) {
             }
         },
 
-        keyExtractor: options.keyExtractor ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.keyExtractor,
-        errorFactory: options.errorFactory ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.errorFactory,
-        optionsFactory: options.optionsFactory ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.optionsFactory,
-
-        custom: {
-            keyExtractors: options.custom?.keyExtractors ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.custom.keyExtractors,
-            errorFactories: options.custom?.errorFactories ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.custom.errorFactories,
-            optionsFactories: options.custom?.optionsFactories ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS.custom.optionsFactories
+        defaultProviders: {
+            keyExtractor: options?.defaultProviders?.keyExtractor ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS?.defaultProviders?.keyExtractor,
+            errorFactory: options?.defaultProviders?.errorFactory ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS?.defaultProviders?.errorFactory,
+            optionsFactory: options?.defaultProviders?.optionsFactory ?? RATE_LIMITER_MODULE_DEFAULT_OPTIONS?.defaultProviders?.optionsFactory
         }
     } satisfies RateLimiterModuleFullOptions;
 }

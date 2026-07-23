@@ -128,16 +128,10 @@ RateLimiterModule.forRoot({
     },
 
     // default providers
-    // ⚠️ NOTE: if you use custom providers here, they should be specified in `custom` field
-    keyExtractor: undefined,
-    errorFactory: undefined,
-    optionsFactory: undefined,
-
-    // custom providers
-    custom: {
-        keyExtractors: [/* You custom key extractors */],
-        errorFactories: [/* You custom error factories */],
-        optionsFactories: [/* You custom options factories */]
+    defaultProviders: {
+        keyExtractor: undefined,
+        errorFactory: undefined,
+        optionsFactory: undefined,
     }
 });
 ```
@@ -178,13 +172,7 @@ Your custom options will be merged with this:
 
     keyExtractor: BuiltinKeyExtractor,  // IP-address is used as key
     errorFactory: BuiltinErrorFactory,  // throws HttpException (from @nestjs/common)
-    optionsFactory: undefined,          // no dynamic options by default
-
-    custom: {
-        keyExtractors: [],
-        errorFactories: [],
-        optionsFactories: []
-    }
+    optionsFactory: undefined           // no dynamic options by default
 }
 ```
 
@@ -218,8 +206,12 @@ import {
 
 > ⚠️ Important ⚠️
 > 
-> You custom providers (key extractors, error factories and options factories) will be called on every request. 
+> Your custom providers (key extractors, error factories and options factories) will be called on every request. 
 > Do not perform any expensive computations here. It can hart performance.
+
+> 📌 **Remember**
+>
+> If you specify you custom providers (key extractors, error factories and options factories) as default providers in `RateLimiterModule` configuration it will become not required to specify them in `RateLimit` decorator.
 
 ### Key Extractors
 
@@ -247,18 +239,12 @@ export class MyCustomKeyExtractor implements IKeyExtractor {
 }
 ```
 
-2. List your key extractor in `RateLimiterModule` configuration:
+2. List your key extractor as your module provider:
 
 ```typescript
-RateLimiterModule.forRoot({
+MyModule.forRoot({
     // ...
-
-    // Optional: You can use it as default key extractor
-    keyExtractor: MyCustomKeyExtractor,
-    custom: {
-        // ...
-        keyExtractors: [MyCustomKeyExtractor],
-    }
+    providers: [MyCustomKeyExtractor]
 });
 ```
 
@@ -270,10 +256,6 @@ RateLimiterModule.forRoot({
     keyExtractor: MyCustomKeyExtractor
 })
 ```
-
-> 📌 **Remember**
->
-> If you specify `MyCustomKeyExtractor` as default key extractor it will become not required to specify it in `RateLimit` decorator.
 
 ### Error Factories
 
@@ -299,18 +281,12 @@ export class MyCustomErrorFactory implements IErrorFactory {
 }
 ```
 
-2. List your error factory in `RateLimiterModule` configuration:
+2. List your error factory as your module provider:
 
 ```typescript
-RateLimiterModule.forRoot({
+MyModule.forRoot({
     // ...
-
-    // Optional: You can use it as default error factory
-    errorFactory: MyCustomErrorFactory,
-    custom: {
-        // ...
-        errorFactories: [MyCustomErrorFactory],
-    }
+    providers: [MyCustomErrorFactory]
 });
 ```
 
@@ -322,10 +298,6 @@ RateLimiterModule.forRoot({
     errorFactory: MyCustomErrorFactory
 })
 ```
-
-> 📌 **Remember**
->
-> If you specify `MyCustomErrorFactory` as default error factory it will become not required to specify it in `RateLimit` decorator.
 
 ### Options Factories
 
@@ -349,18 +321,12 @@ export class MyCustomOptionsFactory implements IOptionsFactory {
 }
 ```
 
-2. List your options factory in `RateLimiterModule` configuration:
+2. List your options factory as your module provider:
 
 ```typescript
 RateLimiterModule.forRoot({
     // ...
-
-    // Optional: You can use it as default options factory
-    optionsFactory: MyCustomOptionsFactory,
-    custom: {
-        // ...
-        optionsFactories: [MyCustomOptionsFactory],
-    }
+    providers: [MyCustomOptionsFactory],
 });
 ```
 
@@ -377,32 +343,17 @@ RateLimiterModule.forRoot({
 >
 > If `RateLimit` decorator has static options (like `scope`) this static options will override corresponding properties returned by `factory`.
 
-> 📌 **Remember**
->
-> If you specify `MyCustomOptionsFactory` as default options factory it will become not required to specify it in `RateLimit` decorator.
-
 ## Techniques
 
 ### Async Configuration
 
-> ⚠️ **Note**
->
-> `custom` property should be provided in top of configuration object.
-
 ```typescript
 RateLimiterModule.forRootAsync({
-    imports: [],
-    inject: [],
-    useFactory: () => ({
+    imports: [/* ... */],
+    inject: [/* ... */],
+    useFactory: (/* ... */) => ({
         // This options are same to `forRoot` method excluding `custom` property
-    }),
-
-    // custom providers should be listed here
-    custom: {
-        keyExtractors: [],
-        errorFactories: [],
-        optionsFactories: []
-    }
+    })
 });
 ```
 
@@ -472,8 +423,7 @@ RateLimiterModule.forRootAsync({
     useFactory: (redisService: RedisService) => ({
         storage: "redis",
         instance: redisService  // or `redisService.getClient()`
-    }),
-    // ...
+    })
 });
 ```
 

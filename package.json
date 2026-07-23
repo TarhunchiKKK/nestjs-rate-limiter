@@ -13,9 +13,7 @@
     "workspaces": ["lib", "e2e"],
     "scripts": {
         "build": "turbo run build",
-        "type-check": "turbo run type-check",
         "test:unit": "turbo run test:unit",
-        "test:e2e": "turbo run test:e2e",
         "format:check": "biome format",
         "format:fix": "biome format --write",
         "lint:check": "biome lint",

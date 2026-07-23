@@ -8,11 +8,12 @@ import type {
     RateLimitGuardOptions,
     StorageOptions
 } from "./config/options";
+import { BuiltinErrorFactory } from "./custom/error-factories";
+import { BuiltinKeyExtractor } from "./custom/key-extractors";
 import { GUARD_OPTIONS_TOKEN, MODULE_OPTIONS_TOKEN, STORAGE_TOKEN } from "./di";
 import { AVAILABLE_EXECUTORS } from "./executors";
 import { RateLimitGuard } from "./middleware";
 import { ProvidersDiscoveryService } from "./services/providers-discovery.service";
-import type { OmitFields } from "./shared/lib";
 import type { Storage } from "./shared/model";
 
 @Module({})
@@ -29,9 +30,7 @@ export class RateLimiterModule {
                 { provide: STORAGE_TOKEN, useValue: RateLimiterModule.createStorage(fullOptions) },
 
                 ...getExecutorsByStorage(options.storage),
-                ...(options.custom?.keyExtractors ?? []),
-                ...(options.custom?.errorFactories ?? []),
-                ...(options.custom?.optionsFactories ?? []),
+                ...RateLimiterModule.getBuiltinProviders(),
 
                 { provide: GUARD_OPTIONS_TOKEN, useValue: RateLimiterModule.createGuardOptions(fullOptions) },
                 ProvidersDiscoveryService,
@@ -42,7 +41,7 @@ export class RateLimiterModule {
     }
 
     public static forRootAsync(options: RateLimiterModuleAsyncOptions): DynamicModule {
-        const moduleOptionsProvider: FactoryProvider<OmitFields<RateLimiterModuleOptions, "custom">> = {
+        const moduleOptionsProvider: FactoryProvider<RateLimiterModuleOptions> = {
             provide: MODULE_OPTIONS_TOKEN,
             inject: options.inject ?? [],
             useFactory: options.useFactory
@@ -73,9 +72,7 @@ export class RateLimiterModule {
                 storageProvider,
 
                 ...AVAILABLE_EXECUTORS,
-                ...(options.custom?.keyExtractors ?? []),
-                ...(options.custom?.errorFactories ?? []),
-                ...(options.custom?.optionsFactories ?? []),
+                ...RateLimiterModule.getBuiltinProviders(),
 
                 guardOptionsProvider,
                 RateLimitGuard,
@@ -100,9 +97,13 @@ export class RateLimiterModule {
                 "sliding-window-log": options.strategyOptions.slidingWindowLog,
                 "leaky-bucket": options.strategyOptions.leakyBucket
             },
-            keyExtractor: options.keyExtractor,
-            errorFactory: options.errorFactory,
-            factory: options.optionsFactory
+            keyExtractor: options.defaultProviders.keyExtractor,
+            errorFactory: options.defaultProviders.errorFactory,
+            factory: options.defaultProviders.optionsFactory
         };
+    }
+
+    private static getBuiltinProviders() {
+        return [BuiltinKeyExtractor, BuiltinErrorFactory];
     }
 }
