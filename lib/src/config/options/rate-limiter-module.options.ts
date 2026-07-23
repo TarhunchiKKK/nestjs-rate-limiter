@@ -44,7 +44,7 @@ export type RateLimiterModuleFullOptions = StorageOptions & {
         leakyBucket: AllStrategiesOptions["leaky-bucket"];
     };
 
-    defaultProviders?: {
+    defaultProviders: {
         keyExtractor: Type<IKeyExtractor> | TokenType;
         errorFactory: Type<IErrorFactory> | TokenType;
         optionsFactory?: Type<IOptionsFactory> | TokenType;
