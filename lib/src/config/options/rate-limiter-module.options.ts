@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: `any` type is necessary for real type providing */
-import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
+import type { ModuleMetadata, Type } from "@nestjs/common";
 import type { IErrorFactory } from "../../custom/error-factories";
 import type { IKeyExtractor } from "../../custom/key-extractors";
 import type { IOptionsFactory } from "../../custom/options-factories";
 import type { AllStrategiesOptions } from "../../executors";
-import type { OmitFields, TokenType } from "../../shared/lib";
+import type { TokenType } from "../../shared/lib";
 import type { Scope, Strategies } from "../../shared/model";
 import type { StorageOptions } from "./common.options";
 
@@ -20,21 +20,16 @@ export type RateLimiterModuleOptions = StorageOptions & {
         leakyBucket?: Partial<AllStrategiesOptions["leaky-bucket"]>;
     };
 
-    keyExtractor?: Type<IKeyExtractor> | TokenType;
-    errorFactory?: Type<IErrorFactory> | TokenType;
-    optionsFactory?: Type<IOptionsFactory> | TokenType;
-
-    custom?: {
-        keyExtractors?: Provider<IKeyExtractor>[];
-        errorFactories?: Provider<IErrorFactory>[];
-        optionsFactories?: Provider<IOptionsFactory>[];
+    defaultProviders?: {
+        keyExtractor?: Type<IKeyExtractor> | TokenType;
+        errorFactory?: Type<IErrorFactory> | TokenType;
+        optionsFactory?: Type<IOptionsFactory> | TokenType;
     };
 };
 
 export type RateLimiterModuleAsyncOptions = Pick<ModuleMetadata, "imports"> & {
     inject?: any[];
-    useFactory: (...args: any[]) => OmitFields<RateLimiterModuleOptions, "custom"> | Promise<OmitFields<RateLimiterModuleOptions, "custom">>;
-    custom?: RateLimiterModuleOptions["custom"];
+    useFactory: (...args: any[]) => RateLimiterModuleOptions | Promise<RateLimiterModuleOptions>;
 };
 
 export type RateLimiterModuleFullOptions = StorageOptions & {
@@ -49,13 +44,9 @@ export type RateLimiterModuleFullOptions = StorageOptions & {
         leakyBucket: AllStrategiesOptions["leaky-bucket"];
     };
 
-    keyExtractor: Type<IKeyExtractor> | TokenType;
-    errorFactory: Type<IErrorFactory> | TokenType;
-    optionsFactory?: Type<IOptionsFactory> | TokenType;
-
-    custom: {
-        keyExtractors: Provider<IKeyExtractor>[];
-        errorFactories: Provider<IErrorFactory>[];
-        optionsFactories: Provider<IOptionsFactory>[];
+    defaultProviders?: {
+        keyExtractor: Type<IKeyExtractor> | TokenType;
+        errorFactory: Type<IErrorFactory> | TokenType;
+        optionsFactory?: Type<IOptionsFactory> | TokenType;
     };
 };
